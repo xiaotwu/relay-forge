@@ -55,12 +55,13 @@ func (h *LiveKitHandler) GenerateToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(tokenResponse{
+	if err := writeJSON(w, http.StatusOK, tokenResponse{
 		Token:     token,
 		URL:       h.cfg.LiveKit.URL,
 		ExpiresAt: expiresAt.Unix(),
-	})
+	}); err != nil {
+		http.Error(w, `{"error":"failed to write response"}`, http.StatusInternalServerError)
+	}
 }
 
 type createRoomRequest struct {
@@ -75,28 +76,37 @@ func (h *LiveKitHandler) CreateRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]any{
+	if err := writeJSON(w, http.StatusOK, map[string]any{
 		"name":             req.Name,
 		"max_participants": req.MaxParticipants,
 		"status":           "created",
-	})
+	}); err != nil {
+		http.Error(w, `{"error":"failed to write response"}`, http.StatusInternalServerError)
+	}
 }
 
 func (h *LiveKitHandler) DeleteRoom(w http.ResponseWriter, r *http.Request) {
 	roomName := chi.URLParam(r, "roomName")
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
+	if err := writeJSON(w, http.StatusOK, map[string]string{
 		"room":   roomName,
 		"status": "deleted",
-	})
+	}); err != nil {
+		http.Error(w, `{"error":"failed to write response"}`, http.StatusInternalServerError)
+	}
 }
 
 func (h *LiveKitHandler) ListRooms(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]any{
+	if err := writeJSON(w, http.StatusOK, map[string]any{
 		"rooms": []any{},
-	})
+	}); err != nil {
+		http.Error(w, `{"error":"failed to write response"}`, http.StatusInternalServerError)
+	}
+}
+
+func writeJSON(w http.ResponseWriter, status int, payload any) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	return json.NewEncoder(w).Encode(payload)
 }
 
 // buildLiveKitToken generates a LiveKit-compatible JWT access token.
