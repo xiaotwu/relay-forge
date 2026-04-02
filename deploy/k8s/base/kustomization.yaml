@@ -1,0 +1,34 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: relayforge
+
+commonLabels:
+  app.kubernetes.io/managed-by: kustomize
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - secret.yaml
+  - api-deployment.yaml
+  - api-service.yaml
+  - realtime-deployment.yaml
+  - realtime-service.yaml
+  - media-deployment.yaml
+  - media-service.yaml
+  - worker-deployment.yaml
+  - web-deployment.yaml
+  - web-service.yaml
+  - ingress.yaml
+
+images:
+  - name: ghcr.io/relayforge/api
+    newTag: latest
+  - name: ghcr.io/relayforge/realtime
+    newTag: latest
+  - name: ghcr.io/relayforge/media
+    newTag: latest
+  - name: ghcr.io/relayforge/worker
+    newTag: latest
+  - name: ghcr.io/relayforge/web
+    newTag: latest

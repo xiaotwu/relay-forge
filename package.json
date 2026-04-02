@@ -1,0 +1,67 @@
+{
+  "name": "relay-forge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Self-hostable open-source chat platform",
+  "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/relay-forge/relay-forge.git"
+  },
+  "workspaces": [
+    "apps/web",
+    "apps/desktop",
+    "apps/admin",
+    "apps/docs",
+    "packages/ui",
+    "packages/types",
+    "packages/sdk",
+    "packages/config",
+    "packages/crypto"
+  ],
+  "scripts": {
+    "dev:web": "npm -w apps/web run dev",
+    "dev:admin": "npm -w apps/admin run dev",
+    "dev:desktop": "npm -w apps/desktop run dev",
+    "dev:docs": "npm -w apps/docs run dev",
+    "build:web": "npm -w apps/web run build",
+    "build:admin": "npm -w apps/admin run build",
+    "build:desktop": "npm -w apps/desktop run build",
+    "build:docs": "npm -w apps/docs run build",
+    "build:ui": "npm -w packages/ui run build",
+    "build:types": "npm -w packages/types run build",
+    "build:sdk": "npm -w packages/sdk run build",
+    "build:config": "npm -w packages/config run build",
+    "build:crypto": "npm -w packages/crypto run build",
+    "build:packages": "npm run build:types && npm run build:config && npm run build:crypto && npm run build:ui && npm run build:sdk",
+    "lint": "npm run lint:ts && npm run lint:go",
+    "lint:ts": "eslint 'apps/*/src/**/*.{ts,tsx}' 'packages/*/src/**/*.{ts,tsx}'",
+    "lint:go": "cd services/api && golangci-lint run ./... && cd ../realtime && golangci-lint run ./... && cd ../media && golangci-lint run ./... && cd ../worker && golangci-lint run ./...",
+    "format": "prettier --write '**/*.{ts,tsx,js,json,css,md,yaml,yml}'",
+    "format:check": "prettier --check '**/*.{ts,tsx,js,json,css,md,yaml,yml}'",
+    "test": "npm run test:ts && npm run test:go",
+    "test:ts": "vitest run --globals --environment jsdom packages/types/src/__tests__/role.test.ts packages/sdk/src/__tests__/client.test.ts packages/crypto/src/__tests__/crypto.test.ts",
+    "test:go": "go test ./services/api/... ./services/realtime/... ./services/media/... ./services/worker/...",
+    "typecheck": "npm run build:packages && npm run typecheck:apps",
+    "typecheck:apps": "npm -w apps/web exec -- tsc -p tsconfig.json --noEmit && npm -w apps/admin exec -- tsc -p tsconfig.json --noEmit && npm -w apps/desktop exec -- tsc -p tsconfig.json --noEmit && npm -w apps/docs exec -- tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules apps/*/dist packages/*/dist"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "eslint": "^9.16.0",
+    "typescript-eslint": "^8.18.0",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "jsdom": "^29.0.1"
+  }
+}

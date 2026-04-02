@@ -1,0 +1,70 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+target/
+*.tsbuildinfo
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go
+*.test
+*.out
+coverage.out
+coverage.html
+
+# Tauri
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/WixTools/
+apps/desktop/src-tauri/Frameworks/
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.*.example
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test
+coverage/
+.nyc_output/
+junit.xml
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+
+# Docker
+docker-compose.override.yml
+
+# OS
+.DS_Store
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Temporary
+tmp/
+temp/
+.cache/

@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-gray-950 text-gray-200;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded bg-gray-700 hover:bg-gray-600;
+  }
+}
+
+@layer components {
+  .prose-dark h1 {
+    @apply mb-6 text-4xl font-bold text-white;
+  }
+
+  .prose-dark h2 {
+    @apply mb-4 mt-10 border-b border-gray-800 pb-2 text-2xl font-semibold text-white;
+  }
+
+  .prose-dark h3 {
+    @apply mb-3 mt-8 text-xl font-semibold text-gray-100;
+  }
+
+  .prose-dark h4 {
+    @apply mb-2 mt-6 text-lg font-medium text-gray-200;
+  }
+
+  .prose-dark p {
+    @apply mb-4 leading-relaxed text-gray-300;
+  }
+
+  .prose-dark ul {
+    @apply mb-4 ml-6 list-disc space-y-1 text-gray-300;
+  }
+
+  .prose-dark ol {
+    @apply mb-4 ml-6 list-decimal space-y-1 text-gray-300;
+  }
+
+  .prose-dark li {
+    @apply leading-relaxed;
+  }
+
+  .prose-dark pre {
+    @apply mb-4 overflow-x-auto rounded-lg border border-gray-800 bg-gray-900 p-4 text-sm;
+  }
+
+  .prose-dark code {
+    @apply text-brand-300 rounded bg-gray-800 px-1.5 py-0.5 font-mono text-sm;
+  }
+
+  .prose-dark pre code {
+    @apply bg-transparent p-0 text-gray-200;
+  }
+
+  .prose-dark table {
+    @apply mb-4 w-full border-collapse text-sm;
+  }
+
+  .prose-dark thead {
+    @apply border-b border-gray-700;
+  }
+
+  .prose-dark th {
+    @apply px-4 py-2 text-left font-semibold text-gray-200;
+  }
+
+  .prose-dark td {
+    @apply border-b border-gray-800 px-4 py-2 text-gray-300;
+  }
+
+  .prose-dark tr:hover td {
+    @apply bg-gray-900/50;
+  }
+
+  .prose-dark blockquote {
+    @apply border-brand-500 mb-4 border-l-4 bg-gray-900/50 py-2 pl-4 italic text-gray-400;
+  }
+
+  .prose-dark a {
+    @apply text-brand-400 decoration-brand-400/30 hover:decoration-brand-400 underline transition;
+  }
+
+  .prose-dark hr {
+    @apply my-8 border-gray-800;
+  }
+
+  .info-box {
+    @apply mb-4 rounded-lg border border-blue-800/50 bg-blue-950/30 p-4 text-blue-200;
+  }
+
+  .warning-box {
+    @apply mb-4 rounded-lg border border-yellow-800/50 bg-yellow-950/30 p-4 text-yellow-200;
+  }
+
+  .danger-box {
+    @apply mb-4 rounded-lg border border-red-800/50 bg-red-950/30 p-4 text-red-200;
+  }
+}

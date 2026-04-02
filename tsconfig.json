@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@relayforge/ui": ["packages/ui/src"],
+      "@relayforge/types": ["packages/types/src"],
+      "@relayforge/sdk": ["packages/sdk/src"],
+      "@relayforge/config": ["packages/config/src"],
+      "@relayforge/crypto": ["packages/crypto/src"]
+    }
+  },
+  "references": [
+    { "path": "packages/types" },
+    { "path": "packages/ui" },
+    { "path": "packages/sdk" },
+    { "path": "packages/config" },
+    { "path": "packages/crypto" },
+    { "path": "apps/web" },
+    { "path": "apps/admin" },
+    { "path": "apps/desktop" }
+  ],
+  "exclude": ["node_modules", "dist", "build", "target"]
+}

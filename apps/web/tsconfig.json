@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "strict": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@relayforge/types": ["../../packages/types/src"],
+      "@relayforge/sdk": ["../../packages/sdk/src"],
+      "@relayforge/ui": ["../../packages/ui/src"],
+      "@relayforge/config": ["../../packages/config/src"],
+      "@relayforge/crypto": ["../../packages/crypto/src"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}

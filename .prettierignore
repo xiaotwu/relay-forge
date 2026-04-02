@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+target
+bin
+coverage
+.terraform
+*.go
+go.sum
+go.work.sum
+deploy/helm/**/templates/**

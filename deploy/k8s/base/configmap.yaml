@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: relayforge-config
+  namespace: relayforge
+  labels:
+    app.kubernetes.io/part-of: relayforge
+data:
+  RELAY_ENV: 'production'
+  RELAY_LOG_LEVEL: 'info'
+  RELAY_LOG_FORMAT: 'json'
+  API_HOST: '0.0.0.0'
+  API_PORT: '8080'
+  REALTIME_HOST: '0.0.0.0'
+  REALTIME_PORT: '8081'
+  MEDIA_HOST: '0.0.0.0'
+  MEDIA_PORT: '8082'
+  DB_HOST: 'postgres.relayforge.svc.cluster.local'
+  DB_PORT: '5432'
+  DB_NAME: 'relayforge'
+  DB_SSL_MODE: 'require'
+  VALKEY_HOST: 'valkey.relayforge.svc.cluster.local'
+  VALKEY_PORT: '6379'
+  S3_REGION: 'us-east-1'
+  S3_BUCKET_UPLOADS: 'relay-uploads'
+  S3_BUCKET_AVATARS: 'relay-avatars'
+  S3_BUCKET_EMOJI: 'relay-emoji'
+  S3_USE_PATH_STYLE: 'false'
+  OTEL_ENABLED: 'true'
+  OTEL_EXPORTER_OTLP_ENDPOINT: 'http://otel-collector.observability.svc.cluster.local:4317'
+  RATE_LIMIT_ENABLED: 'true'
+  RATE_LIMIT_REQUESTS_PER_SECOND: '10'
+  RATE_LIMIT_BURST: '20'
+  METRICS_ENABLED: 'true'
+  METRICS_PORT: '9090'

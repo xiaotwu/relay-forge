@@ -1,0 +1,12 @@
+{
+  "identifier": "default",
+  "description": "Default capability for RelayForge desktop",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "notification:default",
+    "autostart:default",
+    "store:default",
+    "updater:default"
+  ]
+}
