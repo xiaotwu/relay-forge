@@ -22,7 +22,7 @@
 - [ ] Connection pooling is configured (`DB_MAX_OPEN_CONNS`, `DB_MAX_IDLE_CONNS`)
 - [ ] Automated backups are configured (see `scripts/backup.sh`)
 - [ ] Backup restoration has been tested
-- [ ] Migrations have been applied (`make migrate`)
+- [ ] Migrations have been applied (`make deploy-migrate ENV_FILE=.env.production` for the default Docker deployment)
 
 ## Deployment
 
@@ -30,8 +30,8 @@
 - [ ] Resource limits are set for containers/pods
 - [ ] Health checks are configured and monitored
 - [ ] Reverse proxy is configured with SSL certificates
-- [ ] LiveKit is deployed and accessible
-- [ ] S3-compatible storage is available and buckets are created
+- [ ] LiveKit is deployed and accessible (or the bundled Compose service is healthy)
+- [ ] S3-compatible storage is available and buckets are created (or the bundled MinIO service is healthy)
 - [ ] DNS records are configured
 - [ ] Container restart policies are set (`unless-stopped` or equivalent)
 

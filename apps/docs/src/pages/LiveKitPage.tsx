@@ -273,7 +273,8 @@ export default function LiveKitPage() {
 
       <h3>Single-Node Setup</h3>
       <pre>
-        <code>{`# LiveKit is included in docker-compose.prod.yml
+        <code>{`# Point LIVEKIT_URL, LIVEKIT_API_KEY, and LIVEKIT_API_SECRET
+# in infra/docker/docker-compose.yml at your LiveKit deployment
 # Ensure these ports are open:
 # - 7880 (HTTP/WebSocket for signaling)
 # - 7881 (TCP for TURN)

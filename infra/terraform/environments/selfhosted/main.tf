@@ -4,7 +4,7 @@
 #
 # This file serves as a reference for self-hosted deployments where cloud
 # provider Terraform modules are not applicable. Instead, use Docker Compose
-# or Kubernetes manifests from the deploy/ directory.
+# or Kubernetes manifests from the infra/ directory.
 #
 # =============================================================================
 # Option 1: Docker Compose (Recommended for small deployments)
@@ -21,7 +21,7 @@
 #        openssl rand -base64 32  (for AUTH_JWT_SECRET, DB_PASSWORD, etc.)
 #   3. Configure your reverse proxy (nginx.conf, Caddyfile, or traefik.yml)
 #   4. Start services:
-#        docker compose -f deploy/compose/docker-compose.yml up -d
+#        docker compose -f infra/docker/docker-compose.yml up -d
 #   5. Run migrations:
 #        docker compose exec api api migrate up
 #
@@ -41,7 +41,7 @@
 #   - External PostgreSQL and Valkey/Redis instances
 #
 # Using Kustomize:
-#   1. Review and edit deploy/k8s/base/configmap.yaml
+#   1. Review and edit infra/kubernetes/base/configmap.yaml
 #   2. Generate and apply secrets:
 #        kubectl create secret generic relayforge-secrets \
 #          --namespace relayforge \
@@ -52,12 +52,12 @@
 #          --from-literal=LIVEKIT_API_KEY=<key> \
 #          --from-literal=LIVEKIT_API_SECRET=<secret>
 #   3. Apply manifests:
-#        kubectl apply -k deploy/k8s/base/
+#        kubectl apply -k infra/kubernetes/base/
 #
 # Using Helm:
 #   1. Create a values-override.yaml with your settings
 #   2. Install:
-#        helm install relayforge deploy/helm/relay-forge/ \
+#        helm install relayforge infra/helm/relay-forge/ \
 #          -f values-override.yaml \
 #          --namespace relayforge --create-namespace
 #

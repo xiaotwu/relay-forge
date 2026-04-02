@@ -62,7 +62,7 @@ export default function ArchitecturePage() {
             <td>
               <code>desktop</code>
             </td>
-            <td>TypeScript / Electron</td>
+            <td>TypeScript / Tauri 2</td>
             <td>
               Native desktop wrapper around the web client with system tray, notifications, and
               auto-update.
@@ -209,7 +209,7 @@ export default function ArchitecturePage() {
         <code>{`relay-forge/
   apps/
     web/          # React web client
-    desktop/      # Electron desktop app
+    desktop/      # Tauri desktop app
     admin/        # Admin console
     docs/         # Documentation site (this site)
   packages/
@@ -222,20 +222,20 @@ export default function ArchitecturePage() {
     api/          # Go REST API service
     realtime/     # Go WebSocket service
     media/        # Go media processing service
-  deploy/
+  infra/
     docker/       # Dockerfiles and docker-compose
-    k8s/          # Kubernetes manifests
+    kubernetes/   # Kubernetes manifests
     helm/         # Helm chart
 `}</code>
       </pre>
 
       <h2>Security Architecture</h2>
       <p>
-        Authentication uses Argon2id password hashing with OWASP-recommended parameters, JWT
+        Authentication uses Argon2id password hashing with OWASP-aligned parameters, JWT
         access/refresh token pairs with HMAC-SHA256 signing, and optional TOTP-based two-factor
         authentication. All inter-service communication stays within the internal network. External
-        traffic is terminated at a reverse proxy (nginx / Caddy / cloud load balancer) which handles
-        TLS.
+        traffic is terminated at a reverse proxy (nginx / Caddy / cloud load balancer) which
+        handles TLS.
       </p>
       <p>
         The permission model is a 32-bit bitfield system attached to roles. Each guild member can

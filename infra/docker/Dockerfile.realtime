@@ -4,10 +4,9 @@ RUN apk add --no-cache git ca-certificates
 
 WORKDIR /build
 
-COPY services/realtime/go.mod services/realtime/go.sum ./services/realtime/
-RUN cd services/realtime && go mod download
-
+COPY services/realtime/go.mod ./services/realtime/
 COPY services/realtime/ ./services/realtime/
+RUN cd services/realtime && go mod download
 
 ARG VERSION=dev
 ARG BUILD_TIME

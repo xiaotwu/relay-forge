@@ -331,7 +331,7 @@ S3_SECRET_KEY=your-sk`}</code>
 
       <h2>Terraform Modules</h2>
       <p>
-        The <code>deploy/terraform/</code> directory contains reusable Terraform modules for
+        The <code>infra/terraform/</code> directory contains reusable Terraform modules for
         provisioning cloud infrastructure:
       </p>
       <table>
@@ -385,7 +385,7 @@ S3_SECRET_KEY=your-sk`}</code>
       </table>
       <pre>
         <code>{`# Example: AWS deployment
-cd deploy/terraform/aws
+cd infra/terraform/aws
 cp terraform.tfvars.example terraform.tfvars
 # Edit terraform.tfvars with your settings
 
@@ -395,7 +395,7 @@ terraform apply`}</code>
       </pre>
       <p>
         Each cloud provider has its own root configuration under{' '}
-        <code>deploy/terraform/{'{provider}'}/</code> that composes the shared modules with
+        <code>infra/terraform/{'{provider}'}/</code> that composes the shared modules with
         provider-specific resources.
       </p>
 

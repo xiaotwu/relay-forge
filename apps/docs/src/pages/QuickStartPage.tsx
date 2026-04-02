@@ -20,8 +20,9 @@ export default function QuickStartPage() {
           At least <strong>4 GB of free RAM</strong> for all containers.
         </li>
         <li>
-          Ports <code>5173</code> (web), <code>8080</code> (API), <code>8081</code> (WebSocket), and{' '}
-          <code>5432</code> (Postgres) should be available.
+          Ports <code>3000</code> (web), <code>8080</code> (API), <code>8081</code> (WebSocket),{' '}
+          <code>5432</code> (Postgres), <code>9000</code> (MinIO), and <code>7880</code> (LiveKit)
+          should be available.
         </li>
       </ul>
 
@@ -48,9 +49,12 @@ cd relay-forge`}</code>
       <h2>Step 3 &mdash; Start All Services</h2>
       <pre>
         <code>{`# From the repository root
-docker compose -f deploy/docker/docker-compose.yml up -d`}</code>
+make deploy-up`}</code>
       </pre>
-      <p>This starts the following containers:</p>
+      <p>
+        This starts the full single-host stack: RelayForge services, PostgreSQL, Valkey, MinIO,
+        and LiveKit. The defaults in <code>.env</code> are enough for a local self-hosted trial.
+      </p>
       <table>
         <thead>
           <tr>
@@ -73,20 +77,6 @@ docker compose -f deploy/docker/docker-compose.yml up -d`}</code>
             </td>
             <td>6379</td>
             <td>Valkey cache and pub/sub</td>
-          </tr>
-          <tr>
-            <td>
-              <code>relayforge-minio</code>
-            </td>
-            <td>9000 / 9001</td>
-            <td>MinIO object storage (S3-compatible)</td>
-          </tr>
-          <tr>
-            <td>
-              <code>relayforge-livekit</code>
-            </td>
-            <td>7880</td>
-            <td>LiveKit WebRTC SFU</td>
           </tr>
           <tr>
             <td>
@@ -113,8 +103,29 @@ docker compose -f deploy/docker/docker-compose.yml up -d`}</code>
             <td>
               <code>relayforge-web</code>
             </td>
-            <td>5173</td>
-            <td>Web client (Vite dev server)</td>
+            <td>3000</td>
+            <td>Web client</td>
+          </tr>
+          <tr>
+            <td>
+              <code>relayforge-worker</code>
+            </td>
+            <td>-</td>
+            <td>Background job processor</td>
+          </tr>
+          <tr>
+            <td>
+              <code>relayforge-minio</code>
+            </td>
+            <td>9000 / 9001</td>
+            <td>S3-compatible object storage plus admin console</td>
+          </tr>
+          <tr>
+            <td>
+              <code>relayforge-livekit</code>
+            </td>
+            <td>7880 / 7881 / 7882</td>
+            <td>Voice and video signaling plus media transport</td>
           </tr>
         </tbody>
       </table>
@@ -122,10 +133,10 @@ docker compose -f deploy/docker/docker-compose.yml up -d`}</code>
       <h2>Step 4 &mdash; Verify Everything Is Running</h2>
       <pre>
         <code>{`# Check container status
-docker compose -f deploy/docker/docker-compose.yml ps
+docker compose --env-file .env -f infra/docker/docker-compose.yml ps
 
 # Check API health
-curl http://localhost:8080/health`}</code>
+curl http://localhost:8080/healthz`}</code>
       </pre>
       <p>
         The health endpoint returns <code>{`{"status":"ok"}`}</code> when the API service has
@@ -134,7 +145,7 @@ curl http://localhost:8080/health`}</code>
 
       <h2>Step 5 &mdash; Open the Web Client</h2>
       <p>
-        Navigate to <code>http://localhost:5173</code> in your browser. You will see the login page.
+        Navigate to <code>http://localhost:3000</code> in your browser. You will see the login page.
         Click <strong>Register</strong> to create your first account.
       </p>
 
@@ -154,10 +165,10 @@ curl http://localhost:8080/health`}</code>
 
       <h2>Stopping the Stack</h2>
       <pre>
-        <code>{`docker compose -f deploy/docker/docker-compose.yml down
+        <code>{`docker compose --env-file .env -f infra/docker/docker-compose.yml down
 
 # To also remove volumes (database data, uploaded files):
-docker compose -f deploy/docker/docker-compose.yml down -v`}</code>
+docker compose --env-file .env -f infra/docker/docker-compose.yml down -v`}</code>
       </pre>
 
       <h2>Next Steps</h2>

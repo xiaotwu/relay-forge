@@ -11,7 +11,7 @@ A self-hostable, open-source multi-user chat platform with guilds, channels, dir
 - **Moderation** -- RBAC, audit logs, mute/kick/ban, word filters, abuse reports, batch actions
 - **Desktop app** -- Tauri 2 with tray, notifications, offline drafts, auto-update
 - **Admin console** -- user/guild management, audit logs, system settings, content review
-- **Self-hostable** -- Docker Compose, Kubernetes, Helm, Terraform with multi-cloud support
+- **Self-hostable** -- one-command Docker deployment for direct use, plus Kubernetes/Helm/Terraform for advanced setups
 - **Observable** -- OpenTelemetry, Prometheus, structured logging, health checks
 
 ## Tech Stack
@@ -25,7 +25,7 @@ A self-hostable, open-source multi-user chat platform with guilds, channels, dir
 | Voice/Video    | LiveKit (self-hosted)               |
 | Frontend       | React, TypeScript, Tailwind CSS     |
 | Desktop        | Tauri 2                             |
-| Deployment     | Docker, Kubernetes, Helm, Terraform |
+| Deployment     | Docker Compose, Kubernetes, Helm, Terraform |
 
 ## Quick Start
 
@@ -59,14 +59,19 @@ npm run build:packages
 make dev-web
 ```
 
-### Production (Docker Compose)
+### Self-Hosted Deployment
 
 ```bash
-cp .env.example .env
-# Edit .env with production values
+make deploy-init
+# Edit .env if you want to change domains, secrets, or ports
 
-make compose-up
+make deploy-up
+make deploy-migrate
 ```
+
+The default deployment stack is now self-contained for single-host usage: it brings up PostgreSQL,
+Valkey, MinIO, LiveKit, the API, realtime, media, worker, and web services together from
+`infra/docker/docker-compose.yml`.
 
 ## Project Structure
 
@@ -88,9 +93,9 @@ relay-forge/
     sdk/          -- Typed API/realtime client SDK
     config/       -- Shared configuration utilities
     crypto/       -- E2EE DM crypto helpers
-  deploy/
-    compose/      -- Docker Compose files
-    k8s/          -- Kubernetes manifests
+  infra/
+    docker/       -- Docker Compose files and container images
+    kubernetes/   -- Kubernetes manifests
     helm/         -- Helm chart
     terraform/    -- Terraform modules
   docs/           -- Architecture and operations documentation

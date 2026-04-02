@@ -10,11 +10,11 @@
     "noEmit": true,
     "skipLibCheck": true,
     "paths": {
-      "@relayforge/types": ["../../packages/types/src"],
-      "@relayforge/sdk": ["../../packages/sdk/src"],
-      "@relayforge/ui": ["../../packages/ui/src"],
-      "@relayforge/config": ["../../packages/config/src"],
-      "@relayforge/crypto": ["../../packages/crypto/src"],
+      "@relayforge/types": ["../../packages/types/dist"],
+      "@relayforge/sdk": ["../../packages/sdk/dist"],
+      "@relayforge/ui": ["../../packages/ui/dist"],
+      "@relayforge/config": ["../../packages/config/dist"],
+      "@relayforge/crypto": ["../../packages/crypto/dist"],
       "@/*": ["./src/*"]
     }
   },

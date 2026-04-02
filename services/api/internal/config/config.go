@@ -139,7 +139,7 @@ func Load() (*Config, error) {
 		LogLevel:  getEnv("RELAY_LOG_LEVEL", "debug"),
 		LogFormat: getEnv("RELAY_LOG_FORMAT", "console"),
 		CORS: CORSConfig{
-			Origins: splitCSV(getEnv("API_CORS_ORIGINS", "http://localhost:5173")),
+			Origins: splitCSV(getEnv("API_CORS_ORIGINS", "http://localhost:3000,http://localhost:5173,http://localhost:5174")),
 		},
 		Database: DatabaseConfig{
 			Host:            getEnv("DB_HOST", "localhost"),

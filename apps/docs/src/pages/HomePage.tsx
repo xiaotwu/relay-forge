@@ -106,7 +106,7 @@ export default function HomePage() {
           </tr>
           <tr>
             <td>Desktop client</td>
-            <td>Electron (wraps web client)</td>
+            <td>Tauri 2 (native shell around the shared web client)</td>
           </tr>
           <tr>
             <td>Admin console</td>

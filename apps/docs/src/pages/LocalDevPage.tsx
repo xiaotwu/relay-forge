@@ -97,7 +97,7 @@ cp .env.example .env`}</code>
       </pre>
       <p>
         Under the hood this runs{' '}
-        <code>docker compose -f deploy/docker/docker-compose.dev.yml up -d</code>. The containers
+        <code>docker compose -f infra/docker/docker-compose.dev.yml up -d</code>. The containers
         expose their default ports to <code>localhost</code>:
       </p>
       <table>
@@ -253,7 +253,7 @@ make dev-worker`}</code>
         <code>{`# Install dependencies (from the repository root)
 npm install
 
-# Build shared TypeScript packages (types, utils, validators)
+# Build shared TypeScript packages (types, config, crypto, ui, sdk)
 npm run build:packages
 
 # Start the web client dev server with hot module replacement
@@ -279,9 +279,11 @@ make dev-web`}</code>
 │   └── docs/         # React — Documentation site (this site)
 ├── packages/
 │   ├── types/        # Shared TypeScript type definitions
-│   ├── utils/        # Shared utility functions
-│   └── validators/   # Shared validation schemas (Zod)
-├── deploy/           # Docker Compose files, Helm charts, Terraform
+│   ├── sdk/          # Shared API client SDK
+│   ├── crypto/       # Shared E2EE helpers
+│   ├── config/       # Shared configuration helpers
+│   └── ui/           # Shared UI components
+├── infra/            # Docker Compose files, Helm charts, Terraform
 ├── scripts/          # Development and CI scripts
 └── go.work           # Go workspace configuration`}</code>
       </pre>
@@ -339,7 +341,7 @@ ss -tlnp | grep 8080`}</code>
       <h3>Database connection refused</h3>
       <p>
         Ensure the infrastructure containers are running with{' '}
-        <code>docker compose -f deploy/docker/docker-compose.dev.yml ps</code>. If PostgreSQL is not
+        <code>docker compose -f infra/docker/docker-compose.dev.yml ps</code>. If PostgreSQL is not
         ready yet, wait a few seconds and retry. The API service has a built-in retry loop on
         startup.
       </p>

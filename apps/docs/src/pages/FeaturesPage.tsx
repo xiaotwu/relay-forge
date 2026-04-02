@@ -197,11 +197,12 @@ export default function FeaturesPage() {
       <h2>Desktop Application</h2>
       <ul>
         <li>
-          Built with <strong>Electron</strong>, wrapping the web client for native OS integration.
+          Built with <strong>Tauri 2</strong>, wrapping the shared web client for native OS
+          integration with a smaller footprint than Electron.
         </li>
         <li>System tray icon with unread badge count.</li>
         <li>Native desktop notifications with click-to-focus.</li>
-        <li>Auto-update via Electron's built-in update mechanism.</li>
+        <li>Auto-update via Tauri's updater integration.</li>
         <li>Supports macOS, Windows, and Linux (AppImage / deb / rpm).</li>
       </ul>
 

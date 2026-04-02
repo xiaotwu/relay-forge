@@ -17,7 +17,7 @@
    - Root `package.json`
    - All workspace `package.json` files
    - Go service version constants
-   - `deploy/helm/relay-forge/Chart.yaml`
+   - `infra/helm/relay-forge/Chart.yaml`
 3. Update CHANGELOG with release date
 4. Create a git tag: `git tag -a vX.Y.Z -m "Release vX.Y.Z"`
 5. Push tag: `git push origin vX.Y.Z`

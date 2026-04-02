@@ -154,7 +154,7 @@ chore: update Go dependencies`}
           Use GitHub Issues to report bugs or request features. Include steps to reproduce, expected
           behavior, actual behavior, and environment details (OS, browser, versions). For security
           vulnerabilities, see the{' '}
-          <a href="/relay-forge/security" className="text-emerald-400 hover:underline">
+          <a href="/security" className="text-emerald-400 hover:underline">
             Security Policy
           </a>
           .

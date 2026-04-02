@@ -298,7 +298,7 @@ relay-emoji/{guild_id}/{emoji_id}.{ext}`}</code>
 
       <h3>Running ClamAV</h3>
       <pre>
-        <code>{`# Add to your docker-compose.prod.yml
+        <code>{`# Add to infra/docker/docker-compose.yml
 clamav:
   image: clamav/clamav:1.3
   ports:

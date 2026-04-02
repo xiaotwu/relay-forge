@@ -2,6 +2,9 @@
        test test-go test-ts lint lint-go lint-ts format migrate migrate-down seed clean
 
 SHELL := /bin/bash
+COMPOSE_DEV_FILE := infra/docker/docker-compose.dev.yml
+COMPOSE_PROD_FILE := infra/docker/docker-compose.yml
+ENV_FILE ?= .env
 
 # Build variables
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
@@ -18,10 +21,10 @@ help: ## Show this help
 dev: dev-services dev-web ## Start all development services
 
 dev-services: ## Start infrastructure services (DB, Valkey, MinIO, LiveKit)
-	docker compose -f deploy/compose/docker-compose.dev.yml up -d
+	docker compose -f $(COMPOSE_DEV_FILE) up -d
 
 dev-stop: ## Stop infrastructure services
-	docker compose -f deploy/compose/docker-compose.dev.yml down
+	docker compose -f $(COMPOSE_DEV_FILE) down
 
 dev-api: ## Run API service locally
 	cd services/api && go run $(GO_LDFLAGS) ./cmd/api
@@ -69,11 +72,11 @@ build-desktop: ## Build desktop app
 	npm -w apps/desktop run build
 
 build-docker: ## Build Docker images
-	docker build -f deploy/compose/Dockerfile.api -t relayforge/api:$(VERSION) .
-	docker build -f deploy/compose/Dockerfile.realtime -t relayforge/realtime:$(VERSION) .
-	docker build -f deploy/compose/Dockerfile.media -t relayforge/media:$(VERSION) .
-	docker build -f deploy/compose/Dockerfile.worker -t relayforge/worker:$(VERSION) .
-	docker build -f deploy/compose/Dockerfile.web -t relayforge/web:$(VERSION) .
+	docker build -f infra/docker/Dockerfile.api -t relayforge/api:$(VERSION) .
+	docker build -f infra/docker/Dockerfile.realtime -t relayforge/realtime:$(VERSION) .
+	docker build -f infra/docker/Dockerfile.media -t relayforge/media:$(VERSION) .
+	docker build -f infra/docker/Dockerfile.worker -t relayforge/worker:$(VERSION) .
+	docker build -f infra/docker/Dockerfile.web -t relayforge/web:$(VERSION) .
 
 # ---------------------------------------------------------------------------
 # Test
@@ -141,11 +144,22 @@ seed: ## Seed database with development data
 # Deployment
 # ---------------------------------------------------------------------------
 
-compose-up: ## Start production-oriented Docker Compose
-	docker compose -f deploy/compose/docker-compose.yml up -d
+deploy-init: ## Create a local deployment env file if one does not exist
+	@if [ ! -f "$(ENV_FILE)" ]; then cp .env.example "$(ENV_FILE)"; fi
+	@echo "Using env file: $(ENV_FILE)"
 
-compose-down: ## Stop production-oriented Docker Compose
-	docker compose -f deploy/compose/docker-compose.yml down
+deploy-up: ## Start the self-hosted deployment stack
+	docker compose --env-file $(ENV_FILE) -f $(COMPOSE_PROD_FILE) up -d
+
+deploy-migrate: ## Run database migrations inside the deployment stack
+	docker compose --env-file $(ENV_FILE) -f $(COMPOSE_PROD_FILE) exec api api migrate up
+
+deploy-down: ## Stop the self-hosted deployment stack
+	docker compose --env-file $(ENV_FILE) -f $(COMPOSE_PROD_FILE) down
+
+compose-up: deploy-up ## Backward-compatible alias for the old target
+
+compose-down: deploy-down ## Backward-compatible alias for the old target
 
 # ---------------------------------------------------------------------------
 # Cleanup

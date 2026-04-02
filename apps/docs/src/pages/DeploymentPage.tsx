@@ -12,9 +12,9 @@ export default function DeploymentPage() {
       <h2>Docker Compose Production Deployment</h2>
       <p>
         The production Docker Compose file is located at{' '}
-        <code>deploy/docker/docker-compose.prod.yml</code>. It differs from the development file in
-        several ways: images are pinned to release tags, resource limits are set, restart policies
-        are configured, and no development tools are included.
+        <code>infra/docker/docker-compose.yml</code>. It is now the recommended single-host
+        deployment path and includes PostgreSQL, Valkey, MinIO, and LiveKit so a direct user does
+        not need to assemble extra infrastructure before bringing the stack up.
       </p>
 
       <h3>Step 1 &mdash; Prepare the Host</h3>
@@ -32,7 +32,7 @@ export default function DeploymentPage() {
 
       <h3>Step 2 &mdash; Configure Environment Variables</h3>
       <pre>
-        <code>{`# Clone the repository (or download the deploy/ directory)
+        <code>{`# Clone the repository
 git clone https://github.com/your-org/relay-forge.git
 cd relay-forge
 
@@ -114,29 +114,27 @@ cp .env.example .env.production`}</code>
           </tr>
           <tr>
             <td>
-              <code>AUTH_BCRYPT_COST</code>
+              <code>AUTH_PASSWORD_MIN_LENGTH</code>
             </td>
-            <td>Keep at 12 or increase to 14 for higher security</td>
+            <td>Review your password policy before exposing the instance publicly</td>
           </tr>
         </tbody>
       </table>
 
       <h3>Step 3 &mdash; Start the Stack</h3>
       <pre>
-        <code>{`docker compose -f deploy/docker/docker-compose.prod.yml \\
-  --env-file .env.production up -d`}</code>
+        <code>{`make deploy-up ENV_FILE=.env.production`}</code>
       </pre>
 
       <h3>Step 4 &mdash; Run Migrations</h3>
       <pre>
-        <code>{`docker compose -f deploy/docker/docker-compose.prod.yml \\
-  exec api /app/migrate up`}</code>
+        <code>{`make deploy-migrate ENV_FILE=.env.production`}</code>
       </pre>
 
       <h3>Step 5 &mdash; Verify</h3>
       <pre>
         <code>{`# Check all containers are healthy
-docker compose -f deploy/docker/docker-compose.prod.yml ps
+docker compose -f infra/docker/docker-compose.yml --env-file .env.production ps
 
 # Check API health
 curl http://localhost:8080/healthz`}</code>
@@ -230,7 +228,7 @@ ws.example.com {
 }
 
 chat.example.com {
-    reverse_proxy localhost:5173
+    reverse_proxy localhost:3000
     encode gzip
 }`}</code>
       </pre>
@@ -241,7 +239,7 @@ chat.example.com {
         services:
       </p>
       <pre>
-        <code>{`# In docker-compose.prod.yml, add to the api service:
+        <code>{`# In infra/docker/docker-compose.yml, add to the api service:
 labels:
   - "traefik.enable=true"
   - "traefik.http.routers.api.rule=Host(\`api.example.com\`)"
@@ -259,7 +257,7 @@ labels:
       <h2>Kubernetes Deployment</h2>
       <p>
         For high-availability deployments, RelayForge provides a Helm chart at{' '}
-        <code>deploy/helm/relayforge/</code>.
+        <code>infra/helm/relay-forge/</code>.
       </p>
 
       <h3>Prerequisites</h3>
@@ -281,15 +279,15 @@ labels:
 # helm repo update
 
 # Or install from the local chart
-helm install relayforge deploy/helm/relayforge/ \\
+helm install relayforge infra/helm/relay-forge/ \\
   --namespace relayforge \\
   --create-namespace \\
-  --values deploy/helm/values-production.yaml`}</code>
+  --values infra/helm/values-production.yaml`}</code>
       </pre>
 
       <h3>Key Helm Values</h3>
       <pre>
-        <code>{`# deploy/helm/values-production.yaml
+        <code>{`# infra/helm/values-production.yaml
 global:
   env: production
   domain: example.com
@@ -372,7 +370,7 @@ ingress:
       <h3>Step 1 &mdash; Save Images on a Connected Machine</h3>
       <pre>
         <code>{`# Pull all required images
-docker compose -f deploy/docker/docker-compose.prod.yml pull
+docker compose -f infra/docker/docker-compose.yml --env-file .env.production pull
 
 # Save to a tarball
 docker save -o relayforge-images.tar \\
@@ -422,14 +420,16 @@ docker load -i relayforge-images.tar`}</code>
       <h2>Upgrading</h2>
       <pre>
         <code>{`# Pull new images
-docker compose -f deploy/docker/docker-compose.prod.yml pull
+docker compose -f infra/docker/docker-compose.yml --env-file .env.production pull
 
 # Apply any new migrations
-docker compose -f deploy/docker/docker-compose.prod.yml \\
+docker compose -f infra/docker/docker-compose.yml \\
+  --env-file .env.production \\
   exec api /app/migrate up
 
 # Restart services with zero-downtime rolling restart
-docker compose -f deploy/docker/docker-compose.prod.yml up -d`}</code>
+docker compose -f infra/docker/docker-compose.yml \\
+  --env-file .env.production up -d`}</code>
       </pre>
 
       <h2>Next Steps</h2>

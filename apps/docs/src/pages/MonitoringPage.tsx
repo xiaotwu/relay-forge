@@ -204,7 +204,7 @@ scrape_configs:
       <h3>Grafana Dashboard</h3>
       <p>
         A pre-built Grafana dashboard is included at{' '}
-        <code>deploy/monitoring/grafana/dashboards/relayforge.json</code>. Import it into your
+        <code>infra/monitoring/grafana/dashboards/relayforge.json</code>. Import it into your
         Grafana instance for out-of-the-box visualization of:
       </p>
       <ul>
@@ -360,7 +360,7 @@ docker compose exec -T postgres pg_restore -U relayforge -d relayforge < backup.
 
 # Automated daily backups with cron
 # Add to crontab:
-0 3 * * * docker compose -f /path/to/docker-compose.prod.yml exec -T postgres \\
+0 3 * * * docker compose --env-file /path/to/.env -f /path/to/infra/docker/docker-compose.yml exec -T postgres \\
   pg_dump -U relayforge -Fc relayforge > /backups/relayforge-$(date +\\%Y\\%m\\%d).dump`}</code>
       </pre>
       <p>
