@@ -17,7 +17,7 @@ export default function DocLayout() {
             Menu
           </button>
           <Link to="/" className="text-sm font-semibold tracking-wide text-slate-900 no-underline">
-            RelayForge Docs
+            RelayForge Handbook
           </Link>
           <div className="flex-1" />
           <a
@@ -26,7 +26,15 @@ export default function DocLayout() {
             rel="noreferrer"
             className="text-sm text-slate-600 no-underline hover:text-slate-900"
           >
-            GitHub
+            Client Repo
+          </a>
+          <a
+            href="https://github.com/xiaotwu/relay-forge-server"
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm text-slate-600 no-underline hover:text-slate-900"
+          >
+            Server Repo
           </a>
         </div>
       </header>

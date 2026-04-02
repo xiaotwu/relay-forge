@@ -18,7 +18,7 @@ This repository now covers:
 - the desktop client
 - the public documentation site
 
-Backend runtime security controls and operational hardening have been moved into `new-project/`.
+Backend runtime security controls and operational hardening live in `relay-forge-server`.
 
 ## Client Security Expectations
 

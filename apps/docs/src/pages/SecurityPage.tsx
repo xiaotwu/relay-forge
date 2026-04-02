@@ -5,7 +5,7 @@ export default function SecurityPage() {
       <p>
         Security responsibilities are now split across repositories. This repo covers client code,
         documentation, and desktop packaging. Backend runtime hardening and operational controls
-        live in <code>new-project/</code>.
+        live in <code>relay-forge-server</code>.
       </p>
 
       <h2>Client concerns</h2>

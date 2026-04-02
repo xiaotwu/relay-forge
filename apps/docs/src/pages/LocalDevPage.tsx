@@ -29,8 +29,8 @@ npm -w apps/desktop run build
 npm run package:desktop`}</pre>
 
       <div className="callout">
-        If you need to change backend behavior, make that change in <code>new-project/</code> and
-        verify the client against the updated backend URL.
+        If you need to change backend behavior, make that change in{' '}
+        <code>relay-forge-server</code> and verify the client against the updated backend URL.
       </div>
     </div>
   );

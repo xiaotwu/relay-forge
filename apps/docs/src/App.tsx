@@ -9,6 +9,10 @@ import DeploymentPage from './pages/DeploymentPage';
 import ContributingPage from './pages/ContributingPage';
 import FAQPage from './pages/FAQPage';
 import SecurityPage from './pages/SecurityPage';
+import ServerHomePage from './pages/ServerHomePage';
+import ServerArchitecturePage from './pages/ServerArchitecturePage';
+import ServerOperationsPage from './pages/ServerOperationsPage';
+import ServerSecurityPage from './pages/ServerSecurityPage';
 
 export default function App() {
   return (
@@ -23,6 +27,10 @@ export default function App() {
         <Route path="contributing" element={<ContributingPage />} />
         <Route path="faq" element={<FAQPage />} />
         <Route path="security" element={<SecurityPage />} />
+        <Route path="server" element={<ServerHomePage />} />
+        <Route path="server/architecture" element={<ServerArchitecturePage />} />
+        <Route path="server/operations" element={<ServerOperationsPage />} />
+        <Route path="server/security" element={<ServerSecurityPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

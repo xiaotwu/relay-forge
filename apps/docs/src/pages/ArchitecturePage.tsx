@@ -4,7 +4,8 @@ export default function ArchitecturePage() {
       <h1>Repository Boundaries</h1>
       <p>
         RelayForge is now split into two concerns: this repository holds the clients and docs,
-        while <code>new-project/</code> holds the backend services and their deployment assets.
+        while <code>relay-forge-server</code> holds the backend services and their deployment
+        assets.
       </p>
 
       <h2>Main repo</h2>
@@ -17,16 +18,17 @@ export default function ArchitecturePage() {
       <h2>Backend repo staging area</h2>
       <ul>
         <li>
-          <code>new-project/services</code> contains the Go services.
+          <code>relay-forge-server/services</code> contains the Go services.
         </li>
         <li>
-          <code>new-project/infra</code> contains backend deployment assets.
+          <code>relay-forge-server/infra</code> contains backend deployment assets.
         </li>
         <li>
-          <code>new-project/docs</code> contains backend operations documentation.
+          <code>relay-forge-server/docs</code> contains backend operations documentation.
         </li>
         <li>
-          <code>new-project/.github/workflows</code> contains backend CI and release workflows.
+          <code>relay-forge-server/.github/workflows</code> contains backend CI and release
+          workflows.
         </li>
       </ul>
 

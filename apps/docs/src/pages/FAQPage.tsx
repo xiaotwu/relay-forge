@@ -5,8 +5,7 @@ export default function FAQPage() {
 
       <h2>Where did the backend go?</h2>
       <p>
-        It has been extracted into <code>new-project/</code> so it can become a separate
-        repository.
+        It now lives in the <code>relay-forge-server</code> repository.
       </p>
 
       <h2>Does this repo still use Docker?</h2>

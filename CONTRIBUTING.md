@@ -1,7 +1,7 @@
 # Contributing to RelayForge Clients
 
 This repository now contains the RelayForge client applications and documentation site. Backend
-service work lives in `new-project/` while it is being prepared for its own repository.
+service work lives in `relay-forge-server`.
 
 ## Local Setup
 
@@ -40,7 +40,7 @@ npm run build:docs
 ## Pull Requests
 
 1. Create a branch from `main`.
-2. Keep frontend/docs changes in this repo and backend changes inside `new-project/`.
+2. Keep frontend/docs changes in this repo and backend changes inside `relay-forge-server`.
 3. Document any endpoint contract changes that affect client configuration.
 4. Include test/build notes in the PR description.
 

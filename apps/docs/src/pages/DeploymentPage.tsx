@@ -28,7 +28,7 @@ make package-docs`}</pre>
       <h2>Backend deployment</h2>
       <p>
         Backend runtime, migrations, and Docker-based server deployment have moved into
-        <code>new-project/</code>. Keep the packaging story in this repo focused on client
+        <code>relay-forge-server</code>. Keep the packaging story in this repo focused on client
         artifacts.
       </p>
     </div>

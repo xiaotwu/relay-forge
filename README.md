@@ -3,18 +3,11 @@
 RelayForge is now organized as a client-focused repository. It contains the web app, admin console,
 desktop app, shared frontend packages, and the GitHub Pages documentation site.
 
-The backend has been extracted into [`new-project/`](./new-project), which is intended to become a
-separate repository. Clients connect to that backend through configurable endpoint URLs, so moving
-the server to a new host or cloud environment only requires updating configuration.
+The backend now lives in
+[`relay-forge-server`](https://github.com/xiaotwu/relay-forge-server). Clients connect to that
+backend through configurable endpoint URLs, so moving the server to a new host or cloud
+environment only requires updating configuration.
 
-## What Lives Here
-
-- `apps/web` — main web client
-- `apps/admin` — admin console
-- `apps/desktop` — Tauri desktop client and installer project
-- `apps/docs` — GitHub Pages documentation site
-- `packages/*` — shared UI, SDK, types, config, and crypto packages
-- `new-project/` — extracted backend project staged for relocation
 
 ## Endpoint Configuration
 
@@ -85,26 +78,27 @@ make package-desktop
 
 ## Backend Project
 
-The extracted backend is staged in [`new-project/`](./new-project). It contains:
+The backend repository is
+[`relay-forge-server`](https://github.com/xiaotwu/relay-forge-server). It contains:
 
 - Go services
 - backend deployment assets
 - backend operations documentation
 - backend CI workflow definitions
 
-It is structured to be moved into its own repository without depending on files from this client
-repo.
+It is maintained independently from this client repo.
 
 ## Documentation
 
-The GitHub Pages site is built from `apps/docs` and now focuses on:
+The GitHub Pages site is built from `apps/docs` and now covers:
 
 - client setup and packaging
 - endpoint configuration
 - repo boundaries
 - contribution workflow
+- backend architecture, operations, and security references
 
-Backend hosting and operations details belong in `new-project/`.
+Backend hosting and operations details belong in `relay-forge-server`.
 
 ## Contributing
 

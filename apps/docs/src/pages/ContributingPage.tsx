@@ -4,7 +4,8 @@ export default function ContributingPage() {
       <h1>Contributing</h1>
       <p>
         Use this repo for client UI, shared frontend packages, desktop packaging, and
-        documentation. Use <code>new-project/</code> for backend logic and service runtime changes.
+        documentation. Use <code>relay-forge-server</code> for backend logic and service runtime
+        changes.
       </p>
 
       <h2>Before opening a PR</h2>
