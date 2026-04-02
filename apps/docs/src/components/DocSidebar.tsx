@@ -6,12 +6,14 @@ interface NavItem {
 }
 
 interface NavSection {
+  index: string;
   title: string;
   items: NavItem[];
 }
 
 const sections: NavSection[] = [
   {
+    index: '01',
     title: 'Overview',
     items: [
       { label: 'Home', to: '/' },
@@ -20,6 +22,7 @@ const sections: NavSection[] = [
     ],
   },
   {
+    index: '02',
     title: 'Getting Started',
     items: [
       { label: 'Quick Start', to: '/quick-start' },
@@ -28,6 +31,7 @@ const sections: NavSection[] = [
     ],
   },
   {
+    index: '03',
     title: 'Deployment',
     items: [
       { label: 'Deploy Guide', to: '/deployment' },
@@ -36,6 +40,7 @@ const sections: NavSection[] = [
     ],
   },
   {
+    index: '04',
     title: 'Core Concepts',
     items: [
       { label: 'Permissions & RBAC', to: '/permissions' },
@@ -45,6 +50,7 @@ const sections: NavSection[] = [
     ],
   },
   {
+    index: '05',
     title: 'Operations',
     items: [
       { label: 'Admin Guide', to: '/admin' },
@@ -52,6 +58,7 @@ const sections: NavSection[] = [
     ],
   },
   {
+    index: '06',
     title: 'Community',
     items: [
       { label: 'FAQ', to: '/faq' },
@@ -65,12 +72,15 @@ const sections: NavSection[] = [
 
 export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) {
   return (
-    <nav className="space-y-8 px-4 py-6">
+    <nav className="space-y-8 px-5 py-6">
       {sections.map((section) => (
         <div key={section.title}>
-          <h3 className="mb-3 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            {section.title}
-          </h3>
+          <div className="mb-3 flex items-center gap-3 px-3">
+            <span className="text-brand-600 font-serif text-xl">{section.index}</span>
+            <h3 className="text-ink-500 text-[11px] font-semibold uppercase tracking-[0.18em]">
+              {section.title}
+            </h3>
+          </div>
           <ul className="space-y-1">
             {section.items.map((item) => (
               <li key={item.to}>
@@ -81,8 +91,8 @@ export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) 
                   className={({ isActive }) =>
                     `block rounded-xl px-3 py-2 text-sm transition ${
                       isActive
-                        ? 'bg-gradient-to-r from-cyan-400/15 to-emerald-400/10 font-medium text-cyan-200 shadow-[inset_0_0_0_1px_rgba(103,232,249,0.14)]'
-                        : 'text-slate-400 hover:bg-white/5 hover:text-slate-100'
+                        ? 'bg-brand-50 text-brand-800 font-medium shadow-[inset_0_0_0_1px_rgba(250,152,25,0.18)]'
+                        : 'text-ink-600 hover:text-ink-900 hover:bg-white'
                     }`
                   }
                 >
@@ -93,6 +103,13 @@ export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) 
           </ul>
         </div>
       ))}
+      <div className="rounded-[1.5rem] border border-[#dccfb9] bg-white p-4">
+        <p className="text-ink-900 mb-2 font-serif text-lg">GitHub Pages</p>
+        <p className="text-ink-600 mb-0 text-sm leading-6">
+          This site is published from <code>apps/docs</code> and styled to mirror your editorial
+          Figma site while keeping the RelayForge docs structure intact.
+        </p>
+      </div>
     </nav>
   );
 }

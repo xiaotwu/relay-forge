@@ -11,7 +11,6 @@ import (
 )
 
 type Scheduler struct {
-	cfg  *config.Config
 	jobs []Job
 }
 
@@ -22,7 +21,7 @@ type Job struct {
 }
 
 func New(cfg *config.Config) *Scheduler {
-	s := &Scheduler{cfg: cfg}
+	s := &Scheduler{}
 
 	s.jobs = []Job{
 		{Name: "cleanup_expired_sessions", Interval: 1 * time.Hour, Fn: jobs.CleanupExpiredSessions(cfg)},

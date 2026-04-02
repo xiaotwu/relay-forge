@@ -6,13 +6,13 @@ export default function DocLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-slate-950 text-slate-100">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.18),transparent_45%),radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.14),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.95),rgba(2,6,23,1))]" />
+    <div className="text-ink-900 relative flex min-h-screen flex-col overflow-hidden bg-[#f7f3eb]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[32rem] bg-[radial-gradient(circle_at_top,rgba(250,152,25,0.18),transparent_42%),radial-gradient(circle_at_20%_10%,rgba(30,61,89,0.10),transparent_30%),linear-gradient(180deg,rgba(248,242,232,0.95),rgba(247,243,235,1))]" />
 
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-[#d8ccb8] bg-[#f7f3eb]/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1600px] items-center px-4 lg:px-6">
           <button
-            className="mr-3 rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:bg-white/10 hover:text-white lg:hidden"
+            className="text-ink-700 hover:bg-brand-50 hover:text-ink-900 mr-3 rounded-xl border border-[#d8ccb8] bg-white p-2 transition lg:hidden"
             onClick={() => setSidebarOpen(!sidebarOpen)}
             aria-label="Toggle sidebar"
           >
@@ -26,25 +26,23 @@ export default function DocLayout() {
             </svg>
           </button>
           <Link to="/" className="flex items-center gap-3">
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 via-cyan-300 to-emerald-300 text-sm font-black text-slate-950 shadow-lg shadow-cyan-500/20">
+            <span className="from-brand-500 to-brand-700 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br font-black text-white shadow-[0_12px_24px_rgba(250,152,25,0.28)]">
               RF
             </span>
-            <span className="text-xl font-bold text-white">
-              Relay<span className="text-brand-400">Forge</span>
+            <span className="text-ink-900 text-xl font-bold">
+              Relay<span className="text-brand-600">Forge</span>
             </span>
-            <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
-              docs
-            </span>
+            <span className="section-chip">docs</span>
           </Link>
           <div className="flex-1" />
-          <div className="mr-3 hidden rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300 md:block">
-            Self-hosted chat, voice, and admin tooling
+          <div className="text-ink-600 mr-3 hidden rounded-full border border-[#d8ccb8] bg-white px-3 py-1 text-xs font-medium md:block">
+            GitHub Pages template edition
           </div>
           <a
             href="https://github.com/xiaotwu/relay-forge"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
+            className="text-ink-700 hover:bg-brand-50 hover:text-ink-900 rounded-xl border border-[#d8ccb8] bg-white p-2 transition"
             aria-label="GitHub"
           >
             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -63,7 +61,7 @@ export default function DocLayout() {
         )}
 
         <aside
-          className={`fixed top-16 z-40 h-[calc(100vh-4rem)] w-72 overflow-y-auto border-r border-white/10 bg-slate-950/95 backdrop-blur-xl transition-transform lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:translate-x-0 ${
+          className={`fixed top-16 z-40 h-[calc(100vh-4rem)] w-72 overflow-y-auto border-r border-[#d8ccb8] bg-[#f8f4ec]/95 backdrop-blur-xl transition-transform lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:translate-x-0 ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -71,9 +69,9 @@ export default function DocLayout() {
         </aside>
 
         <main className="min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
-          <div className="mx-auto max-w-5xl rounded-[2rem] border border-white/10 bg-slate-950/55 p-6 shadow-[0_24px_80px_rgba(2,6,23,0.45)] backdrop-blur md:p-8 lg:p-10">
+          <div className="editorial-shell mx-auto max-w-5xl p-6 md:p-8 lg:p-10">
             <div className="prose-dark mx-auto max-w-4xl">
-              <div className="mb-8 rounded-2xl border border-cyan-400/15 bg-gradient-to-r from-cyan-400/10 via-sky-400/5 to-emerald-400/10 px-4 py-3 text-sm text-slate-300">
+              <div className="text-ink-700 mb-8 rounded-[1.5rem] border border-[#dccfb9] bg-white px-4 py-3 text-sm shadow-[0_10px_30px_rgba(30,61,89,0.06)]">
                 RelayForge documentation is kept in sync with the monorepo layout under{' '}
                 <code>apps/</code>, <code>services/</code>, <code>packages/</code>, and{' '}
                 <code>infra/</code>.
@@ -83,6 +81,30 @@ export default function DocLayout() {
           </div>
         </main>
       </div>
+
+      <footer className="text-ink-600 relative z-10 border-t border-[#d8ccb8] px-4 py-8 text-sm">
+        <div className="mx-auto flex max-w-[1600px] flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="mb-0">
+            RelayForge GitHub Pages, adapted from your Figma site&apos;s editorial template.
+          </p>
+          <div className="flex gap-5">
+            <Link to="/quick-start" className="hover:text-brand-700">
+              Quick Start
+            </Link>
+            <Link to="/deployment" className="hover:text-brand-700">
+              Deployment
+            </Link>
+            <a
+              href="https://github.com/xiaotwu/relay-forge"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-brand-700"
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

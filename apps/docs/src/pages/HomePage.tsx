@@ -3,87 +3,139 @@ import { Link } from 'react-router-dom';
 export default function HomePage() {
   return (
     <div>
-      <div className="mb-14 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(6,182,212,0.18),rgba(2,6,23,0.15)_40%,rgba(16,185,129,0.14))] p-8 md:p-10">
-        <div className="mb-4 inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
-          Self-hosted collaboration stack
-        </div>
-        <h1 className="mb-5 max-w-3xl text-5xl font-extrabold tracking-tight text-white md:text-6xl">
-          Relay<span className="text-brand-400">Forge</span>
+      <div className="mb-14 overflow-hidden rounded-[2rem] border border-[#d8ccb8] bg-[linear-gradient(135deg,rgba(250,152,25,0.16),rgba(255,255,255,0.8)_35%,rgba(182,201,207,0.34))] p-8 md:p-10">
+        <div className="section-chip mb-4">RelayForge handbook</div>
+        <h1 className="text-ink-900 mb-5 max-w-3xl font-serif text-5xl tracking-tight md:text-6xl">
+          Brand-grade docs for a self-hosted collaboration platform.
         </h1>
-        <p className="max-w-3xl text-lg leading-8 text-slate-200 md:text-xl">
-          An open-source communication platform for teams that want Discord-style UX without giving
-          away control of infrastructure, storage, or operational policy.
+        <p className="text-ink-700 max-w-3xl text-lg leading-8 md:text-xl">
+          This GitHub Pages site now borrows the visual rhythm of your published Figma template:
+          editorial spacing, serif-forward headings, numbered sections, and a warmer documentation
+          tone for the RelayForge platform.
         </p>
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
             to="/quick-start"
-            className="rounded-xl bg-cyan-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300"
+            className="bg-brand-500 hover:bg-brand-600 rounded-xl px-6 py-3 font-semibold text-white transition"
           >
-            Quick Start
+            Launch the stack
           </Link>
           <Link
-            to="/features"
-            className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
+            to="/architecture"
+            className="text-ink-900 rounded-xl border border-[#d8ccb8] bg-white px-6 py-3 font-semibold transition hover:bg-[#f7f2ea]"
           >
-            Explore Features
+            Read the architecture
           </Link>
         </div>
 
         <div className="docs-hero-grid mt-10">
           {stats.map((stat) => (
             <div key={stat.label} className="docs-stat-card">
-              <div className="mb-2 text-sm uppercase tracking-[0.16em] text-slate-400">
+              <div className="text-ink-500 mb-2 text-sm uppercase tracking-[0.16em]">
                 {stat.label}
               </div>
-              <div className="text-2xl font-bold text-white">{stat.value}</div>
-              <p className="!mb-0 mt-2 text-sm text-slate-300">{stat.desc}</p>
+              <div className="text-ink-900 font-serif text-2xl">{stat.value}</div>
+              <p className="text-ink-600 !mb-0 mt-2 text-sm">{stat.desc}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <h2>Why RelayForge?</h2>
-      <p>
-        Existing hosted chat platforms require trusting a third party with all of your
-        organisation's conversations, files, and metadata. RelayForge gives you feature parity with
-        mainstream products while keeping data on infrastructure you own.
-      </p>
-
-      <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {features.map((f) => (
-          <div
-            key={f.title}
-            className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_14px_40px_rgba(15,23,42,0.25)]"
-          >
-            <div className="mb-2 text-2xl">{f.icon}</div>
-            <h3 className="!mt-0 mb-1 text-base font-semibold text-white">{f.title}</h3>
-            <p className="!mb-0 text-sm text-slate-400">{f.desc}</p>
+      <div className="mb-12 grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
+        <section className="rounded-[2rem] border border-[#dccfb9] bg-white p-8 shadow-[0_18px_40px_rgba(30,61,89,0.06)]">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="text-brand-600 font-serif text-3xl">01</span>
+            <div>
+              <p className="text-ink-500 mb-0 text-xs font-semibold uppercase tracking-[0.18em]">
+                Platform story
+              </p>
+              <h2 className="!mb-0 !mt-0 border-none pb-0">Why RelayForge?</h2>
+            </div>
           </div>
-        ))}
+          <p>
+            RelayForge exists for teams that want modern chat, voice, admin tooling, and encrypted
+            direct messages without handing core operations to a hosted third party. The system is
+            structured to be practical for single-host deployments while still offering a path to
+            Kubernetes, Helm, and multi-cloud storage backends.
+          </p>
+          <p>
+            The docs are organized to help two audiences at once: operators who want to stand up the
+            stack quickly, and contributors who want to understand the service boundaries under
+            <code>apps/</code>, <code>services/</code>, <code>packages/</code>, and
+            <code>infra/</code>.
+          </p>
+        </section>
+
+        <aside className="rounded-[2rem] border border-[#dccfb9] bg-[#f8f2e7] p-8 shadow-[0_18px_40px_rgba(30,61,89,0.05)]">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="text-brand-600 font-serif text-3xl">02</span>
+            <div>
+              <p className="text-ink-500 mb-0 text-xs font-semibold uppercase tracking-[0.18em]">
+                Contents
+              </p>
+              <h2 className="!mb-0 !mt-0 border-none pb-0">Start here</h2>
+            </div>
+          </div>
+          <div className="space-y-3">
+            {contents.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="hover:border-brand-300 hover:bg-brand-50 block rounded-[1.25rem] border border-[#dfd3c0] bg-white px-4 py-3 no-underline transition"
+              >
+                <div className="text-ink-500 text-xs font-semibold uppercase tracking-[0.18em]">
+                  {item.index}
+                </div>
+                <div className="text-ink-900 mt-1 font-serif text-xl">{item.title}</div>
+              </Link>
+            ))}
+          </div>
+        </aside>
       </div>
 
-      <hr />
+      <div className="mb-12 rounded-[2rem] border border-[#dccfb9] bg-white p-8 shadow-[0_18px_40px_rgba(30,61,89,0.06)]">
+        <div className="mb-4 flex items-center gap-3">
+          <span className="text-brand-600 font-serif text-3xl">03</span>
+          <div>
+            <p className="text-ink-500 mb-0 text-xs font-semibold uppercase tracking-[0.18em]">
+              Core capabilities
+            </p>
+            <h2 className="!mb-0 !mt-0 border-none pb-0">What ships today</h2>
+          </div>
+        </div>
 
-      {/* Quick links */}
-      <h2>Quick Links</h2>
+        <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((f) => (
+            <div
+              key={f.title}
+              className="rounded-[1.5rem] border border-[#ece2d1] bg-[#fcfaf6] p-5"
+            >
+              <div className="mb-2 text-2xl">{f.icon}</div>
+              <h3 className="text-ink-900 !mt-0 mb-1 text-base font-semibold">{f.title}</h3>
+              <p className="text-ink-600 !mb-0 text-sm">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <h2>Reference paths</h2>
       <div className="grid gap-4 sm:grid-cols-2">
         {quickLinks.map((l) => (
           <Link
             key={l.to}
             to={l.to}
-            className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 no-underline transition hover:border-cyan-300/20 hover:bg-white/[0.06]"
+            className="hover:border-brand-300 hover:bg-brand-50 group rounded-[1.5rem] border border-[#dccfb9] bg-white p-5 no-underline transition"
           >
-            <h4 className="!mt-0 mb-1 font-semibold text-cyan-300 group-hover:text-cyan-200">
+            <h4 className="text-brand-700 group-hover:text-brand-800 !mt-0 mb-1 font-semibold">
               {l.title}
             </h4>
-            <p className="!mb-0 text-sm text-slate-400">{l.desc}</p>
+            <p className="text-ink-600 !mb-0 text-sm">{l.desc}</p>
           </Link>
         ))}
       </div>
 
       <hr />
 
-      {/* Tech stack summary */}
       <h2>Technology Stack</h2>
       <table>
         <thead>
@@ -165,6 +217,13 @@ const stats = [
     value: 'WebSocket + LiveKit',
     desc: 'Text delivery, presence, voice, and video are designed to scale independently while sharing a common deployment model.',
   },
+];
+
+const contents = [
+  { index: '01', title: 'Quick Start', to: '/quick-start' },
+  { index: '02', title: 'Architecture', to: '/architecture' },
+  { index: '03', title: 'Deployment', to: '/deployment' },
+  { index: '04', title: 'Configuration', to: '/config' },
 ];
 
 const features = [
