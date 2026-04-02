@@ -1,218 +1,199 @@
 export default function FeaturesPage() {
   return (
-    <div>
-      <h1>Features</h1>
-      <p>
-        RelayForge delivers a comprehensive feature set for team communication. Below is a detailed
-        breakdown of every major capability, organised by domain.
-      </p>
+    <div className="space-y-10">
+      <div>
+        <span className="section-chip">Product surface</span>
+        <h1>Features</h1>
+        <p>
+          RelayForge combines the familiar shape of a modern community platform with self-hosted
+          deployment, open infrastructure choices, and stronger control over data ownership.
+        </p>
+      </div>
 
-      <h2>Guilds (Servers)</h2>
-      <ul>
-        <li>Create unlimited guilds, each with its own name, icon, banner, and description.</li>
-        <li>Guild owners can transfer ownership or delete the guild entirely.</li>
-        <li>
-          Invite system with short-lived, single-use, or permanent invite codes and configurable
-          max-uses.
-        </li>
-        <li>
-          Guild discovery is scoped to invite links only &mdash; no public directory by default,
-          keeping communities private.
-        </li>
-        <li>Member list with online/idle/DND/offline presence indicators.</li>
-        <li>Member nicknames per guild, independent of the global display name.</li>
-      </ul>
+      <section>
+        <h2>Feature pillars</h2>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {featurePillars.map((pillar) => (
+            <div key={pillar.title} className="docs-stat-card">
+              <p className="section-chip mb-3">{pillar.kicker}</p>
+              <p className="text-ink-900 mb-2 font-serif text-2xl">{pillar.title}</p>
+              <p className="text-ink-600 mb-0 text-sm leading-7">{pillar.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-      <h2>Channels</h2>
-      <p>Channels live inside guilds and come in several types:</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Purpose</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <code>text</code>
-            </td>
-            <td>Standard real-time chat with message history, reactions, and threads.</td>
-          </tr>
-          <tr>
-            <td>
-              <code>voice</code>
-            </td>
-            <td>Persistent voice room powered by LiveKit. Supports video and screen sharing.</td>
-          </tr>
-          <tr>
-            <td>
-              <code>announcement</code>
-            </td>
-            <td>
-              Publish-only channel. Only users with <code>SEND_MESSAGES</code> permission can post;
-              everyone else reads.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <code>forum</code>
-            </td>
-            <td>
-              Thread-first channel. Every new post creates its own thread for focused discussion.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <ul>
-        <li>Channels are grouped into categories for sidebar organisation.</li>
-        <li>
-          Per-channel permission overrides allow fine-grained access control beyond the role
-          defaults.
-        </li>
-        <li>Slow mode (rate-limit per user) can be set per channel.</li>
-        <li>
-          Channel topics are displayed in the header and can be updated by users with{' '}
-          <code>MANAGE_CHANNELS</code>.
-        </li>
-      </ul>
+      <section>
+        <h2>Guilds and channels</h2>
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div>
+            <h3>Guilds</h3>
+            <ul>
+              <li>Create unlimited guilds with their own identity, invites, and member rosters.</li>
+              <li>Owners can transfer ownership or remove the guild entirely.</li>
+              <li>Presence, nicknames, and private invite-only access keep communities scoped.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Channel types</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                {channelTypes.map((row) => (
+                  <tr key={row.type}>
+                    <td>
+                      <code>{row.type}</code>
+                    </td>
+                    <td>{row.purpose}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <ul>
+          <li>Channels can be grouped into categories for clearer navigation.</li>
+          <li>Per-channel overrides extend role defaults with more precise access rules.</li>
+          <li>
+            Topics and slow mode settings are configurable where moderation policies need them.
+          </li>
+        </ul>
+      </section>
 
-      <h2>Messaging</h2>
-      <ul>
-        <li>
-          Messages support Markdown formatting (bold, italic, strikethrough, code blocks, block
-          quotes, headers).
-        </li>
-        <li>
-          File attachments (images, videos, audio, documents) with server-side antivirus scanning
-          via ClamAV.
-        </li>
-        <li>Rich embeds auto-generated for links (Open Graph / oEmbed metadata).</li>
-        <li>Emoji reactions with both built-in Unicode emoji and custom guild emojis.</li>
-        <li>Threaded replies &mdash; reply to any message to start a sub-conversation.</li>
-        <li>Pinned messages per channel (up to 50).</li>
-        <li>Message editing and deletion with edit history tracking.</li>
-        <li>Typing indicators broadcast over WebSocket.</li>
-        <li>Unread tracking with per-channel read-state cursors.</li>
-        <li>
-          <code>@everyone</code>, <code>@here</code>, role mentions, and user mentions with
-          notification targeting.
-        </li>
-        <li>
-          Message search by keyword, author, date range, and channel (backed by PostgreSQL full-text
-          search).
-        </li>
-      </ul>
+      <section>
+        <h2>Messaging and collaboration</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {messagingGroups.map((group) => (
+            <div
+              key={group.title}
+              className="rounded-[1.5rem] border border-[#dccfb9] bg-white p-5"
+            >
+              <h3 className="!mt-0">{group.title}</h3>
+              <ul className="!mb-0">
+                {group.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
 
-      <h2>Polls</h2>
-      <ul>
-        <li>Create inline polls inside any text channel.</li>
-        <li>Single-choice or multiple-choice voting.</li>
-        <li>Optional expiration time after which the poll auto-closes.</li>
-        <li>Real-time vote count updates over WebSocket.</li>
-      </ul>
+      <section>
+        <h2>Voice, video, and encryption</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="docs-stat-card">
+            <p className="section-chip mb-3">Live communication</p>
+            <p className="text-ink-900 mb-2 font-serif text-2xl">Voice and video</p>
+            <ul className="!mb-0">
+              <li>LiveKit-powered voice channels with video and screen sharing.</li>
+              <li>Room lifecycle controlled by the API service with scoped join tokens.</li>
+              <li>Realtime participant state, mute, and deafen updates.</li>
+            </ul>
+          </div>
+          <div className="docs-stat-card">
+            <p className="section-chip mb-3">Private communication</p>
+            <p className="text-ink-900 mb-2 font-serif text-2xl">End-to-end encryption</p>
+            <ul className="!mb-0">
+              <li>X3DH key agreement plus the Double Ratchet protocol for direct messages.</li>
+              <li>Encrypted ciphertext stored on the server without plaintext visibility.</li>
+              <li>Device-level keys, pre-key bundles, and revocable sessions.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
-      <h2>Voice &amp; Video</h2>
-      <ul>
-        <li>
-          Powered by <strong>LiveKit</strong>, an open-source WebRTC SFU.
-        </li>
-        <li>
-          Join a voice channel to start audio &mdash; toggle video and screen share at any time.
-        </li>
-        <li>
-          Room lifecycle managed by the API: rooms are created on first join and cleaned up when
-          empty.
-        </li>
-        <li>JWT-based room tokens issued per user, per channel, with configurable TTL.</li>
-        <li>
-          Server-side mute and deafen controlled by users with the <code>MUTE_MEMBERS</code> /{' '}
-          <code>DEAFEN_MEMBERS</code> permission.
-        </li>
-        <li>Participant list and voice state changes broadcast in real time.</li>
-      </ul>
+      <section>
+        <h2>Operations and moderation</h2>
+        <ul>
+          <li>Kick, ban, timed ban, and lockdown workflows for fast incident response.</li>
+          <li>Keyword filters, spam controls, mention limits, and bulk purge tooling.</li>
+          <li>Comprehensive audit logging for moderation and administrative actions.</li>
+          <li>Dedicated admin console for users, guilds, and platform health.</li>
+          <li>Desktop app support through Tauri 2 with native notifications and tray behavior.</li>
+        </ul>
+      </section>
 
-      <h2>Direct Messages with End-to-End Encryption</h2>
-      <ul>
-        <li>
-          1-on-1 DM channels with full E2EE using <strong>X3DH key agreement</strong> and the{' '}
-          <strong>Double Ratchet</strong> protocol.
-        </li>
-        <li>
-          The server never has access to plaintext DM content &mdash; it stores only encrypted
-          ciphertext.
-        </li>
-        <li>
-          Each device generates its own identity key pair, signed pre-key, and a batch of one-time
-          pre-keys.
-        </li>
-        <li>
-          Key bundles are uploaded to the server so initiating parties can perform the handshake
-          asynchronously.
-        </li>
-        <li>Group DM channels (up to 10 participants) with pairwise E2EE sessions.</li>
-        <li>
-          Device management: users can view and revoke devices, which invalidates associated
-          sessions.
-        </li>
-      </ul>
-
-      <h2>Moderation</h2>
-      <ul>
-        <li>Kick and ban members with optional reason and audit log entry.</li>
-        <li>Timed bans with automatic expiry.</li>
-        <li>
-          Auto-moderation rules: keyword filters, spam detection, link blocking, mention limits.
-        </li>
-        <li>
-          Message purge &mdash; bulk delete up to 100 messages from a channel or by a specific user.
-        </li>
-        <li>
-          Channel lockdown: temporarily revoke <code>SEND_MESSAGES</code> for @everyone.
-        </li>
-        <li>
-          Comprehensive audit log recording who did what and when, filterable by action type and
-          actor.
-        </li>
-      </ul>
-
-      <h2>Admin Console</h2>
-      <ul>
-        <li>Dedicated web application for platform administrators.</li>
-        <li>Dashboard with system metrics: total users, guilds, messages, active connections.</li>
-        <li>
-          User management: search, view profile, disable/enable accounts, force password reset.
-        </li>
-        <li>
-          Guild management: list all guilds, view member counts, force-delete guilds violating
-          terms.
-        </li>
-        <li>
-          System health overview: API, realtime, media service status, database connections, cache
-          hit rates.
-        </li>
-        <li>Feature flags and global settings management.</li>
-      </ul>
-
-      <h2>Desktop Application</h2>
-      <ul>
-        <li>
-          Built with <strong>Tauri 2</strong>, wrapping the shared web client for native OS
-          integration with a smaller footprint than Electron.
-        </li>
-        <li>System tray icon with unread badge count.</li>
-        <li>Native desktop notifications with click-to-focus.</li>
-        <li>Auto-update via Tauri's updater integration.</li>
-        <li>Supports macOS, Windows, and Linux (AppImage / deb / rpm).</li>
-      </ul>
-
-      <h2>Internationalisation</h2>
-      <p>
-        The web and desktop clients use <code>react-i18next</code> with JSON translation bundles.
-        English is the default language, with the translation framework ready for
-        community-contributed locales. All user-facing strings are extracted into namespace-based
-        translation files under <code>src/i18n/locales/</code>.
-      </p>
+      <section>
+        <h2>Internationalization</h2>
+        <p>
+          The web and desktop clients use <code>react-i18next</code> with JSON translation bundles.
+          English is the default locale, but the translation layer is already structured for
+          additional community-contributed languages.
+        </p>
+      </section>
     </div>
   );
 }
+
+const featurePillars = [
+  {
+    kicker: 'Communities',
+    title: 'Guild-based structure',
+    desc: 'Organize teams and communities with roles, channels, categories, and invite-only membership.',
+  },
+  {
+    kicker: 'Conversation',
+    title: 'Modern messaging',
+    desc: 'Markdown, attachments, reactions, threads, mentions, search, and read-state tracking are built in.',
+  },
+  {
+    kicker: 'Realtime',
+    title: 'Voice and presence',
+    desc: 'Persistent websocket delivery plus LiveKit-backed voice and video channels keep communication fast and synchronized.',
+  },
+  {
+    kicker: 'Control',
+    title: 'Self-hosted operations',
+    desc: 'Administrative tooling, moderation, encryption, and deployable infrastructure stay under your control.',
+  },
+];
+
+const channelTypes = [
+  { type: 'text', purpose: 'Standard realtime chat with history, reactions, and threads.' },
+  { type: 'voice', purpose: 'Persistent voice room with video and screen sharing.' },
+  { type: 'announcement', purpose: 'Broadcast-only channel for read-mostly communications.' },
+  { type: 'forum', purpose: 'Thread-first space for structured topic discussions.' },
+];
+
+const messagingGroups = [
+  {
+    title: 'Message composition',
+    items: [
+      'Markdown formatting with code blocks, quotes, and rich text basics.',
+      'Attachments for images, video, audio, and documents.',
+      'Auto-generated link previews and embeds.',
+      'Emoji reactions with Unicode and custom guild assets.',
+    ],
+  },
+  {
+    title: 'Conversation mechanics',
+    items: [
+      'Replies and thread-based sub-conversations.',
+      'Pinned messages and edit or delete workflows.',
+      'Typing indicators over websocket.',
+      'Mentions for users, roles, @everyone, and @here.',
+    ],
+  },
+  {
+    title: 'Discovery and retention',
+    items: [
+      'Unread tracking with per-channel read-state cursors.',
+      'PostgreSQL-backed message search across author, channel, and keyword.',
+      'Inline polls with live vote updates and optional expiry.',
+    ],
+  },
+  {
+    title: 'Administrative surfaces',
+    items: [
+      'Admin dashboards for users, guilds, and service health.',
+      'Feature flags and global settings management.',
+      'Cross-platform desktop packaging through Tauri 2.',
+    ],
+  },
+];
