@@ -14,18 +14,6 @@ A self-hostable, open-source multi-user chat platform with guilds, channels, dir
 - **Self-hostable** -- one-command Docker deployment for direct use, plus Kubernetes/Helm/Terraform for advanced setups
 - **Observable** -- OpenTelemetry, Prometheus, structured logging, health checks
 
-## Tech Stack
-
-| Layer          | Technology                                  |
-| -------------- | ------------------------------------------- |
-| Backend        | Go (modular monolith)                       |
-| Database       | PostgreSQL 16                               |
-| Cache/PubSub   | Valkey (Redis-compatible)                   |
-| Object Storage | S3-compatible (MinIO, AWS S3, etc.)         |
-| Voice/Video    | LiveKit (self-hosted)                       |
-| Frontend       | React, TypeScript, Tailwind CSS             |
-| Desktop        | Tauri 2                                     |
-| Deployment     | Docker Compose, Kubernetes, Helm, Terraform |
 
 ## Quick Start
 
