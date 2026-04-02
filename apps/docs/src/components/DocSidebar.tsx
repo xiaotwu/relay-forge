@@ -72,14 +72,20 @@ const sections: NavSection[] = [
 
 export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) {
   return (
-    <nav className="space-y-8 px-5 py-6">
+    <nav className="space-y-8 px-4 py-8">
+      <div className="rounded-[1.5rem] border border-[#dccfb9] bg-white/80 p-4 shadow-[0_14px_32px_rgba(30,61,89,0.04)]">
+        <p className="editorial-meta mb-2">GitHub Pages</p>
+        <p className="text-ink-900 mb-2 font-serif text-xl">RelayForge handbook</p>
+        <p className="text-ink-600 mb-0 text-sm leading-6">
+          A guided table of contents for operators, contributors, and self-hosters.
+        </p>
+      </div>
+
       {sections.map((section) => (
         <div key={section.title}>
           <div className="mb-3 flex items-center gap-3 px-3">
-            <span className="text-brand-600 font-serif text-xl">{section.index}</span>
-            <h3 className="text-ink-500 text-[11px] font-semibold uppercase tracking-[0.18em]">
-              {section.title}
-            </h3>
+            <span className="font-serif text-xl text-[#b58a59]">{section.index}</span>
+            <h3 className="editorial-meta">{section.title}</h3>
           </div>
           <ul className="space-y-1">
             {section.items.map((item) => (
@@ -89,10 +95,10 @@ export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) 
                   end={item.to === '/'}
                   onClick={onNavClick}
                   className={({ isActive }) =>
-                    `block rounded-xl px-3 py-2 text-sm transition ${
+                    `block rounded-[1rem] px-3 py-2.5 text-sm transition ${
                       isActive
-                        ? 'bg-brand-50 text-brand-800 font-medium shadow-[inset_0_0_0_1px_rgba(250,152,25,0.18)]'
-                        : 'text-ink-600 hover:text-ink-900 hover:bg-white'
+                        ? 'text-ink-900 bg-white font-medium shadow-[inset_0_0_0_1px_rgba(181,138,89,0.22),0_12px_24px_rgba(30,61,89,0.05)]'
+                        : 'text-ink-600 hover:text-ink-900 hover:bg-white/85'
                     }`
                   }
                 >
@@ -103,11 +109,12 @@ export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) 
           </ul>
         </div>
       ))}
-      <div className="rounded-[1.5rem] border border-[#dccfb9] bg-white p-4">
-        <p className="text-ink-900 mb-2 font-serif text-lg">GitHub Pages</p>
-        <p className="text-ink-600 mb-0 text-sm leading-6">
-          This site is published from <code>apps/docs</code> and styled to mirror your editorial
-          Figma site while keeping the RelayForge docs structure intact.
+
+      <div className="rounded-[1.5rem] border border-[#dccfb9] bg-[#f5eee3] p-4">
+        <p className="editorial-meta mb-2">Source</p>
+        <p className="text-ink-700 mb-0 text-sm leading-6">
+          Published from <code>apps/docs</code> and kept aligned with the monorepo&apos;s
+          <code>infra/</code>, <code>services/</code>, and <code>apps/</code> structure.
         </p>
       </div>
     </nav>
