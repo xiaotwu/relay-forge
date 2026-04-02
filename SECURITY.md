@@ -6,7 +6,7 @@ If you discover a security vulnerability in RelayForge, please report it respons
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Instead, email: security@relayforge.example.com
+Instead, email: ...
 
 Include:
 

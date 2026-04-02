@@ -127,7 +127,7 @@ RelayForge uses a **modular monolith** architecture for the API service, with se
 
 ## Documentation
 
-See the [docs site](https://relay-forge.github.io/relay-forge/) or browse the `docs/` directory.
+See the [docs site](https://xiaotwu.github.io/relay-forge/) or browse the `docs/` directory.
 
 ## Contributing
 
