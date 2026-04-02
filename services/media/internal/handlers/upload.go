@@ -63,12 +63,13 @@ func (h *UploadHandler) CreatePresignedUpload(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(presignResponse{
+	if err := writeJSON(w, http.StatusOK, presignResponse{
 		UploadURL: url,
 		FileID:    fileID,
 		Key:       key,
-	})
+	}); err != nil {
+		http.Error(w, `{"error":"failed to write response"}`, http.StatusInternalServerError)
+	}
 }
 
 type completeRequest struct {
@@ -92,12 +93,13 @@ func (h *UploadHandler) CompleteUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
+	if err := writeJSON(w, http.StatusOK, map[string]string{
 		"file_id": req.FileID,
 		"url":     downloadURL,
 		"status":  "completed",
-	})
+	}); err != nil {
+		http.Error(w, `{"error":"failed to write response"}`, http.StatusInternalServerError)
+	}
 }
 
 func (h *UploadHandler) GetFile(w http.ResponseWriter, r *http.Request) {
