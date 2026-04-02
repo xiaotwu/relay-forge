@@ -28,7 +28,7 @@ export default function QuickStartPage() {
 
       <h2>Step 1 &mdash; Clone the Repository</h2>
       <pre>
-        <code>{`git clone https://github.com/your-org/relay-forge.git
+        <code>{`git clone https://github.com/xiaotwu/relay-forge.git
 cd relay-forge`}</code>
       </pre>
 
@@ -52,8 +52,9 @@ cd relay-forge`}</code>
 make deploy-up`}</code>
       </pre>
       <p>
-        This starts the full single-host stack: RelayForge services, PostgreSQL, Valkey, MinIO,
-        and LiveKit. The defaults in <code>.env</code> are enough for a local self-hosted trial.
+        This starts the full single-host stack: RelayForge services, PostgreSQL, Valkey, MinIO, and
+        LiveKit. The defaults in <code>.env</code> are enough for a local self-hosted trial, and the
+        web app is published on the same <code>3000</code> port used by the native Vite dev flow.
       </p>
       <table>
         <thead>

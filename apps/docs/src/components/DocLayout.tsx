@@ -6,12 +6,13 @@ export default function DocLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-gray-800 bg-gray-950/80 backdrop-blur-sm">
-        <div className="flex h-14 items-center px-4 lg:px-6">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-slate-950 text-slate-100">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.18),transparent_45%),radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.14),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.95),rgba(2,6,23,1))]" />
+
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-[1600px] items-center px-4 lg:px-6">
           <button
-            className="mr-3 rounded-md p-1.5 text-gray-400 hover:bg-gray-800 hover:text-gray-200 lg:hidden"
+            className="mr-3 rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:bg-white/10 hover:text-white lg:hidden"
             onClick={() => setSidebarOpen(!sidebarOpen)}
             aria-label="Toggle sidebar"
           >
@@ -24,20 +25,26 @@ export default function DocLayout() {
               />
             </svg>
           </button>
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-3">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 via-cyan-300 to-emerald-300 text-sm font-black text-slate-950 shadow-lg shadow-cyan-500/20">
+              RF
+            </span>
             <span className="text-xl font-bold text-white">
               Relay<span className="text-brand-400">Forge</span>
             </span>
-            <span className="bg-brand-600/20 text-brand-300 rounded px-2 py-0.5 text-xs font-medium">
+            <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
               docs
             </span>
           </Link>
           <div className="flex-1" />
+          <div className="mr-3 hidden rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300 md:block">
+            Self-hosted chat, voice, and admin tooling
+          </div>
           <a
-            href="https://github.com/your-org/relay-forge"
+            href="https://github.com/xiaotwu/relay-forge"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md p-1.5 text-gray-400 transition hover:bg-gray-800 hover:text-gray-200"
+            className="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
             aria-label="GitHub"
           >
             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -47,8 +54,7 @@ export default function DocLayout() {
         </div>
       </header>
 
-      <div className="flex flex-1">
-        {/* Mobile sidebar overlay */}
+      <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-1">
         {sidebarOpen && (
           <div
             className="fixed inset-0 z-40 bg-black/60 lg:hidden"
@@ -56,19 +62,24 @@ export default function DocLayout() {
           />
         )}
 
-        {/* Sidebar */}
         <aside
-          className={`fixed top-14 z-40 h-[calc(100vh-3.5rem)] w-64 overflow-y-auto border-r border-gray-800 bg-gray-950 transition-transform lg:sticky lg:translate-x-0 ${
+          className={`fixed top-16 z-40 h-[calc(100vh-4rem)] w-72 overflow-y-auto border-r border-white/10 bg-slate-950/95 backdrop-blur-xl transition-transform lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:translate-x-0 ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
           <DocSidebar onNavClick={() => setSidebarOpen(false)} />
         </aside>
 
-        {/* Main content */}
-        <main className="min-w-0 flex-1 px-6 py-8 lg:px-12 lg:py-10">
-          <div className="prose-dark mx-auto max-w-4xl">
-            <Outlet />
+        <main className="min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
+          <div className="mx-auto max-w-5xl rounded-[2rem] border border-white/10 bg-slate-950/55 p-6 shadow-[0_24px_80px_rgba(2,6,23,0.45)] backdrop-blur md:p-8 lg:p-10">
+            <div className="prose-dark mx-auto max-w-4xl">
+              <div className="mb-8 rounded-2xl border border-cyan-400/15 bg-gradient-to-r from-cyan-400/10 via-sky-400/5 to-emerald-400/10 px-4 py-3 text-sm text-slate-300">
+                RelayForge documentation is kept in sync with the monorepo layout under{' '}
+                <code>apps/</code>, <code>services/</code>, <code>packages/</code>, and{' '}
+                <code>infra/</code>.
+              </div>
+              <Outlet />
+            </div>
           </div>
         </main>
       </div>

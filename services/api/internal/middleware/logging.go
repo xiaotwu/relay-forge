@@ -9,12 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// requestIDKey is the context key for the request ID.
 const requestIDHeader = "X-Request-ID"
-
-type requestIDKeyType int
-
-const requestIDKey requestIDKeyType = 0
 
 // RequestID returns a chi middleware that generates a unique request ID for
 // each incoming request. If the client provides an X-Request-ID header, it is

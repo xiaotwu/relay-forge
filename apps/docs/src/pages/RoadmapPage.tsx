@@ -300,8 +300,8 @@ export default function RoadmapPage() {
           bots using the planned bot framework that integrate with any AI service externally.
         </li>
         <li>
-          <strong>Desktop runtime:</strong> The desktop app uses Tauri 2 for smaller binary size
-          and lower resource consumption. An Electron-based client is not planned.
+          <strong>Desktop runtime:</strong> The desktop app uses Tauri 2 for smaller binary size and
+          lower resource consumption. An Electron-based client is not planned.
         </li>
         <li>
           <strong>Proprietary cloud offering:</strong> RelayForge will not offer a hosted SaaS

@@ -234,8 +234,8 @@ export default function ArchitecturePage() {
         Authentication uses Argon2id password hashing with OWASP-aligned parameters, JWT
         access/refresh token pairs with HMAC-SHA256 signing, and optional TOTP-based two-factor
         authentication. All inter-service communication stays within the internal network. External
-        traffic is terminated at a reverse proxy (nginx / Caddy / cloud load balancer) which
-        handles TLS.
+        traffic is terminated at a reverse proxy (nginx / Caddy / cloud load balancer) which handles
+        TLS.
       </p>
       <p>
         The permission model is a 32-bit bitfield system attached to roles. Each guild member can

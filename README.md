@@ -16,15 +16,15 @@ A self-hostable, open-source multi-user chat platform with guilds, channels, dir
 
 ## Tech Stack
 
-| Layer          | Technology                          |
-| -------------- | ----------------------------------- |
-| Backend        | Go (modular monolith)               |
-| Database       | PostgreSQL 16                       |
-| Cache/PubSub   | Valkey (Redis-compatible)           |
-| Object Storage | S3-compatible (MinIO, AWS S3, etc.) |
-| Voice/Video    | LiveKit (self-hosted)               |
-| Frontend       | React, TypeScript, Tailwind CSS     |
-| Desktop        | Tauri 2                             |
+| Layer          | Technology                                  |
+| -------------- | ------------------------------------------- |
+| Backend        | Go (modular monolith)                       |
+| Database       | PostgreSQL 16                               |
+| Cache/PubSub   | Valkey (Redis-compatible)                   |
+| Object Storage | S3-compatible (MinIO, AWS S3, etc.)         |
+| Voice/Video    | LiveKit (self-hosted)                       |
+| Frontend       | React, TypeScript, Tailwind CSS             |
+| Desktop        | Tauri 2                                     |
 | Deployment     | Docker Compose, Kubernetes, Helm, Terraform |
 
 ## Quick Start
@@ -71,7 +71,8 @@ make deploy-migrate
 
 The default deployment stack is now self-contained for single-host usage: it brings up PostgreSQL,
 Valkey, MinIO, LiveKit, the API, realtime, media, worker, and web services together from
-`infra/docker/docker-compose.yml`.
+`infra/docker/docker-compose.yml`. The self-hosted web entrypoint is published on `http://localhost:3000`,
+matching the web app's Vite development port to avoid accidental cross-origin and port drift during setup.
 
 ## Project Structure
 

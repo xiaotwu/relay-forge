@@ -121,7 +121,7 @@ export default function ConfigReferencePage() {
               Comma-separated list of allowed CORS origins. Must include the web client's URL.
             </td>
             <td>
-              <code>http://localhost:3000,http://localhost:5173,http://localhost:5174</code>
+              <code>http://localhost:3000,http://localhost:5174</code>
             </td>
             <td>Yes (prod)</td>
           </tr>
@@ -434,19 +434,6 @@ export default function ConfigReferencePage() {
             </td>
             <td>
               <code>7d</code>
-            </td>
-            <td>No</td>
-          </tr>
-          <tr>
-            <td>
-              <code>AUTH_BCRYPT_COST</code>
-            </td>
-            <td>
-              Legacy configuration field retained for backward compatibility. The current password
-              hashing implementation uses Argon2id, so this value is presently ignored.
-            </td>
-            <td>
-              <code>12</code>
             </td>
             <td>No</td>
           </tr>

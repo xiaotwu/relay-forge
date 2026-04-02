@@ -55,7 +55,7 @@ relayforge.example.com {
     }
 
     # Web app (SPA) - catch-all
-    reverse_proxy web:3000
+    reverse_proxy web:80
 
     # Request body size limit (50 MB)
     request_body {

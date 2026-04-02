@@ -3,35 +3,45 @@ import { Link } from 'react-router-dom';
 export default function HomePage() {
   return (
     <div>
-      {/* Hero */}
-      <div className="mb-12 text-center">
-        <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-white">
+      <div className="mb-14 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(6,182,212,0.18),rgba(2,6,23,0.15)_40%,rgba(16,185,129,0.14))] p-8 md:p-10">
+        <div className="mb-4 inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
+          Self-hosted collaboration stack
+        </div>
+        <h1 className="mb-5 max-w-3xl text-5xl font-extrabold tracking-tight text-white md:text-6xl">
           Relay<span className="text-brand-400">Forge</span>
         </h1>
-        <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-400">
-          An open-source, self-hosted team communication platform inspired by Discord. Guilds,
-          channels, real-time messaging, voice and video, end-to-end encrypted DMs, and a full admin
-          console &mdash; all under your control.
+        <p className="max-w-3xl text-lg leading-8 text-slate-200 md:text-xl">
+          An open-source communication platform for teams that want Discord-style UX without giving
+          away control of infrastructure, storage, or operational policy.
         </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
+        <div className="mt-8 flex flex-wrap gap-4">
           <Link
             to="/quick-start"
-            className="bg-brand-600 hover:bg-brand-500 rounded-lg px-6 py-2.5 font-medium text-white transition"
+            className="rounded-xl bg-cyan-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300"
           >
             Quick Start
           </Link>
           <Link
             to="/features"
-            className="rounded-lg border border-gray-700 px-6 py-2.5 font-medium text-gray-300 transition hover:border-gray-500 hover:text-white"
+            className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
           >
             Explore Features
           </Link>
         </div>
+
+        <div className="docs-hero-grid mt-10">
+          {stats.map((stat) => (
+            <div key={stat.label} className="docs-stat-card">
+              <div className="mb-2 text-sm uppercase tracking-[0.16em] text-slate-400">
+                {stat.label}
+              </div>
+              <div className="text-2xl font-bold text-white">{stat.value}</div>
+              <p className="!mb-0 mt-2 text-sm text-slate-300">{stat.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <hr />
-
-      {/* Feature highlights */}
       <h2>Why RelayForge?</h2>
       <p>
         Existing hosted chat platforms require trusting a third party with all of your
@@ -41,10 +51,13 @@ export default function HomePage() {
 
       <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((f) => (
-          <div key={f.title} className="rounded-lg border border-gray-800 bg-gray-900/50 p-5">
+          <div
+            key={f.title}
+            className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_14px_40px_rgba(15,23,42,0.25)]"
+          >
             <div className="mb-2 text-2xl">{f.icon}</div>
             <h3 className="!mt-0 mb-1 text-base font-semibold text-white">{f.title}</h3>
-            <p className="!mb-0 text-sm text-gray-400">{f.desc}</p>
+            <p className="!mb-0 text-sm text-slate-400">{f.desc}</p>
           </div>
         ))}
       </div>
@@ -58,12 +71,12 @@ export default function HomePage() {
           <Link
             key={l.to}
             to={l.to}
-            className="hover:border-brand-600/40 group rounded-lg border border-gray-800 bg-gray-900/30 p-4 no-underline transition hover:bg-gray-900/60"
+            className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 no-underline transition hover:border-cyan-300/20 hover:bg-white/[0.06]"
           >
-            <h4 className="text-brand-400 group-hover:text-brand-300 !mt-0 mb-1 font-semibold">
+            <h4 className="!mt-0 mb-1 font-semibold text-cyan-300 group-hover:text-cyan-200">
               {l.title}
             </h4>
-            <p className="!mb-0 text-sm text-gray-500">{l.desc}</p>
+            <p className="!mb-0 text-sm text-slate-400">{l.desc}</p>
           </Link>
         ))}
       </div>
@@ -135,6 +148,24 @@ export default function HomePage() {
     </div>
   );
 }
+
+const stats = [
+  {
+    label: 'Deploy shape',
+    value: 'Single host first',
+    desc: 'The default self-hosted path brings up the full stack from infra/docker with one Compose entrypoint.',
+  },
+  {
+    label: 'Runtime split',
+    value: 'Apps + Services',
+    desc: 'Frontend apps, Go services, shared packages, and infrastructure all live in clearly separated monorepo roots.',
+  },
+  {
+    label: 'Realtime stack',
+    value: 'WebSocket + LiveKit',
+    desc: 'Text delivery, presence, voice, and video are designed to scale independently while sharing a common deployment model.',
+  },
+];
 
 const features = [
   {

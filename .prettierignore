@@ -9,3 +9,4 @@ coverage
 go.sum
 go.work.sum
 deploy/helm/**/templates/**
+infra/helm/**/templates/**

@@ -87,7 +87,7 @@ services:
       mc anonymous set download local/${S3_BUCKET_EMOJI:-relay-emoji};
       echo 'Buckets initialized';
       "
-    restart: "no"
+    restart: 'no'
 
   livekit:
     image: livekit/livekit-server:latest

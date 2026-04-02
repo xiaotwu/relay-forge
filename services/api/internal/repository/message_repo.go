@@ -185,7 +185,9 @@ func (r *MessageRepository) Pin(ctx context.Context, channelID, messageID, pinne
 	if err != nil {
 		return apperrors.Internal("failed to begin transaction")
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
 
 	result, err := tx.Exec(ctx, `
 		UPDATE messages SET is_pinned = true WHERE id = $1 AND channel_id = $2 AND is_deleted = false`,
@@ -215,7 +217,9 @@ func (r *MessageRepository) Unpin(ctx context.Context, channelID, messageID uuid
 	if err != nil {
 		return apperrors.Internal("failed to begin transaction")
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
 
 	result, err := tx.Exec(ctx, `
 		UPDATE messages SET is_pinned = false WHERE id = $1 AND channel_id = $2`,

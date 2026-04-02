@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"net/http"
@@ -379,13 +378,4 @@ func (h *AuthHandler) createSession(r *http.Request, userID uuid.UUID) (*tokenRe
 func hashToken(token string) string {
 	h := sha256.Sum256([]byte(token))
 	return hex.EncodeToString(h[:])
-}
-
-// generateRandomToken returns a cryptographically secure random hex string.
-func generateRandomToken(n int) (string, error) {
-	b := make([]byte, n)
-	if _, err := rand.Read(b); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(b), nil
 }

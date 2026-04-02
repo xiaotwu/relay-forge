@@ -10,7 +10,7 @@
   }
 
   body {
-    @apply bg-gray-950 text-gray-200;
+    @apply bg-slate-950 text-slate-200 antialiased;
   }
 
   ::-webkit-scrollbar {
@@ -18,41 +18,41 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-900;
+    @apply bg-slate-900;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply rounded bg-gray-700 hover:bg-gray-600;
+    @apply rounded bg-slate-700 hover:bg-slate-600;
   }
 }
 
 @layer components {
   .prose-dark h1 {
-    @apply mb-6 text-4xl font-bold text-white;
+    @apply mb-6 text-4xl font-bold tracking-tight text-white md:text-5xl;
   }
 
   .prose-dark h2 {
-    @apply mb-4 mt-10 border-b border-gray-800 pb-2 text-2xl font-semibold text-white;
+    @apply mb-4 mt-12 border-b border-white/10 pb-3 text-2xl font-semibold tracking-tight text-white;
   }
 
   .prose-dark h3 {
-    @apply mb-3 mt-8 text-xl font-semibold text-gray-100;
+    @apply mb-3 mt-8 text-xl font-semibold text-slate-100;
   }
 
   .prose-dark h4 {
-    @apply mb-2 mt-6 text-lg font-medium text-gray-200;
+    @apply mb-2 mt-6 text-lg font-medium text-slate-200;
   }
 
   .prose-dark p {
-    @apply mb-4 leading-relaxed text-gray-300;
+    @apply mb-4 leading-8 text-slate-300;
   }
 
   .prose-dark ul {
-    @apply mb-4 ml-6 list-disc space-y-1 text-gray-300;
+    @apply mb-5 ml-6 list-disc space-y-2 text-slate-300;
   }
 
   .prose-dark ol {
-    @apply mb-4 ml-6 list-decimal space-y-1 text-gray-300;
+    @apply mb-5 ml-6 list-decimal space-y-2 text-slate-300;
   }
 
   .prose-dark li {
@@ -60,58 +60,66 @@
   }
 
   .prose-dark pre {
-    @apply mb-4 overflow-x-auto rounded-lg border border-gray-800 bg-gray-900 p-4 text-sm;
+    @apply mb-5 overflow-x-auto rounded-2xl border border-white/10 bg-slate-900/90 p-4 text-sm shadow-inner;
   }
 
   .prose-dark code {
-    @apply text-brand-300 rounded bg-gray-800 px-1.5 py-0.5 font-mono text-sm;
+    @apply rounded bg-white/5 px-1.5 py-0.5 font-mono text-sm text-cyan-200;
   }
 
   .prose-dark pre code {
-    @apply bg-transparent p-0 text-gray-200;
+    @apply bg-transparent p-0 text-slate-200;
   }
 
   .prose-dark table {
-    @apply mb-4 w-full border-collapse text-sm;
+    @apply mb-6 w-full border-separate border-spacing-0 overflow-hidden rounded-2xl border border-white/10 text-sm;
   }
 
   .prose-dark thead {
-    @apply border-b border-gray-700;
+    @apply bg-white/5;
   }
 
   .prose-dark th {
-    @apply px-4 py-2 text-left font-semibold text-gray-200;
+    @apply px-4 py-3 text-left font-semibold text-slate-100;
   }
 
   .prose-dark td {
-    @apply border-b border-gray-800 px-4 py-2 text-gray-300;
+    @apply border-t border-white/10 px-4 py-3 text-slate-300;
   }
 
   .prose-dark tr:hover td {
-    @apply bg-gray-900/50;
+    @apply bg-white/[0.03];
   }
 
   .prose-dark blockquote {
-    @apply border-brand-500 mb-4 border-l-4 bg-gray-900/50 py-2 pl-4 italic text-gray-400;
+    @apply mb-5 rounded-r-2xl border-l-4 border-cyan-400 bg-cyan-400/5 py-3 pl-4 italic text-slate-300;
   }
 
   .prose-dark a {
-    @apply text-brand-400 decoration-brand-400/30 hover:decoration-brand-400 underline transition;
+    @apply text-cyan-300 underline decoration-cyan-400/30 transition hover:text-cyan-200 hover:decoration-cyan-300;
   }
 
   .prose-dark hr {
-    @apply my-8 border-gray-800;
+    @apply my-10 border-white/10;
   }
 
   .info-box {
-    @apply mb-4 rounded-lg border border-blue-800/50 bg-blue-950/30 p-4 text-blue-200;
+    @apply mb-5 rounded-2xl border border-sky-400/20 bg-sky-400/10 p-4 text-sky-100;
   }
 
   .warning-box {
-    @apply mb-4 rounded-lg border border-yellow-800/50 bg-yellow-950/30 p-4 text-yellow-200;
+    @apply mb-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-amber-100;
   }
 
   .danger-box {
-    @apply mb-4 rounded-lg border border-red-800/50 bg-red-950/30 p-4 text-red-200;
+    @apply mb-5 rounded-2xl border border-rose-400/20 bg-rose-400/10 p-4 text-rose-100;
+  }
+
+  .docs-hero-grid {
+    @apply grid gap-4 md:grid-cols-3;
+  }
+
+  .docs-stat-card {
+    @apply rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.25)];
   }
 }

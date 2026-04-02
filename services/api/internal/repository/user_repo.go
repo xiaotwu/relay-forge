@@ -25,7 +25,9 @@ func (r *UserRepository) Create(ctx context.Context, user *models.User, password
 	if err != nil {
 		return apperrors.Internal("failed to begin transaction")
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
 
 	_, err = tx.Exec(ctx, `
 		INSERT INTO users (id, username, display_name, email, avatar_url, banner_url, bio, status, custom_status, is_bot, is_verified, is_disabled, locale, created_at, updated_at)

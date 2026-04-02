@@ -62,13 +62,12 @@ func (c ValkeyConfig) Addr() string {
 }
 
 type AuthConfig struct {
-	JWTSecret        string
-	AccessTTL        time.Duration
-	RefreshTTL       time.Duration
-	BcryptCost       int
-	PasswordMinLen   int
+	JWTSecret         string
+	AccessTTL         time.Duration
+	RefreshTTL        time.Duration
+	PasswordMinLen    int
 	MaxDevicesPerUser int
-	TOTPIssuer       string
+	TOTPIssuer        string
 }
 
 type SMTPConfig struct {
@@ -108,9 +107,9 @@ type AntivirusConfig struct {
 }
 
 type UploadConfig struct {
-	MaxFileSize  int64
-	AllowedMIME  string
-	ChunkSize    int64
+	MaxFileSize int64
+	AllowedMIME string
+	ChunkSize   int64
 }
 
 type RateLimitConfig struct {
@@ -139,7 +138,7 @@ func Load() (*Config, error) {
 		LogLevel:  getEnv("RELAY_LOG_LEVEL", "debug"),
 		LogFormat: getEnv("RELAY_LOG_FORMAT", "console"),
 		CORS: CORSConfig{
-			Origins: splitCSV(getEnv("API_CORS_ORIGINS", "http://localhost:3000,http://localhost:5173,http://localhost:5174")),
+			Origins: splitCSV(getEnv("API_CORS_ORIGINS", "http://localhost:3000,http://localhost:5174")),
 		},
 		Database: DatabaseConfig{
 			Host:            getEnv("DB_HOST", "localhost"),
@@ -160,13 +159,12 @@ func Load() (*Config, error) {
 			PoolSize: getEnvInt("VALKEY_POOL_SIZE", 10),
 		},
 		Auth: AuthConfig{
-			JWTSecret:        getEnv("AUTH_JWT_SECRET", "change-me-in-production"),
-			AccessTTL:        getEnvDuration("AUTH_JWT_ACCESS_TTL", 15*time.Minute),
-			RefreshTTL:       getEnvDuration("AUTH_JWT_REFRESH_TTL", 7*24*time.Hour),
-			BcryptCost:       getEnvInt("AUTH_BCRYPT_COST", 12),
-			PasswordMinLen:   getEnvInt("AUTH_PASSWORD_MIN_LENGTH", 8),
+			JWTSecret:         getEnv("AUTH_JWT_SECRET", "change-me-in-production"),
+			AccessTTL:         getEnvDuration("AUTH_JWT_ACCESS_TTL", 15*time.Minute),
+			RefreshTTL:        getEnvDuration("AUTH_JWT_REFRESH_TTL", 7*24*time.Hour),
+			PasswordMinLen:    getEnvInt("AUTH_PASSWORD_MIN_LENGTH", 8),
 			MaxDevicesPerUser: getEnvInt("AUTH_MAX_DEVICES_PER_USER", 10),
-			TOTPIssuer:       getEnv("AUTH_TOTP_ISSUER", "RelayForge"),
+			TOTPIssuer:        getEnv("AUTH_TOTP_ISSUER", "RelayForge"),
 		},
 		SMTP: SMTPConfig{
 			Host:     getEnv("SMTP_HOST", "localhost"),

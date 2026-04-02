@@ -65,13 +65,13 @@ const sections: NavSection[] = [
 
 export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) {
   return (
-    <nav className="space-y-6 px-4 py-6">
+    <nav className="space-y-8 px-4 py-6">
       {sections.map((section) => (
         <div key={section.title}>
-          <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <h3 className="mb-3 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
             {section.title}
           </h3>
-          <ul className="space-y-0.5">
+          <ul className="space-y-1">
             {section.items.map((item) => (
               <li key={item.to}>
                 <NavLink
@@ -79,10 +79,10 @@ export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) 
                   end={item.to === '/'}
                   onClick={onNavClick}
                   className={({ isActive }) =>
-                    `block rounded-md px-3 py-1.5 text-sm transition-colors ${
+                    `block rounded-xl px-3 py-2 text-sm transition ${
                       isActive
-                        ? 'bg-brand-600/20 text-brand-400 font-medium'
-                        : 'text-gray-400 hover:bg-gray-800/50 hover:text-gray-200'
+                        ? 'bg-gradient-to-r from-cyan-400/15 to-emerald-400/10 font-medium text-cyan-200 shadow-[inset_0_0_0_1px_rgba(103,232,249,0.14)]'
+                        : 'text-slate-400 hover:bg-white/5 hover:text-slate-100'
                     }`
                   }
                 >

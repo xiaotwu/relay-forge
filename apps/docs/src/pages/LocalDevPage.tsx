@@ -81,7 +81,7 @@ export default function LocalDevPage() {
 
       <h2>Step 1 &mdash; Clone and Configure</h2>
       <pre>
-        <code>{`git clone https://github.com/your-org/relay-forge.git
+        <code>{`git clone https://github.com/xiaotwu/relay-forge.git
 cd relay-forge
 cp .env.example .env`}</code>
       </pre>
@@ -260,7 +260,7 @@ npm run build:packages
 make dev-web`}</code>
       </pre>
       <p>
-        The web client starts on <code>http://localhost:5173</code> with Vite's HMR. Changes to
+        The web client starts on <code>http://localhost:3000</code> with Vite's HMR. Changes to
         React components are reflected instantly without a full page reload.
       </p>
 

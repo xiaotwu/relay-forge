@@ -33,7 +33,7 @@ export default function DeploymentPage() {
       <h3>Step 2 &mdash; Configure Environment Variables</h3>
       <pre>
         <code>{`# Clone the repository
-git clone https://github.com/your-org/relay-forge.git
+git clone https://github.com/xiaotwu/relay-forge.git
 cd relay-forge
 
 # Create and edit the production environment file
