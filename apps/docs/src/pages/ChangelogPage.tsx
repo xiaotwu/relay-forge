@@ -1,101 +1,69 @@
 export default function ChangelogPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
-        <h1 className="text-rf-primary text-3xl font-bold">Changelog</h1>
-        <p className="text-rf-secondary mt-2">
-          All notable changes to RelayForge will be documented here. This project follows{' '}
-          <a
-            href="https://semver.org"
-            className="text-emerald-400 hover:underline"
-            target="_blank"
-            rel="noreferrer"
-          >
+        <span className="section-chip">Release notes</span>
+        <h1>Changelog</h1>
+        <p>
+          All notable changes to RelayForge are tracked here. The project follows{' '}
+          <a href="https://semver.org" target="_blank" rel="noreferrer">
             Semantic Versioning
           </a>{' '}
           and the{' '}
-          <a
-            href="https://keepachangelog.com"
-            className="text-emerald-400 hover:underline"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a href="https://keepachangelog.com" target="_blank" rel="noreferrer">
             Keep a Changelog
           </a>{' '}
-          format.
+          structure.
         </p>
       </div>
 
-      <section className="space-y-4">
-        <h2 className="text-rf-primary text-2xl font-semibold">Format</h2>
-        <p className="text-rf-secondary">Each release entry includes:</p>
-        <ul className="text-rf-secondary list-inside list-disc space-y-1 pl-4">
-          <li>
-            <span className="text-rf-primary font-medium">Added</span> — new features
-          </li>
-          <li>
-            <span className="text-rf-primary font-medium">Changed</span> — changes to existing
-            functionality
-          </li>
-          <li>
-            <span className="text-rf-primary font-medium">Deprecated</span> — features that will be
-            removed
-          </li>
-          <li>
-            <span className="text-rf-primary font-medium">Removed</span> — removed features
-          </li>
-          <li>
-            <span className="text-rf-primary font-medium">Fixed</span> — bug fixes
-          </li>
-          <li>
-            <span className="text-rf-primary font-medium">Security</span> — vulnerability fixes
-          </li>
-        </ul>
+      <section>
+        <h2>Format</h2>
+        <p>Each release entry uses the same categories so operators can scan impact quickly.</p>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {categories.map((category) => (
+            <div key={category.title} className="docs-stat-card">
+              <p className="text-ink-900 mb-2 font-serif text-2xl">{category.title}</p>
+              <p className="text-ink-600 mb-0 text-sm leading-7">{category.desc}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
-      <section className="space-y-6">
-        <div className="border-l-2 border-emerald-500 pl-6">
-          <h3 className="text-rf-primary text-xl font-semibold">v0.1.0 — Initial Release</h3>
-          <p className="text-rf-secondary mt-1 text-sm">Unreleased</p>
-
-          <div className="mt-4 space-y-4">
-            <div>
-              <h4 className="font-semibold text-emerald-400">Added</h4>
-              <ul className="text-rf-secondary mt-1 list-inside list-disc space-y-1 pl-2">
-                <li>User registration and authentication with JWT</li>
-                <li>Two-factor authentication (TOTP)</li>
-                <li>Device and session management</li>
-                <li>Guild creation, editing, and membership</li>
-                <li>Text, voice, forum, and announcement channels</li>
-                <li>Categories for channel organization</li>
-                <li>Full RBAC with guild roles and channel permission overrides</li>
-                <li>Rich text messaging with Markdown support</li>
-                <li>Message replies, threads, and pinning</li>
-                <li>Emoji reactions and custom emoji/stickers</li>
-                <li>File uploads with presigned URLs and MIME validation</li>
-                <li>Direct messages with end-to-end encryption (X3DH + Double Ratchet)</li>
-                <li>Voice channels via LiveKit integration</li>
-                <li>P2P calls, group calls, and video meetings</li>
-                <li>Screen sharing and recording support</li>
-                <li>Moderation tools: mute, kick, ban, word filters, audit logs</li>
-                <li>Abuse reporting system</li>
-                <li>System admin console</li>
-                <li>Web application (React + Vite)</li>
-                <li>Desktop application (Tauri 2)</li>
-                <li>Docker Compose deployment (dev and production)</li>
-                <li>Kubernetes manifests and Helm chart</li>
-                <li>Terraform modules for multi-cloud deployment</li>
-                <li>Reverse proxy examples (Nginx, Caddy, Traefik)</li>
-                <li>OpenTelemetry and Prometheus observability</li>
-                <li>Structured logging with zerolog</li>
-                <li>GitHub Pages documentation site</li>
-                <li>CI/CD pipelines with GitHub Actions</li>
-                <li>Backup and restore scripts</li>
-              </ul>
-            </div>
-          </div>
+      <section>
+        <h2>Current release track</h2>
+        <div className="rounded-[1.75rem] border border-[#dccfb9] bg-white p-6 shadow-[0_18px_40px_rgba(30,61,89,0.06)]">
+          <p className="section-chip mb-3">Unreleased</p>
+          <h3 className="!mt-0">v0.1.0 - Initial release</h3>
+          <p>
+            The initial release establishes the full self-hosted collaboration stack and the docs
+            site that explains how to run it.
+          </p>
+          <h4>Added</h4>
+          <ul>
+            <li>User registration and authentication with JWT and two-factor support.</li>
+            <li>Guilds, channels, roles, moderation tools, and audit logs.</li>
+            <li>Rich messaging, reactions, file uploads, replies, and threads.</li>
+            <li>End-to-end encrypted direct messages.</li>
+            <li>Voice, video, and LiveKit-backed real-time communication.</li>
+            <li>React web app and Tauri desktop app.</li>
+            <li>Docker, Helm, Terraform, and reverse-proxy deployment paths.</li>
+            <li>Observability, CI/CD, backup, restore, and operator documentation.</li>
+          </ul>
         </div>
       </section>
     </div>
   );
 }
+
+const categories = [
+  { title: 'Added', desc: 'New capabilities, surfaces, or workflows entering the product.' },
+  { title: 'Changed', desc: 'Behavior shifts, reorganized flows, or updates to existing systems.' },
+  { title: 'Deprecated', desc: 'Features that still work now but are scheduled for removal.' },
+  { title: 'Removed', desc: 'Capabilities or interfaces that are no longer supported.' },
+  { title: 'Fixed', desc: 'Bug fixes, regressions, and correctness improvements.' },
+  {
+    title: 'Security',
+    desc: 'Vulnerability fixes, hardening work, and disclosure-related updates.',
+  },
+];

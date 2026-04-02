@@ -1,172 +1,156 @@
 export default function ContributingPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
-        <h1 className="text-rf-primary text-3xl font-bold">Contributing to RelayForge</h1>
-        <p className="text-rf-secondary mt-2">
-          Thank you for your interest in contributing. RelayForge is an open-source project and we
-          welcome contributions of all kinds: code, documentation, bug reports, feature requests,
-          and design feedback.
+        <span className="section-chip">Community handbook</span>
+        <h1>Contributing to RelayForge</h1>
+        <p>
+          RelayForge is an open-source project and we welcome code, docs, bug reports, feature
+          ideas, and design feedback. This page keeps the contribution workflow short and practical
+          so new contributors can get from clone to pull request without guesswork.
         </p>
       </div>
 
-      <section className="space-y-4">
-        <h2 className="text-rf-primary text-2xl font-semibold">Getting Started</h2>
-        <ol className="text-rf-secondary list-inside list-decimal space-y-2">
-          <li>Fork the repository on GitHub</li>
+      <section>
+        <h2>Getting started</h2>
+        <ol>
+          <li>Fork the repository on GitHub.</li>
           <li>
-            Clone your fork:{' '}
-            <code className="bg-rf-elevated rounded px-2 py-0.5 text-sm text-emerald-400">
-              git clone https://github.com/your-user/relay-forge.git
-            </code>
+            Clone your fork:
+            <code>git clone https://github.com/your-user/relay-forge.git</code>
           </li>
-          <li>Install prerequisites: Go 1.23+, Node.js 20+, Docker</li>
+          <li>Install prerequisites: Go 1.23+, Node.js 20+, and Docker.</li>
           <li>
-            Start infrastructure:{' '}
-            <code className="bg-rf-elevated rounded px-2 py-0.5 text-sm text-emerald-400">
-              make dev-services
-            </code>
+            Start shared infrastructure:
+            <code>make dev-services</code>
           </li>
           <li>
-            Run migrations and seed:{' '}
-            <code className="bg-rf-elevated rounded px-2 py-0.5 text-sm text-emerald-400">
-              make migrate && make seed
-            </code>
+            Run migrations and seed development data:
+            <code>make migrate && make seed</code>
           </li>
           <li>
-            Install frontend deps:{' '}
-            <code className="bg-rf-elevated rounded px-2 py-0.5 text-sm text-emerald-400">
-              npm install && npm run build:packages
-            </code>
+            Install frontend dependencies and build shared packages:
+            <code>npm install && npm run build:packages</code>
           </li>
           <li>
-            Start the API:{' '}
-            <code className="bg-rf-elevated rounded px-2 py-0.5 text-sm text-emerald-400">
-              make dev-api
-            </code>
+            Start the API:
+            <code>make dev-api</code>
           </li>
           <li>
-            Start the web app:{' '}
-            <code className="bg-rf-elevated rounded px-2 py-0.5 text-sm text-emerald-400">
-              make dev-web
-            </code>
+            Start the web app:
+            <code>make dev-web</code>
           </li>
         </ol>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-rf-primary text-2xl font-semibold">Development Workflow</h2>
-        <div className="text-rf-secondary space-y-3">
-          <p>
-            Create a feature branch from{' '}
-            <code className="bg-rf-elevated rounded px-2 py-0.5 text-sm text-emerald-400">
-              main
-            </code>{' '}
-            for your changes. Keep branches focused on a single change when possible.
-          </p>
-          <p>Before submitting a pull request, ensure:</p>
-          <ul className="list-inside list-disc space-y-1 pl-4">
-            <li>
-              All tests pass:{' '}
-              <code className="bg-rf-elevated rounded px-2 py-0.5 text-sm text-emerald-400">
-                make test
-              </code>
-            </li>
-            <li>
-              Linting passes:{' '}
-              <code className="bg-rf-elevated rounded px-2 py-0.5 text-sm text-emerald-400">
-                make lint
-              </code>
-            </li>
-            <li>
-              Code is formatted:{' '}
-              <code className="bg-rf-elevated rounded px-2 py-0.5 text-sm text-emerald-400">
-                make format
-              </code>
-            </li>
-            <li>New features have tests</li>
-            <li>Documentation is updated if needed</li>
-          </ul>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-rf-primary text-2xl font-semibold">Code Style</h2>
-        <div className="overflow-x-auto">
-          <table className="text-rf-secondary w-full text-left text-sm">
-            <thead className="border-rf-elevated text-rf-primary border-b">
-              <tr>
-                <th className="pb-3 pr-6 font-semibold">Language</th>
-                <th className="pb-3 pr-6 font-semibold">Formatter</th>
-                <th className="pb-3 font-semibold">Linter</th>
-              </tr>
-            </thead>
-            <tbody className="divide-rf-elevated divide-y">
-              <tr>
-                <td className="py-2 pr-6">Go</td>
-                <td className="py-2 pr-6">gofmt</td>
-                <td className="py-2">golangci-lint</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-6">TypeScript</td>
-                <td className="py-2 pr-6">Prettier</td>
-                <td className="py-2">ESLint</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-6">CSS</td>
-                <td className="py-2 pr-6">Prettier</td>
-                <td className="py-2">Tailwind CSS conventions</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-rf-primary text-2xl font-semibold">Commit Messages</h2>
-        <p className="text-rf-secondary">
-          Use conventional commit messages to keep the history readable:
+      <section>
+        <h2>Development workflow</h2>
+        <p>
+          Create a focused feature branch from <code>main</code>. Keep each branch scoped to one
+          change when possible so review stays fast and the project history remains readable.
         </p>
-        <pre className="bg-rf-elevated text-rf-primary overflow-x-auto rounded-lg p-4 text-sm">
-          {`feat: add voice message recording
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="docs-stat-card">
+            <p className="section-chip mb-3">Validate</p>
+            <p className="text-ink-900 mb-2 font-serif text-2xl">Tests</p>
+            <p className="mb-0 text-sm leading-7">
+              Run the project checks before opening a pull request.
+              <br />
+              <code>make test</code>
+            </p>
+          </div>
+          <div className="docs-stat-card">
+            <p className="section-chip mb-3">Polish</p>
+            <p className="text-ink-900 mb-2 font-serif text-2xl">Lint</p>
+            <p className="mb-0 text-sm leading-7">
+              Keep service and frontend lint jobs green.
+              <br />
+              <code>make lint</code>
+            </p>
+          </div>
+          <div className="docs-stat-card">
+            <p className="section-chip mb-3">Ship</p>
+            <p className="text-ink-900 mb-2 font-serif text-2xl">Format</p>
+            <p className="mb-0 text-sm leading-7">
+              Normalize formatting before review.
+              <br />
+              <code>make format</code>
+            </p>
+          </div>
+        </div>
+        <ul>
+          <li>New features should include tests where practical.</li>
+          <li>Documentation should be updated whenever workflows or structure change.</li>
+          <li>Keep commits and pull requests small enough to review with context.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Code style</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Language</th>
+              <th>Formatter</th>
+              <th>Linter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Go</td>
+              <td>gofmt</td>
+              <td>golangci-lint</td>
+            </tr>
+            <tr>
+              <td>TypeScript</td>
+              <td>Prettier</td>
+              <td>ESLint</td>
+            </tr>
+            <tr>
+              <td>CSS</td>
+              <td>Prettier</td>
+              <td>Tailwind CSS conventions</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Commit messages</h2>
+        <p>Use conventional commit messages to keep history and release notes easy to scan.</p>
+        <pre>{`feat: add voice message recording
 fix: correct permission check for channel deletion
 docs: update deployment guide for ARM64
 refactor: extract message validation logic
 test: add integration tests for guild creation
-chore: update Go dependencies`}
-        </pre>
+chore: update Go dependencies`}</pre>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-rf-primary text-2xl font-semibold">Pull Request Guidelines</h2>
-        <ul className="text-rf-secondary list-inside list-disc space-y-2">
-          <li>Write a clear PR description explaining what changed and why</li>
-          <li>Reference related issues if applicable</li>
-          <li>Keep PRs reasonably sized — split large changes into smaller PRs</li>
-          <li>Respond to review feedback constructively</li>
-          <li>Ensure CI passes before requesting review</li>
+      <section>
+        <h2>Pull request guidelines</h2>
+        <ul>
+          <li>Explain what changed and why in the PR description.</li>
+          <li>Reference related issues when they exist.</li>
+          <li>Split very large changes into smaller reviewable pull requests.</li>
+          <li>Respond to review comments with follow-up changes or rationale.</li>
+          <li>Wait for CI to pass before asking for final review.</li>
         </ul>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-rf-primary text-2xl font-semibold">Reporting Issues</h2>
-        <p className="text-rf-secondary">
-          Use GitHub Issues to report bugs or request features. Include steps to reproduce, expected
-          behavior, actual behavior, and environment details (OS, browser, versions). For security
-          vulnerabilities, see the{' '}
-          <a href="/security" className="text-emerald-400 hover:underline">
-            Security Policy
-          </a>
-          .
+      <section>
+        <h2>Reporting issues</h2>
+        <p>
+          Use GitHub Issues for bugs and feature requests. Include reproduction steps, expected
+          behavior, actual behavior, and environment details. For vulnerabilities, use the{' '}
+          <a href="/security">Security Policy</a> instead of opening a public issue.
         </p>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-rf-primary text-2xl font-semibold">Code of Conduct</h2>
-        <p className="text-rf-secondary">
-          We follow the <span className="text-rf-primary">Contributor Covenant</span>. Be
-          respectful, constructive, and welcoming to all contributors regardless of experience
-          level.
+      <section>
+        <h2>Code of conduct</h2>
+        <p>
+          We follow the Contributor Covenant. Be respectful, constructive, and welcoming to
+          contributors at every experience level.
         </p>
       </section>
     </div>
