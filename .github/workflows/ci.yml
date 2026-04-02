@@ -1,4 +1,4 @@
-name: CI
+name: Client CI
 
 on:
   push:
@@ -7,86 +7,13 @@ on:
     branches: [main]
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: client-ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  changes:
-    name: Detect changes
+  lint-typecheck-test:
+    name: Lint, Typecheck, Test
     runs-on: ubuntu-latest
-    outputs:
-      go: ${{ steps.filter.outputs.go }}
-      ts: ${{ steps.filter.outputs.ts }}
-      web: ${{ steps.filter.outputs.web }}
-      admin: ${{ steps.filter.outputs.admin }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            go:
-              - 'services/**'
-              - 'go.work'
-            ts:
-              - 'packages/**'
-              - 'apps/**'
-              - 'package.json'
-              - 'tsconfig.json'
-              - 'vitest.config.ts'
-            web:
-              - 'apps/web/**'
-              - 'packages/**'
-            admin:
-              - 'apps/admin/**'
-              - 'packages/**'
-
-  lint-go:
-    name: Lint Go
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.go == 'true'
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.23'
-          cache-dependency-path: |
-            services/api/go.sum
-            services/realtime/go.sum
-            services/media/go.sum
-            services/worker/go.sum
-
-      - name: golangci-lint api
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
-          working-directory: services/api
-
-      - name: golangci-lint realtime
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
-          working-directory: services/realtime
-
-      - name: golangci-lint media
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
-          working-directory: services/media
-
-      - name: golangci-lint worker
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
-          working-directory: services/worker
-
-  lint-ts:
-    name: Lint TypeScript
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.ts == 'true'
     steps:
       - uses: actions/checkout@v4
 
@@ -96,92 +23,14 @@ jobs:
           cache: npm
 
       - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
 
-      - name: Run ESLint
-        run: npx eslint 'apps/*/src/**/*.{ts,tsx}' 'packages/*/src/**/*.{ts,tsx}'
-
-      - name: Check formatting
-        run: npx prettier --check '**/*.{ts,tsx,js,json,css,md,yaml,yml}'
-
-  test-go:
-    name: Test Go
+  build-docs:
+    name: Build docs
     runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.go == 'true'
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: relayforge
-          POSTGRES_PASSWORD: testpassword
-          POSTGRES_DB: relayforge_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U relayforge"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      valkey:
-        image: valkey/valkey:8-alpine
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "valkey-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.23'
-          cache-dependency-path: |
-            services/api/go.sum
-            services/realtime/go.sum
-            services/media/go.sum
-            services/worker/go.sum
-
-      - name: Test API service
-        run: cd services/api && go test -race -cover -coverprofile=coverage.out ./...
-        env:
-          DB_HOST: localhost
-          DB_PORT: '5432'
-          DB_USER: relayforge
-          DB_PASSWORD: testpassword
-          DB_NAME: relayforge_test
-          VALKEY_HOST: localhost
-          VALKEY_PORT: '6379'
-
-      - name: Test Realtime service
-        run: cd services/realtime && go test -race -cover -coverprofile=coverage.out ./...
-        env:
-          VALKEY_HOST: localhost
-          VALKEY_PORT: '6379'
-
-      - name: Test Media service
-        run: cd services/media && go test -race -cover -coverprofile=coverage.out ./...
-        env:
-          VALKEY_HOST: localhost
-          VALKEY_PORT: '6379'
-
-      - name: Test Worker service
-        run: cd services/worker && go test -race -cover -coverprofile=coverage.out ./...
-        env:
-          DB_HOST: localhost
-          DB_PORT: '5432'
-          DB_USER: relayforge
-          DB_PASSWORD: testpassword
-          DB_NAME: relayforge_test
-          VALKEY_HOST: localhost
-          VALKEY_PORT: '6379'
-
-  test-ts:
-    name: Test TypeScript
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.ts == 'true'
+    needs: lint-typecheck-test
     steps:
       - uses: actions/checkout@v4
 
@@ -191,57 +40,13 @@ jobs:
           cache: npm
 
       - run: npm ci
+      - run: npm run build:packages
+      - run: npm -w apps/docs run build
 
-      - name: Run tests
-        run: npx vitest run --coverage
-
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ts-coverage
-          path: coverage/
-          retention-days: 7
-
-  build-go:
-    name: Build Go services
+  build-clients:
+    name: Build web, admin, desktop bundle
     runs-on: ubuntu-latest
-    needs: [changes, lint-go, test-go]
-    if: always() && !failure() && !cancelled() && needs.changes.outputs.go == 'true'
-    strategy:
-      matrix:
-        service: [api, realtime, media, worker]
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.23'
-          cache-dependency-path: services/${{ matrix.service }}/go.sum
-
-      - name: Build
-        env:
-          SERVICE: ${{ matrix.service }}
-          COMMIT_SHA: ${{ github.sha }}
-        run: |
-          cd "services/${SERVICE}"
-          CGO_ENABLED=0 go build \
-            -ldflags "-s -w -X main.version=${COMMIT_SHA} -X main.buildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-            -o "../../bin/${SERVICE}" \
-            "./cmd/${SERVICE}"
-
-      - name: Upload binary
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.service }}-binary
-          path: bin/${{ matrix.service }}
-          retention-days: 1
-
-  build-web:
-    name: Build Web app
-    runs-on: ubuntu-latest
-    needs: [changes, lint-ts, test-ts]
-    if: always() && !failure() && !cancelled() && needs.changes.outputs.web == 'true'
+    needs: lint-typecheck-test
     steps:
       - uses: actions/checkout@v4
 
@@ -253,34 +58,5 @@ jobs:
       - run: npm ci
       - run: npm run build:packages
       - run: npm -w apps/web run build
-
-      - name: Upload build
-        uses: actions/upload-artifact@v4
-        with:
-          name: web-dist
-          path: apps/web/dist/
-          retention-days: 1
-
-  build-admin:
-    name: Build Admin app
-    runs-on: ubuntu-latest
-    needs: [changes, lint-ts, test-ts]
-    if: always() && !failure() && !cancelled() && needs.changes.outputs.admin == 'true'
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - run: npm ci
-      - run: npm run build:packages
       - run: npm -w apps/admin run build
-
-      - name: Upload build
-        uses: actions/upload-artifact@v4
-        with:
-          name: admin-dist
-          path: apps/admin/dist/
-          retention-days: 1
+      - run: npm -w apps/desktop run build

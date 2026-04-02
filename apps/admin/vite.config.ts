@@ -4,6 +4,7 @@ import path from 'node:path';
 
 export default defineConfig({
   plugins: [react()],
+  envPrefix: ['VITE_', 'API_', 'WS_', 'LIVEKIT_'],
   resolve: {
     alias: {
       '@relayforge/types': path.resolve(__dirname, '../../packages/types/src'),

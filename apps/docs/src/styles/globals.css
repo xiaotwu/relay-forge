@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=JetBrains+Mono:wght@400;500;600&family=Rethink+Sans:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,134 +8,66 @@
   }
 
   body {
-    @apply text-ink-900 bg-[#f7f3eb] antialiased;
-  }
-
-  ::-webkit-scrollbar {
-    @apply w-2;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-[#efe7d8];
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply rounded bg-[#d7c7ae] hover:bg-[#c5b18f];
+    @apply bg-slate-50 text-slate-900 antialiased;
+    font-family:
+      ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 }
 
 @layer components {
-  .prose-dark h1 {
-    @apply text-ink-900 mb-6 font-serif text-4xl tracking-tight md:text-5xl;
+  .prose-slim h1 {
+    @apply mb-4 text-4xl font-semibold tracking-tight text-slate-950;
   }
 
-  .prose-dark h2 {
-    @apply text-ink-900 mb-4 mt-12 border-b border-[#d8ccb8] pb-3 font-serif text-2xl tracking-tight;
+  .prose-slim h2 {
+    @apply mt-10 mb-3 text-2xl font-semibold text-slate-900;
   }
 
-  .prose-dark h3 {
-    @apply text-ink-800 mb-3 mt-8 font-serif text-xl;
+  .prose-slim h3 {
+    @apply mt-8 mb-2 text-xl font-semibold text-slate-900;
   }
 
-  .prose-dark h4 {
-    @apply text-ink-800 mb-2 mt-6 text-lg font-semibold;
+  .prose-slim p {
+    @apply mb-4 leading-7 text-slate-700;
   }
 
-  .prose-dark p {
-    @apply text-ink-700 mb-4 leading-8;
+  .prose-slim ul {
+    @apply mb-4 ml-6 list-disc space-y-2 text-slate-700;
   }
 
-  .prose-dark ul {
-    @apply text-ink-700 mb-5 ml-6 list-disc space-y-2;
+  .prose-slim ol {
+    @apply mb-4 ml-6 list-decimal space-y-2 text-slate-700;
   }
 
-  .prose-dark ol {
-    @apply text-ink-700 mb-5 ml-6 list-decimal space-y-2;
+  .prose-slim code {
+    @apply rounded bg-slate-100 px-1.5 py-0.5 text-sm text-slate-800;
   }
 
-  .prose-dark li {
-    @apply leading-relaxed;
+  .prose-slim pre {
+    @apply mb-4 overflow-x-auto rounded-2xl border border-slate-200 bg-slate-950 p-4 text-sm text-slate-100;
   }
 
-  .prose-dark pre {
-    @apply mb-5 overflow-x-auto rounded-[1.5rem] border border-[#dccfb9] bg-white p-4 text-sm shadow-[0_18px_40px_rgba(30,61,89,0.08)];
+  .prose-slim pre code {
+    @apply bg-transparent p-0 text-slate-100;
   }
 
-  .prose-dark code {
-    @apply text-ink-700 rounded bg-[#f5eee3] px-1.5 py-0.5 font-mono text-sm;
+  .prose-slim a {
+    @apply text-blue-700 underline decoration-blue-200 underline-offset-2 hover:text-blue-800;
   }
 
-  .prose-dark pre code {
-    @apply text-ink-800 bg-transparent p-0;
+  .prose-slim table {
+    @apply mb-4 w-full overflow-hidden rounded-2xl border border-slate-200 text-sm;
   }
 
-  .prose-dark table {
-    @apply mb-6 w-full overflow-hidden rounded-[1.5rem] border border-[#dccfb9] bg-white text-sm shadow-[0_14px_32px_rgba(30,61,89,0.06)];
+  .prose-slim th {
+    @apply bg-slate-100 px-3 py-2 text-left font-semibold text-slate-800;
   }
 
-  .prose-dark thead {
-    @apply bg-[#f7f2ea];
+  .prose-slim td {
+    @apply border-t border-slate-200 px-3 py-2 text-slate-700;
   }
 
-  .prose-dark th {
-    @apply text-ink-800 px-4 py-3 text-left font-semibold;
-  }
-
-  .prose-dark td {
-    @apply text-ink-700 border-t border-[#ece3d4] px-4 py-3;
-  }
-
-  .prose-dark tr:hover td {
-    @apply bg-[#fbf7f1];
-  }
-
-  .prose-dark blockquote {
-    @apply border-brand-500 bg-brand-50 text-ink-700 mb-5 rounded-r-[1.5rem] border-l-4 py-3 pl-4 italic;
-  }
-
-  .prose-dark a {
-    @apply text-brand-700 decoration-brand-300 hover:text-brand-600 hover:decoration-brand-500 underline transition;
-  }
-
-  .prose-dark hr {
-    @apply my-10 border-[#ddd0bc];
-  }
-
-  .info-box {
-    @apply border-ink-300 bg-ink-50 text-ink-800 mb-5 rounded-[1.5rem] border p-4;
-  }
-
-  .warning-box {
-    @apply border-brand-300 bg-brand-50 text-brand-900 mb-5 rounded-[1.5rem] border p-4;
-  }
-
-  .danger-box {
-    @apply mb-5 rounded-[1.5rem] border border-[#e4b8a6] bg-[#fff1ec] p-4 text-[#8c3b16];
-  }
-
-  .docs-hero-grid {
-    @apply grid gap-4 md:grid-cols-3;
-  }
-
-  .docs-stat-card {
-    @apply rounded-[1.75rem] border border-[#dccfb9] bg-white p-5 shadow-[0_18px_40px_rgba(30,61,89,0.08)];
-  }
-
-  .docs-outline-title {
-    @apply font-serif text-[4.5rem] tracking-[-0.08em] text-transparent md:text-[7.5rem] lg:text-[9rem];
-    -webkit-text-stroke: 1.5px #d8ccb8;
-  }
-
-  .editorial-shell {
-    @apply rounded-[2rem] border border-[#d8ccb8] bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(249,244,236,0.92))] shadow-[0_24px_80px_rgba(30,61,89,0.12)];
-  }
-
-  .section-chip {
-    @apply text-ink-600 inline-flex items-center rounded-full border border-[#d8ccb8] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em];
-  }
-
-  .editorial-meta {
-    font-family: 'Source Code Pro', 'JetBrains Mono', monospace;
-    @apply text-ink-500 text-[11px] uppercase tracking-[0.14em];
+  .callout {
+    @apply mb-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700;
   }
 }

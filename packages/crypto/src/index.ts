@@ -237,7 +237,6 @@ export async function createSession(
 
   // We need an ECDH-capable version of our identity key for DH1
   // Since identity key is ECDSA, we export and re-import as ECDH
-  const _identityKeyRaw = await subtle.exportKey('raw', ourIdentity.publicKey);
   const identityPrivateJwk = await subtle.exportKey('jwk', ourIdentity.privateKey);
   // Change the key_ops and algorithm for ECDH usage
   const identityECDHPrivate = await subtle.importKey(

@@ -2,36 +2,27 @@
 
 ## Reporting Vulnerabilities
 
-If you discover a security vulnerability in RelayForge, please report it responsibly.
+If you discover a RelayForge security issue, do not open a public issue. Report it privately with:
 
-**Do not open a public GitHub issue for security vulnerabilities.**
+- a description of the issue
+- reproduction steps
+- affected component or repository
+- impact assessment
 
-Instead, email: ...
+## Repository Scope
 
-Include:
+This repository now covers:
 
-- Description of the vulnerability
-- Steps to reproduce
-- Potential impact
-- Suggested fix (if any)
+- the web client
+- the admin client
+- the desktop client
+- the public documentation site
 
-We will acknowledge receipt within 48 hours and provide a timeline for a fix.
+Backend runtime security controls and operational hardening have been moved into `new-project/`.
 
-## Supported Versions
+## Client Security Expectations
 
-| Version | Supported |
-| ------- | --------- |
-| Latest  | Yes       |
-
-## Security Design
-
-- Passwords are hashed with Argon2id
-- JWT access tokens with short TTL and refresh token rotation
-- Server-side permission enforcement on all API and WebSocket operations
-- Direct messages support end-to-end encryption (Double Ratchet + X3DH)
-- Guild/channel messages use TLS in transit and server-side access control
-- CSRF protection via SameSite cookies and origin checking
-- Rate limiting on authentication and sensitive endpoints
-- Input validation on all API boundaries
-- SQL injection prevention via parameterized queries
-- File upload MIME validation and optional antivirus scanning
+- All client-to-server communication must be configured through explicit endpoint URLs.
+- Sensitive tokens should stay in the smallest practical storage surface for each client.
+- Desktop packaging should use signed installers whenever your release channel supports it.
+- Documentation must not expose deployment secrets or backend-only operational details.

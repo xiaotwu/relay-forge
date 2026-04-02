@@ -1,16 +1,9 @@
-use serde::{Deserialize, Serialize};
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     Manager,
 };
 use tauri_plugin_autostart::MacosLauncher;
-
-#[derive(Debug, Serialize, Deserialize)]
-struct Draft {
-    channel_id: String,
-    content: String,
-}
 
 #[tauri::command]
 fn get_app_version() -> String {
@@ -40,7 +33,6 @@ pub fn run() {
             Some(vec!["--hidden"]),
         ))
         .plugin(tauri_plugin_store::Builder::default().build())
-        .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
             // Build tray menu
             let show_item = MenuItem::with_id(app, "show", "Show RelayForge", true, None::<&str>)?;

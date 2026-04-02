@@ -54,14 +54,6 @@
       "deb": {
         "depends": []
       }
-    },
-    "createUpdaterArtifacts": true
-  },
-  "plugins": {
-    "updater": {
-      "pubkey": "",
-      "endpoints": ["https://releases.relayforge.app/{{target}}/{{arch}}/{{current_version}}"],
-      "dialog": true
     }
   }
 }

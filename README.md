@@ -1,130 +1,115 @@
-# RelayForge
+# RelayForge Clients
 
-A self-hostable, open-source multi-user chat platform with guilds, channels, direct messages with end-to-end encryption, voice/video via LiveKit, and a desktop app built with Tauri 2.
+RelayForge is now organized as a client-focused repository. It contains the web app, admin console,
+desktop app, shared frontend packages, and the GitHub Pages documentation site.
 
-## Features
+The backend has been extracted into [`new-project/`](./new-project), which is intended to become a
+separate repository. Clients connect to that backend through configurable endpoint URLs, so moving
+the server to a new host or cloud environment only requires updating configuration.
 
-- **Guilds and channels** -- text, voice, forum/thread channels with categories and permission overrides
-- **Direct messages** -- end-to-end encrypted using the Double Ratchet protocol
-- **Voice and video** -- powered by LiveKit (self-hosted SFU) with screen sharing, push-to-talk, and recording
-- **Rich messaging** -- Markdown, reactions, polls, threads, pins, search, link previews, file uploads
-- **Moderation** -- RBAC, audit logs, mute/kick/ban, word filters, abuse reports, batch actions
-- **Desktop app** -- Tauri 2 with tray, notifications, offline drafts, auto-update
-- **Admin console** -- user/guild management, audit logs, system settings, content review
-- **Self-hostable** -- one-command Docker deployment for direct use, plus Kubernetes/Helm/Terraform for advanced setups
-- **Observable** -- OpenTelemetry, Prometheus, structured logging, health checks
+## What Lives Here
 
+- `apps/web` — main web client
+- `apps/admin` — admin console
+- `apps/desktop` — Tauri desktop client and installer project
+- `apps/docs` — GitHub Pages documentation site
+- `packages/*` — shared UI, SDK, types, config, and crypto packages
+- `new-project/` — extracted backend project staged for relocation
 
-## Quick Start
+## Endpoint Configuration
 
-### Prerequisites
+RelayForge clients are intentionally decoupled from backend deployment details. Use these variables
+to point the clients at the correct backend:
 
-- Go 1.23+
+- `API_BASE_URL`
+- `WS_URL`
+- `LIVEKIT_URL`
+
+Legacy `VITE_API_URL`, `VITE_WS_URL`, and `VITE_LIVEKIT_URL` aliases are still accepted for
+compatibility, but the explicit contract above is the preferred interface going forward.
+
+Copy [`.env.example`](./.env.example) to `.env` when you want a local client build with explicit
+server endpoints.
+
+## Tooling
+
+Install dependencies in this order:
+
+1. Homebrew first for core tools such as `node`, `go`, `rustup`, `tauri`, `golangci-lint`,
+   `playwright`, `zip`, and supporting native libraries.
+2. If Homebrew does not provide the version you need, use the tool's official install instructions.
+
+Recommended local toolchain:
+
 - Node.js 20+
-- Docker and Docker Compose
+- npm 10+
+- Rust + Cargo
+- Tauri prerequisites for your platform
 
-### Development
+## Client Development
 
 ```bash
-# Start infrastructure services
-make dev-services
-
-# Run database migrations
-make migrate
-
-# Seed development data
-make seed
-
-# Start backend services (in separate terminals)
-make dev-api
-make dev-realtime
-make dev-media
-make dev-worker
-
-# Install frontend dependencies and start web app
 npm install
 npm run build:packages
-make dev-web
+npm run dev:web
 ```
 
-### Self-Hosted Deployment
+Common commands:
 
 ```bash
-make deploy-init
-# Edit .env if you want to change domains, secrets, or ports
+npm run dev:web
+npm run dev:admin
+npm run dev:desktop
+npm run dev:docs
 
-make deploy-up
-make deploy-migrate
+npm test
+npm run typecheck
+npm run lint
 ```
 
-The default deployment stack is now self-contained for single-host usage: it brings up PostgreSQL,
-Valkey, MinIO, LiveKit, the API, realtime, media, worker, and web services together from
-`infra/docker/docker-compose.yml`. The self-hosted web entrypoint is published on `http://localhost:3000`,
-matching the web app's Vite development port to avoid accidental cross-origin and port drift during setup.
+## Direct Packaging
 
-## Project Structure
+Static clients can be built and archived directly:
 
-```
-relay-forge/
-  apps/
-    web/          -- Main web application (React + Vite)
-    desktop/      -- Desktop app (Tauri 2 + React)
-    admin/        -- System admin console (React + Vite)
-    docs/         -- Documentation site (GitHub Pages)
-  services/
-    api/          -- HTTP API service (Go)
-    realtime/     -- WebSocket realtime service (Go)
-    media/        -- Media processing and LiveKit integration (Go)
-    worker/       -- Background job processor (Go)
-  packages/
-    ui/           -- Shared UI components
-    types/        -- Shared TypeScript types
-    sdk/          -- Typed API/realtime client SDK
-    config/       -- Shared configuration utilities
-    crypto/       -- E2EE DM crypto helpers
-  infra/
-    docker/       -- Docker Compose files and container images
-    kubernetes/   -- Kubernetes manifests
-    helm/         -- Helm chart
-    terraform/    -- Terraform modules
-  docs/           -- Architecture and operations documentation
+```bash
+make package-web
+make package-admin
+make package-docs
 ```
 
-## Architecture
+Desktop installers are produced through Tauri:
 
-RelayForge uses a **modular monolith** architecture for the API service, with separate services for realtime (WebSocket), media (LiveKit/storage), and background workers. Services communicate via Valkey pub/sub for realtime events and share a PostgreSQL database.
+```bash
+make package-desktop
+```
 
-- **API Service** -- REST API for all CRUD, auth, permissions, admin operations
-- **Realtime Service** -- WebSocket gateway for live message delivery, presence, typing
-- **Media Service** -- File uploads, LiveKit room management, media processing
-- **Worker Service** -- Background jobs (email, cleanup, audit archival, virus scanning)
+## Backend Project
 
-### E2EE Boundary
+The extracted backend is staged in [`new-project/`](./new-project). It contains:
 
-- Direct messages use end-to-end encryption (Double Ratchet with X3DH key agreement)
-- Guild/channel messages are NOT E2EE -- they use TLS in transit and server-side access control
-- This is intentional: guild messages need server-side search, moderation, and audit
+- Go services
+- backend deployment assets
+- backend operations documentation
+- backend CI workflow definitions
 
-### Multi-Cloud Portability
-
-- S3-compatible storage (works with MinIO, AWS S3, Tencent COS, Alibaba OSS, Huawei OBS)
-- PostgreSQL (any managed or self-hosted instance)
-- Valkey/Redis (any compatible service)
-- Terraform modules with provider-specific variables
-- No hard dependency on any cloud vendor's proprietary services
+It is structured to be moved into its own repository without depending on files from this client
+repo.
 
 ## Documentation
 
-See the [docs site](https://xiaotwu.github.io/relay-forge/) or browse the `docs/` directory.
+The GitHub Pages site is built from `apps/docs` and now focuses on:
+
+- client setup and packaging
+- endpoint configuration
+- repo boundaries
+- contribution workflow
+
+Backend hosting and operations details belong in `new-project/`.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Security
 
-See [SECURITY.md](SECURITY.md).
-
-## License
-
-AGPL-3.0-or-later. See [LICENSE](LICENSE).
+See [SECURITY.md](./SECURITY.md).

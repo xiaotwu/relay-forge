@@ -1,36 +1,54 @@
-# Contributing to RelayForge
+# Contributing to RelayForge Clients
 
-Thank you for your interest in contributing to RelayForge.
+This repository now contains the RelayForge client applications and documentation site. Backend
+service work lives in `new-project/` while it is being prepared for its own repository.
 
-## Development Setup
+## Local Setup
 
-1. Fork and clone the repository
-2. Install prerequisites: Go 1.23+, Node.js 20+, Docker
-3. Run `make dev-services` to start infrastructure
-4. Run `make migrate && make seed` to set up the database
-5. Start services with `make dev-api`, `make dev-web`, etc.
+1. Install prerequisites with Homebrew when possible:
+   - `node`
+   - `rustup`
+   - Tauri system dependencies for your platform
+2. If Homebrew is behind or unavailable for a required tool, use the official installer.
+3. Install dependencies:
 
-## Code Style
+```bash
+npm install
+npm run build:packages
+```
 
-- **Go**: Follow standard Go conventions. Run `gofmt` and `golangci-lint`
-- **TypeScript**: Follow the ESLint and Prettier configurations in the repo
-- **Commits**: Use conventional commit messages (e.g., `feat:`, `fix:`, `docs:`, `refactor:`)
+4. Point the clients at the backend you want to use by copying `.env.example` to `.env`.
+
+## Development Commands
+
+```bash
+npm run dev:web
+npm run dev:admin
+npm run dev:desktop
+npm run dev:docs
+```
+
+Checks to run before opening a PR:
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build:docs
+```
 
 ## Pull Requests
 
-1. Create a feature branch from `main`
-2. Make your changes with tests
-3. Run `make lint` and `make test`
-4. Submit a PR with a clear description of the changes
+1. Create a branch from `main`.
+2. Keep frontend/docs changes in this repo and backend changes inside `new-project/`.
+3. Document any endpoint contract changes that affect client configuration.
+4. Include test/build notes in the PR description.
 
 ## Reporting Issues
 
-Use GitHub Issues. Include:
+Open GitHub issues with:
 
-- Steps to reproduce
-- Expected vs actual behavior
-- Environment details (OS, browser, versions)
-
-## Code of Conduct
-
-Be respectful and constructive. We follow the [Contributor Covenant](https://www.contributor-covenant.org/).
+- reproduction steps
+- expected vs actual behavior
+- environment details
+- whether the problem is in the client repo or the extracted backend project

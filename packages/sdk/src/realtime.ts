@@ -33,7 +33,7 @@ export class RealtimeClient {
   private _state: ConnectionState = 'disconnected';
 
   constructor(options: RealtimeClientOptions = {}) {
-    this.wsURL = options.wsURL ?? 'ws://localhost:8080/ws';
+    this.wsURL = options.wsURL ?? 'ws://localhost:8081/ws';
     this.heartbeatInterval = options.heartbeatInterval ?? WS_HEARTBEAT_INTERVAL;
     this.reconnectBaseDelay = options.reconnectBaseDelay ?? WS_RECONNECT_BASE_DELAY;
     this.reconnectMaxDelay = options.reconnectMaxDelay ?? WS_RECONNECT_MAX_DELAY;

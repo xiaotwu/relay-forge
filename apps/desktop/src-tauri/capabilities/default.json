@@ -6,7 +6,6 @@
     "core:default",
     "notification:default",
     "autostart:default",
-    "store:default",
-    "updater:default"
+    "store:default"
   ]
 }

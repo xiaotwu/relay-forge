@@ -1,13 +1,17 @@
 /**
- * Safely read a Vite environment variable.
- * Works in both browser (import.meta.env) and Node (process.env) contexts.
+ * Safely read environment variables in browser (Vite) and Node contexts.
+ * Keys are checked in order so explicit contract names can take priority.
  */
-function getEnv(viteKey: string, nodeKey: string): string | undefined {
-  // Vite injects env vars at build time via import.meta.env
+function getEnv(...keys: string[]): string | undefined {
+  // Vite injects prefixed env vars at build time via import.meta.env
   try {
     const meta = (import.meta as unknown as Record<string, Record<string, string>>).env;
-    if (meta && meta[viteKey]) {
-      return meta[viteKey];
+    if (meta) {
+      for (const key of keys) {
+        if (meta[key]) {
+          return meta[key];
+        }
+      }
     }
   } catch {
     // import.meta.env may not exist in Node
@@ -15,7 +19,11 @@ function getEnv(viteKey: string, nodeKey: string): string | undefined {
 
   // Fallback to process.env for SSR / Node / test environments
   if (typeof process !== 'undefined' && process.env) {
-    return process.env[nodeKey] ?? process.env[viteKey];
+    for (const key of keys) {
+      if (process.env[key]) {
+        return process.env[key];
+      }
+    }
   }
 
   return undefined;
@@ -23,26 +31,26 @@ function getEnv(viteKey: string, nodeKey: string): string | undefined {
 
 /**
  * Base URL for the REST API.
- * Set via VITE_API_URL (browser) or API_URL (Node).
+ * Set via API_BASE_URL or the legacy VITE_API_URL / API_URL aliases.
  * @default "http://localhost:8080/api/v1"
  */
 export const API_BASE_URL: string =
-  getEnv('VITE_API_URL', 'API_URL') ?? 'http://localhost:8080/api/v1';
+  getEnv('API_BASE_URL', 'VITE_API_URL', 'API_URL') ?? 'http://localhost:8080/api/v1';
 
 /**
  * WebSocket URL for real-time events.
- * Set via VITE_WS_URL (browser) or WS_URL (Node).
- * @default "ws://localhost:8080/ws"
+ * Set via WS_URL or the legacy VITE_WS_URL alias.
+ * @default "ws://localhost:8081/ws"
  */
-export const WS_URL: string = getEnv('VITE_WS_URL', 'WS_URL') ?? 'ws://localhost:8080/ws';
+export const WS_URL: string = getEnv('WS_URL', 'VITE_WS_URL') ?? 'ws://localhost:8081/ws';
 
 /**
  * LiveKit server URL for voice/video.
- * Set via VITE_LIVEKIT_URL (browser) or LIVEKIT_URL (Node).
+ * Set via LIVEKIT_URL or the legacy VITE_LIVEKIT_URL alias.
  * @default "ws://localhost:7880"
  */
 export const LIVEKIT_URL: string =
-  getEnv('VITE_LIVEKIT_URL', 'LIVEKIT_URL') ?? 'ws://localhost:7880';
+  getEnv('LIVEKIT_URL', 'VITE_LIVEKIT_URL') ?? 'ws://localhost:7880';
 
 /**
  * Maximum file upload size in bytes (25 MB).
