@@ -4,25 +4,26 @@
 
 If you discover a RelayForge security issue, do not open a public issue. Report it privately with:
 
-- a description of the issue
+- the affected repository or component
 - reproduction steps
-- affected component or repository
 - impact assessment
+- any relevant logs, traces, or screenshots
 
 ## Repository Scope
 
-This repository now covers:
+This repository covers:
 
 - the web client
-- the admin client
-- the desktop client
+- the admin console
+- the desktop shell
+- the shared frontend packages
 - the public documentation site
 
-Backend runtime security controls and operational hardening live in `relay-forge-server`.
+Backend runtime security controls and operational hardening are implemented in
+`relay-forge-server` and documented in the GitHub Pages handbook published from this repository.
 
 ## Client Security Expectations
 
-- All client-to-server communication must be configured through explicit endpoint URLs.
-- Sensitive tokens should stay in the smallest practical storage surface for each client.
-- Desktop packaging should use signed installers whenever your release channel supports it.
-- Documentation must not expose deployment secrets or backend-only operational details.
+- Keep backend endpoints explicit through environment variables.
+- Avoid publishing secrets, internal deployment details, or credentials in docs or example config.
+- Treat desktop release credentials and notification credentials as environment-specific secrets.

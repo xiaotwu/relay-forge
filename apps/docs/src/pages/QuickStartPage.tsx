@@ -1,39 +1,69 @@
 export default function QuickStartPage() {
   return (
-    <div>
-      <h1>Quick Start</h1>
-      <p>
-        This repository no longer boots the full stack locally. It builds client applications that
-        connect to an existing RelayForge backend.
-      </p>
+    <>
+      <section className="doc-section">
+        <p className="doc-kicker">Quick start</p>
+        <h1 className="doc-title !mt-2 !text-4xl md:!text-5xl">
+          Start the clients first, then point them at the backend you want.
+        </h1>
+        <p className="doc-section-copy !mt-4">
+          RelayForge is easiest to understand as a client-first project. The clients can target a
+          local backend, a hosted backend, or a backend running from the sibling server repository.
+        </p>
 
-      <h2>Prerequisites</h2>
-      <ul>
-        <li>Install Node.js 20+ and npm 10+ with Homebrew when possible.</li>
-        <li>Install Rust and Tauri prerequisites if you need desktop builds.</li>
-        <li>Use the official installer only when Homebrew is missing or outdated.</li>
-      </ul>
-
-      <h2>Client setup</h2>
-      <pre>{`cp .env.example .env
+        <div className="doc-card-grid">
+          <article className="doc-card">
+            <h2 className="doc-card-title">Option A: use an existing backend</h2>
+            <p className="doc-card-copy">
+              Best for product work, docs work, and UI iteration when the server is already hosted.
+            </p>
+            <div className="doc-code-block">
+              <pre>{`cp .env.example .env
 npm install
 npm run build:packages
 npm run dev:web`}</pre>
+            </div>
+          </article>
 
-      <p>
-        Update <code>.env</code> so the client points at the backend you want to use before you
-        sign in.
-      </p>
+          <article className="doc-card">
+            <h2 className="doc-card-title">Option B: boot the local backend</h2>
+            <p className="doc-card-copy">
+              Best when you need to exercise runtime services or verify the full stack end to end.
+            </p>
+            <div className="doc-code-block">
+              <pre>{`cd ../relay-forge-server
+cp .env.example .env
+make deploy-up
+make deploy-migrate`}</pre>
+            </div>
+          </article>
+        </div>
+      </section>
 
-      <h2>Common commands</h2>
-      <pre>{`npm run dev:web
-npm run dev:admin
-npm run dev:desktop
-npm run dev:docs
+      <section className="doc-section">
+        <h2 className="doc-section-title">Recommended local flow</h2>
+        <ol className="doc-list">
+          <li>Install Node.js 20+ and npm 10+ for the client workspace.</li>
+          <li>
+            Copy the client <code>.env.example</code> and set the endpoint URLs you want.
+          </li>
+          <li>
+            Run <code>npm run build:packages</code> before launching any app workspace.
+          </li>
+          <li>
+            Use <code>npm run dev:web</code> or <code>npm run dev:admin</code> for most frontend
+            work.
+          </li>
+          <li>
+            Use <code>npm run dev:docs</code> when editing the handbook or GitHub Pages site.
+          </li>
+        </ol>
 
-npm run lint
-npm run typecheck
-npm test`}</pre>
-    </div>
+        <div className="doc-callout">
+          The docs site is part of the product now. Treat docs changes like product changes: build
+          them locally, review them visually, and keep the README files intentionally short.
+        </div>
+      </section>
+    </>
   );
 }

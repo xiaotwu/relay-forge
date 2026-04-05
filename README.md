@@ -1,45 +1,14 @@
-# RelayForge Clients
+# RelayForge
 
-RelayForge is now organized as a client-focused repository. It contains the web app, admin console,
-desktop app, shared frontend packages, and the GitHub Pages documentation site.
+RelayForge is the client-facing repository for the RelayForge platform. It contains the web app,
+admin console, desktop app, shared frontend packages, and the GitHub Pages handbook.
 
-The backend now lives in
-[`relay-forge-server`](https://github.com/xiaotwu/relay-forge-server). Clients connect to that
-backend through configurable endpoint URLs, so moving the server to a new host or cloud
-environment only requires updating configuration.
+If you are looking for the backend services and deployment assets, go to
+[`relay-forge-server`](https://github.com/xiaotwu/relay-forge-server). If you want the full
+platform handbook, go to
+[`xiaotwu.github.io/relay-forge`](https://xiaotwu.github.io/relay-forge/).
 
-
-## Endpoint Configuration
-
-RelayForge clients are intentionally decoupled from backend deployment details. Use these variables
-to point the clients at the correct backend:
-
-- `API_BASE_URL`
-- `WS_URL`
-- `LIVEKIT_URL`
-
-Legacy `VITE_API_URL`, `VITE_WS_URL`, and `VITE_LIVEKIT_URL` aliases are still accepted for
-compatibility, but the explicit contract above is the preferred interface going forward.
-
-Copy [`.env.example`](./.env.example) to `.env` when you want a local client build with explicit
-server endpoints.
-
-## Tooling
-
-Install dependencies in this order:
-
-1. Homebrew first for core tools such as `node`, `go`, `rustup`, `tauri`, `golangci-lint`,
-   `playwright`, `zip`, and supporting native libraries.
-2. If Homebrew does not provide the version you need, use the tool's official install instructions.
-
-Recommended local toolchain:
-
-- Node.js 20+
-- npm 10+
-- Rust + Cargo
-- Tauri prerequisites for your platform
-
-## Client Development
+## Quickstart
 
 ```bash
 npm install
@@ -47,63 +16,33 @@ npm run build:packages
 npm run dev:web
 ```
 
-Common commands:
+Copy [`.env.example`](./.env.example) to `.env` when you want the clients to target an explicit
+backend. The runtime contract is:
 
-```bash
-npm run dev:web
-npm run dev:admin
-npm run dev:desktop
-npm run dev:docs
+- `API_BASE_URL`
+- `WS_URL`
+- `LIVEKIT_URL`
+- `MEDIA_BASE_URL`
 
-npm test
-npm run typecheck
-npm run lint
-```
+## Apps
 
-## Direct Packaging
+- `apps/web` - main browser client
+- `apps/admin` - operator and moderation console
+- `apps/desktop` - Tauri desktop shell
+- `apps/docs` - GitHub Pages handbook
 
-Static clients can be built and archived directly:
+## Packages
 
-```bash
-make package-web
-make package-admin
-make package-docs
-```
+- `packages/config` - shared endpoint contract
+- `packages/sdk` - REST and realtime client layer
+- `packages/types` - shared API and event models
+- `packages/crypto` - E2EE and device-key helpers
+- `packages/ui` - shared design system primitives
 
-Desktop installers are produced through Tauri:
+## Docs
 
-```bash
-make package-desktop
-```
+- [Handbook](https://xiaotwu.github.io/relay-forge/)
+- [Contributing](./CONTRIBUTING.md)
+- [Security](./SECURITY.md)
 
-## Backend Project
-
-The backend repository is
-[`relay-forge-server`](https://github.com/xiaotwu/relay-forge-server). It contains:
-
-- Go services
-- backend deployment assets
-- backend operations documentation
-- backend CI workflow definitions
-
-It is maintained independently from this client repo.
-
-## Documentation
-
-The GitHub Pages site is built from `apps/docs` and now covers:
-
-- client setup and packaging
-- endpoint configuration
-- repo boundaries
-- contribution workflow
-- backend architecture, operations, and security references
-
-Backend hosting and operations details belong in `relay-forge-server`.
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
-
-## Security
-
-See [SECURITY.md](./SECURITY.md).
+This repository is licensed under the [Apache-2.0 License](./LICENSE).

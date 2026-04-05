@@ -1,25 +1,26 @@
-# Contributing to RelayForge Clients
+# Contributing to RelayForge
 
-This repository now contains the RelayForge client applications and documentation site. Backend
-service work lives in `relay-forge-server`.
+This is the main contribution guide for the RelayForge platform. Keep it here in
+`relay-forge`; do not duplicate it in `relay-forge-server`.
+
+## Scope
+
+- Use `relay-forge` for the web app, admin console, desktop shell, shared frontend packages, and
+  GitHub Pages handbook.
+- Use `relay-forge-server` for Go runtime services, backend deployment assets, and server release
+  automation.
+- Publish long-form architecture and operations documentation from `apps/docs` in this repository.
 
 ## Local Setup
-
-1. Install prerequisites with Homebrew when possible:
-   - `node`
-   - `rustup`
-   - Tauri system dependencies for your platform
-2. If Homebrew is behind or unavailable for a required tool, use the official installer.
-3. Install dependencies:
 
 ```bash
 npm install
 npm run build:packages
 ```
 
-4. Point the clients at the backend you want to use by copying `.env.example` to `.env`.
+Copy [`.env.example`](./.env.example) to `.env` if you need explicit backend endpoints.
 
-## Development Commands
+## Common Commands
 
 ```bash
 npm run dev:web
@@ -39,16 +40,11 @@ npm run build:docs
 
 ## Pull Requests
 
-1. Create a branch from `main`.
-2. Keep frontend/docs changes in this repo and backend changes inside `relay-forge-server`.
-3. Document any endpoint contract changes that affect client configuration.
-4. Include test/build notes in the PR description.
+1. Keep changes focused on one repository boundary.
+2. Update the handbook when public behavior, deployment flow, or project structure changes.
+3. Include test or build notes in the PR description.
+4. Call out any environment or backend assumptions explicitly.
 
-## Reporting Issues
+## Security
 
-Open GitHub issues with:
-
-- reproduction steps
-- expected vs actual behavior
-- environment details
-- whether the problem is in the client repo or the extracted backend project
+Do not open public issues for vulnerabilities. Follow [SECURITY.md](./SECURITY.md) instead.

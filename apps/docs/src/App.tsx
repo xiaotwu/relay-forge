@@ -6,6 +6,8 @@ import QuickStartPage from './pages/QuickStartPage';
 import LocalDevPage from './pages/LocalDevPage';
 import ConfigReferencePage from './pages/ConfigReferencePage';
 import DeploymentPage from './pages/DeploymentPage';
+import ClientAppsPage from './pages/ClientAppsPage';
+import SharedPackagesPage from './pages/SharedPackagesPage';
 import ContributingPage from './pages/ContributingPage';
 import FAQPage from './pages/FAQPage';
 import SecurityPage from './pages/SecurityPage';
@@ -13,6 +15,7 @@ import ServerHomePage from './pages/ServerHomePage';
 import ServerArchitecturePage from './pages/ServerArchitecturePage';
 import ServerOperationsPage from './pages/ServerOperationsPage';
 import ServerSecurityPage from './pages/ServerSecurityPage';
+import ReferencesPage from './pages/ReferencesPage';
 
 export default function App() {
   return (
@@ -24,6 +27,8 @@ export default function App() {
         <Route path="local-dev" element={<LocalDevPage />} />
         <Route path="config" element={<ConfigReferencePage />} />
         <Route path="deployment" element={<DeploymentPage />} />
+        <Route path="client-apps" element={<ClientAppsPage />} />
+        <Route path="shared-packages" element={<SharedPackagesPage />} />
         <Route path="contributing" element={<ContributingPage />} />
         <Route path="faq" element={<FAQPage />} />
         <Route path="security" element={<SecurityPage />} />
@@ -31,6 +36,7 @@ export default function App() {
         <Route path="server/architecture" element={<ServerArchitecturePage />} />
         <Route path="server/operations" element={<ServerOperationsPage />} />
         <Route path="server/security" element={<ServerSecurityPage />} />
+        <Route path="references" element={<ReferencesPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

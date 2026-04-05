@@ -1,60 +1,57 @@
-import { Link } from 'react-router-dom';
+import RuntimeFlowDiagram from '../components/RuntimeFlowDiagram';
+
+const services = [
+  {
+    title: 'API',
+    copy: 'Owns REST endpoints, auth, RBAC, guilds, channels, messages, device state, migrations, and audit-facing persistence.',
+  },
+  {
+    title: 'Realtime',
+    copy: 'Maintains websocket sessions, presence, typing, and cross-node fan-out behavior using Valkey.',
+  },
+  {
+    title: 'Media',
+    copy: 'Coordinates uploads, object storage, and LiveKit room or token issuance for voice and video.',
+  },
+  {
+    title: 'Worker',
+    copy: 'Processes background jobs such as cleanup, retention, notification, and asynchronous maintenance tasks.',
+  },
+];
 
 export default function ServerHomePage() {
   return (
-    <div>
-      <h1>RelayForge Server</h1>
-      <p>
-        <code>relay-forge-server</code> is the standalone backend repository for RelayForge. It
-        owns the API, realtime gateway, media service, worker processes, deployment assets, and
-        backend runbooks.
-      </p>
+    <>
+      <section className="doc-section">
+        <p className="doc-kicker">Server overview</p>
+        <h1 className="doc-title !mt-2 !text-4xl md:!text-5xl">
+          A modular backend that is still easy to self-host.
+        </h1>
+        <p className="doc-section-copy !mt-4">
+          RelayForge keeps the backend small enough for self-hosters to reason about, but separates
+          runtime concerns where they diverge sharply: request/response APIs, long-lived realtime
+          connections, media workflows, and background jobs.
+        </p>
 
-      <div className="callout">
-        The client repo publishes this combined handbook, but the backend source code and release
-        workflows live in <code>relay-forge-server</code>.
-      </div>
+        <RuntimeFlowDiagram />
+      </section>
 
-      <h2>What lives in the repo</h2>
-      <ul>
-        <li>
-          <code>services/api</code> for authentication, RBAC, guilds, channels, messages, admin,
-          and database migrations
-        </li>
-        <li>
-          <code>services/realtime</code> for WebSocket fan-out, presence, typing, and event
-          delivery
-        </li>
-        <li>
-          <code>services/media</code> for uploads, S3-compatible storage, and LiveKit integration
-        </li>
-        <li>
-          <code>services/worker</code> for background jobs, maintenance, and delivery workflows
-        </li>
-        <li>
-          <code>infra/</code> for Docker-based deployment, proxy, and observability assets
-        </li>
-      </ul>
+      <section className="doc-section">
+        <h2 className="doc-section-title">Primary runtime components</h2>
+        <div className="doc-card-grid">
+          {services.map((service) => (
+            <article key={service.title} className="doc-card">
+              <h3 className="doc-card-title">{service.title}</h3>
+              <p className="doc-card-copy">{service.copy}</p>
+            </article>
+          ))}
+        </div>
 
-      <h2>Quick start</h2>
-      <pre>{`cp .env.example .env
-make test
-make build`}</pre>
-
-      <h2>Server docs</h2>
-      <ul>
-        <li>
-          <Link to="/server/architecture">Architecture</Link> for service boundaries and data flow
-        </li>
-        <li>
-          <Link to="/server/operations">Operations</Link> for deployment, production readiness, and
-          release guidance
-        </li>
-        <li>
-          <Link to="/server/security">Security Model</Link> for the threat model and trust
-          boundaries
-        </li>
-      </ul>
-    </div>
+        <div className="doc-callout">
+          The runtime code remains in <code>relay-forge-server</code>; the long-form explanation now
+          lives here so the public docs have one stable home.
+        </div>
+      </section>
+    </>
   );
 }

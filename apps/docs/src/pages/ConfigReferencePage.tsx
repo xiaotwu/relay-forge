@@ -1,65 +1,113 @@
+const configRows = [
+  {
+    key: 'API_BASE_URL',
+    usedBy: 'web, admin, desktop, sdk',
+    defaultValue: 'http://localhost:8080/api/v1',
+    note: 'Points product surfaces at the API service for REST and auth flows.',
+  },
+  {
+    key: 'WS_URL',
+    usedBy: 'web, desktop, sdk',
+    defaultValue: 'ws://localhost:8081/ws',
+    note: 'Connects clients to the realtime WebSocket gateway for fan-out and presence.',
+  },
+  {
+    key: 'LIVEKIT_URL',
+    usedBy: 'web, desktop',
+    defaultValue: 'ws://localhost:7880',
+    note: 'Targets the LiveKit deployment used for voice and video transport.',
+  },
+  {
+    key: 'MEDIA_BASE_URL',
+    usedBy: 'sdk and upload flows',
+    defaultValue: 'http://localhost:8082/api/v1',
+    note: 'Optional override for media-oriented endpoints and storage coordination.',
+  },
+];
+
+const serviceMappings = [
+  {
+    label: 'API_BASE_URL',
+    target: 'relay-forge-server/services/api',
+  },
+  {
+    label: 'WS_URL',
+    target: 'relay-forge-server/services/realtime',
+  },
+  {
+    label: 'MEDIA_BASE_URL',
+    target: 'relay-forge-server/services/media',
+  },
+  {
+    label: 'LIVEKIT_URL',
+    target: 'LiveKit plus the media service token issuer',
+  },
+];
+
 export default function ConfigReferencePage() {
   return (
-    <div>
-      <h1>Endpoint Configuration</h1>
-      <p>
-        RelayForge clients are designed to follow the backend by configuration, not by repository
-        structure. When the backend moves to a new host or cloud provider, update the endpoint
-        values and rebuild or restart the client workflow as needed.
-      </p>
+    <>
+      <section className="doc-section">
+        <p className="doc-kicker">Endpoint contract</p>
+        <h1 className="doc-title !mt-2 !text-4xl md:!text-5xl">
+          Runtime URLs are the contract between the repos.
+        </h1>
+        <p className="doc-section-copy !mt-4">
+          The client repo should never assume a co-located Go service. Every surface reads explicit
+          endpoint variables and can target any compatible RelayForge backend deployment.
+        </p>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Variable</th>
-            <th>Purpose</th>
-            <th>Example</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <code>API_BASE_URL</code>
-            </td>
-            <td>Base URL for REST API calls.</td>
-            <td>
-              <code>https://relay.example.com/api/v1</code>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <code>WS_URL</code>
-            </td>
-            <td>WebSocket endpoint for realtime events.</td>
-            <td>
-              <code>wss://relay.example.com/ws</code>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <code>LIVEKIT_URL</code>
-            </td>
-            <td>LiveKit endpoint for voice and video.</td>
-            <td>
-              <code>wss://livekit.example.com</code>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div className="doc-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th>Used by</th>
+                <th>Default</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {configRows.map((row) => (
+                <tr key={row.key}>
+                  <td>
+                    <code>{row.key}</code>
+                  </td>
+                  <td>{row.usedBy}</td>
+                  <td>
+                    <code>{row.defaultValue}</code>
+                  </td>
+                  <td>{row.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-      <h2>Example</h2>
-      <pre>{`API_BASE_URL=https://relay.example.com/api/v1
-WS_URL=wss://relay.example.com/ws
-LIVEKIT_URL=wss://livekit.example.com`}</pre>
+      <section className="doc-section">
+        <h2 className="doc-section-title">Mapping to backend components</h2>
+        <p className="doc-section-copy">
+          These values are intentionally named after product contracts rather than Vite internals,
+          so web, desktop, docs examples, and future mobile clients can all read the same shape.
+        </p>
 
-      <p>
-        These values are shared by the web, admin, and desktop frontend bundles through the shared
-        config package.
-      </p>
-      <p>
-        Older <code>VITE_*</code> aliases are still accepted, but the explicit names above are the
-        preferred contract for future deployments and host migrations.
-      </p>
-    </div>
+        <div className="doc-card-grid">
+          {serviceMappings.map((mapping) => (
+            <article key={mapping.label} className="doc-card">
+              <h3 className="doc-card-title">{mapping.label}</h3>
+              <p className="doc-card-copy">{mapping.target}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="doc-code-block">
+          <pre>{`API_BASE_URL=https://relayforge.example.com/api/v1
+WS_URL=wss://relayforge.example.com/ws
+LIVEKIT_URL=wss://livekit.example.com
+MEDIA_BASE_URL=https://relayforge.example.com/api/v1/media`}</pre>
+        </div>
+      </section>
+    </>
   );
 }

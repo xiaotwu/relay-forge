@@ -6,6 +6,7 @@ vendor/
 dist/
 build/
 target/
+release/
 *.tsbuildinfo
 bin/
 *.exe

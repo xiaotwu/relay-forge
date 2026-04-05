@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "RelayForge client applications and documentation",
-  "license": "AGPL-3.0-or-later",
+  "description": "RelayForge client applications, shared packages, and documentation",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/relay-forge/relay-forge.git"
+    "url": "https://github.com/xiaotwu/relay-forge.git"
   },
   "workspaces": [
     "apps/web",

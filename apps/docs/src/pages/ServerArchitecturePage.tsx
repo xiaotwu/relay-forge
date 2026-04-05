@@ -1,77 +1,108 @@
+import RuntimeFlowDiagram from '../components/RuntimeFlowDiagram';
+
+const serviceRows = [
+  {
+    service: 'api',
+    responsibility:
+      'Authoritative REST API, auth, guild state, message persistence, DM key bundle coordination, and migrations.',
+  },
+  {
+    service: 'realtime',
+    responsibility:
+      'WebSocket gateway for message fan-out, presence, typing indicators, read-state broadcasts, and reconnect behavior.',
+  },
+  {
+    service: 'media',
+    responsibility:
+      'Upload orchestration, MIME validation, S3-compatible storage coordination, and LiveKit integration.',
+  },
+  {
+    service: 'worker',
+    responsibility:
+      'Scheduled or queued jobs including cleanup, retention, and asynchronous side effects.',
+  },
+];
+
+const dataRows = [
+  {
+    domain: 'Users, guilds, channels, messages, audit',
+    owner: 'PostgreSQL via API service',
+  },
+  {
+    domain: 'Presence, typing, fan-out coordination',
+    owner: 'Valkey via realtime service',
+  },
+  {
+    domain: 'Uploads and media blobs',
+    owner: 'S3-compatible storage via media service',
+  },
+  {
+    domain: 'Voice and video transport',
+    owner: 'LiveKit, coordinated by the media service',
+  },
+];
+
 export default function ServerArchitecturePage() {
   return (
-    <div>
-      <h1>Server Architecture</h1>
-      <p>
-        RelayForge is designed as a modular monolith with separate realtime and media services. The
-        goal is to keep small-team deployment simple while preserving clear boundaries for scaling.
-      </p>
+    <>
+      <section className="doc-section">
+        <p className="doc-kicker">Services and data flow</p>
+        <h1 className="doc-title !mt-2 !text-4xl md:!text-5xl">
+          Runtime separation follows connection shape, not organizational fashion.
+        </h1>
+        <p className="doc-section-copy !mt-4">
+          The server repository is deliberately not a microservice maze. It is a practical split:
+          synchronous HTTP state, long-lived realtime connections, media workflows, and queued work.
+        </p>
 
-      <h2>Core services</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Service</th>
-            <th>Responsibility</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <code>api</code>
-            </td>
-            <td>REST API, auth, RBAC, guilds, channels, messages, admin, migrations.</td>
-          </tr>
-          <tr>
-            <td>
-              <code>realtime</code>
-            </td>
-            <td>WebSocket delivery, presence, typing indicators, and fan-out.</td>
-          </tr>
-          <tr>
-            <td>
-              <code>media</code>
-            </td>
-            <td>Uploads, S3-compatible storage, MIME validation, and LiveKit room handling.</td>
-          </tr>
-          <tr>
-            <td>
-              <code>worker</code>
-            </td>
-            <td>Background jobs, cleanups, archival, and scheduled maintenance work.</td>
-          </tr>
-        </tbody>
-      </table>
+        <RuntimeFlowDiagram />
+      </section>
 
-      <h2>Supporting infrastructure</h2>
-      <ul>
-        <li>
-          <code>PostgreSQL</code> stores users, sessions, guilds, channels, messages, roles, and
-          audit data.
-        </li>
-        <li>
-          <code>Valkey</code> handles ephemeral presence state, pub/sub, and queues.
-        </li>
-        <li>
-          <code>S3-compatible storage</code> stores uploaded media assets and blobs.
-        </li>
-        <li>
-          <code>LiveKit</code> powers voice and video room transport.
-        </li>
-      </ul>
+      <section className="doc-section">
+        <h2 className="doc-section-title">Service contract matrix</h2>
+        <div className="doc-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Responsibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              {serviceRows.map((row) => (
+                <tr key={row.service}>
+                  <td>
+                    <code>{row.service}</code>
+                  </td>
+                  <td>{row.responsibility}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-      <h2>Architectural principles</h2>
-      <ul>
-        <li>Server-side authority for permissions and access control.</li>
-        <li>Cloud-portable primitives instead of vendor-specific backend services.</li>
-        <li>Observability by default through logs, traces, metrics, and health endpoints.</li>
-        <li>E2EE only for DMs, while guild content remains searchable and moderatable.</li>
-      </ul>
-
-      <div className="callout">
-        The client and server repos are intentionally decoupled. Their shared contract is endpoint
-        configuration, not a shared filesystem or build graph.
-      </div>
-    </div>
+      <section className="doc-section">
+        <h2 className="doc-section-title">Data ownership</h2>
+        <div className="doc-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Domain</th>
+                <th>Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataRows.map((row) => (
+                <tr key={row.domain}>
+                  <td>{row.domain}</td>
+                  <td>{row.owner}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </>
   );
 }
