@@ -29,7 +29,9 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
           <div className="mt-4">
             <Spinner size="lg" />
           </div>
-          <p className="text-text-primary mt-4 text-2xl font-semibold">Preparing your desktop app</p>
+          <p className="text-text-primary mt-4 text-2xl font-semibold">
+            Preparing your desktop app
+          </p>
         </div>
       </div>
     );
