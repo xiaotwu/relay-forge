@@ -8,13 +8,28 @@ import { MainPage } from '@/pages/MainPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { Spinner } from '@relayforge/ui';
 
+const relayForgeIconSrc = '/branding/relay-forge-icon.png';
+
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuthStore();
 
   if (isLoading) {
     return (
-      <div className="bg-base flex h-screen w-screen items-center justify-center">
-        <Spinner size="xl" />
+      <div className="bg-base flex h-screen w-screen items-center justify-center px-4">
+        <div className="bg-surface flex w-full max-w-sm flex-col items-center rounded-[28px] px-8 py-9 text-center shadow-xl">
+          <img
+            src={relayForgeIconSrc}
+            alt="RelayForge"
+            className="mb-5 h-20 w-20 rounded-[28px] border border-black/5 bg-white object-cover shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
+          />
+          <p className="text-text-secondary text-[11px] font-semibold uppercase tracking-[0.28em]">
+            RelayForge
+          </p>
+          <div className="mt-4">
+            <Spinner size="lg" />
+          </div>
+          <p className="text-text-primary mt-4 text-2xl font-semibold">Preparing your workspace</p>
+        </div>
       </div>
     );
   }

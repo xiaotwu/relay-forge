@@ -3,6 +3,8 @@ import { Link, useNavigate, Navigate } from 'react-router-dom';
 import { Button, Input } from '@relayforge/ui';
 import { useAuthStore } from '@/stores/auth';
 
+const relayForgeIconSrc = '/branding/relay-forge-icon.png';
+
 export function RegisterPage() {
   const { register, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
@@ -52,6 +54,11 @@ export function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="bg-surface rounded-2xl p-8 shadow-xl">
           <div className="mb-8 text-center">
+            <img
+              src={relayForgeIconSrc}
+              alt="RelayForge"
+              className="mx-auto mb-4 h-20 w-20 rounded-[28px] border border-black/5 bg-white object-cover shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
+            />
             <h1 className="text-text-primary text-2xl font-bold">Create account</h1>
             <p className="text-text-secondary mt-2">Join RelayForge</p>
           </div>

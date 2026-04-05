@@ -4,6 +4,8 @@ import { Avatar, Modal, Input, Button } from '@relayforge/ui';
 import { useGuildStore } from '@/stores/guild';
 import { useAuthStore } from '@/stores/auth';
 
+const relayForgeIconSrc = '/branding/relay-forge-icon.png';
+
 export function GuildSidebar() {
   const { guilds, selectedGuildId, selectGuild, createGuild } = useGuildStore();
   const { user } = useAuthStore();
@@ -36,25 +38,13 @@ export function GuildSidebar() {
           title="Direct Messages"
         >
           <div
-            className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-200 ${
+            className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded-[18px] border border-white/60 bg-white shadow-sm transition-all duration-200 ${
               selectedGuildId === null
-                ? 'bg-accent rounded-xl'
-                : 'bg-elevated hover:bg-accent hover:rounded-xl'
+                ? 'rounded-xl shadow-[0_14px_28px_rgba(var(--rf-accent),0.28)] ring-2 ring-[rgba(var(--rf-accent),0.4)]'
+                : 'hover:-translate-y-0.5 hover:rounded-xl hover:shadow-[0_16px_30px_rgba(15,23,42,0.16)]'
             }`}
           >
-            <svg
-              className="text-text-primary h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-              />
-            </svg>
+            <img src={relayForgeIconSrc} alt="" className="h-full w-full object-cover" />
           </div>
           {/* Selected indicator */}
           {selectedGuildId === null && (
