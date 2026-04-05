@@ -58,7 +58,6 @@ export default function ArchitectureDiagram() {
   return (
     <MermaidDiagram
       chart={architectureChart}
-      eyebrow="Platform map"
       title="RelayForge client, shared packages, backend services, and infrastructure"
       note="Text-defined Mermaid charts now replace fixed SVG illustrations so the docs stay easier to audit and maintain."
     />
