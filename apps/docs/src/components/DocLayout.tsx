@@ -7,6 +7,7 @@ export default function DocLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const pageTitle = getDocTitle(location.pathname);
+  const wordmarkSrc = `${import.meta.env.BASE_URL}branding/relay-forge-wordmark.png`;
 
   return (
     <div className="min-h-screen bg-stone-100 text-stone-950">
@@ -27,11 +28,9 @@ export default function DocLayout() {
           </button>
 
           <Link to="/" className="no-underline">
-            <div className="rounded-2xl border border-stone-200 bg-white px-4 py-2 shadow-sm">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-500">
-                RelayForge
-              </p>
-              <p className="text-sm font-semibold text-stone-950">Handbook</p>
+            <div className="doc-brand-card">
+              <img src={wordmarkSrc} alt="RelayForge" className="doc-brand-wordmark" />
+              <span className="doc-brand-badge">Handbook</span>
             </div>
           </Link>
 

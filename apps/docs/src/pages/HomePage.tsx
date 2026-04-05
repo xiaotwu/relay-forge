@@ -65,11 +65,14 @@ const readingPaths = [
 ];
 
 export default function HomePage() {
+  const wordmarkSrc = `${import.meta.env.BASE_URL}branding/relay-forge-wordmark.png`;
+
   return (
     <>
       <section className="doc-hero">
         <div>
-          <p className="doc-kicker">RelayForge platform handbook</p>
+          <img src={wordmarkSrc} alt="RelayForge" className="doc-hero-wordmark" />
+          <p className="doc-kicker">Platform handbook</p>
           <h1 className="doc-title">One documentation surface for the entire RelayForge stack.</h1>
           <p className="doc-subtitle">
             The client repository now owns the GitHub Pages site, contribution rules, release

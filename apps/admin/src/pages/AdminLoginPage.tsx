@@ -3,6 +3,8 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import { Button, Input } from '@relayforge/ui';
 import { useAdminStore } from '@/stores/admin';
 
+const relayForgeIconSrc = '/branding/relay-forge-icon.png';
+
 export function AdminLoginPage() {
   const { loginAdmin, isAuthenticated, initialize } = useAdminStore();
   const navigate = useNavigate();
@@ -38,9 +40,11 @@ export function AdminLoginPage() {
       <div className="w-full max-w-md">
         <div className="bg-surface rounded-2xl p-8 shadow-xl">
           <div className="mb-8 text-center">
-            <div className="bg-accent mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-              <span className="text-lg font-bold text-white">RF</span>
-            </div>
+            <img
+              src={relayForgeIconSrc}
+              alt="RelayForge"
+              className="mx-auto mb-4 h-20 w-20 rounded-[28px] border border-black/5 bg-white object-cover shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
+            />
             <h1 className="text-text-primary text-2xl font-bold">Admin Console</h1>
             <p className="text-text-secondary mt-2">Sign in to RelayForge Admin</p>
           </div>

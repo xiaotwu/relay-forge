@@ -2,6 +2,9 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAdminStore } from '@/stores/admin';
 
+const relayForgeIconSrc = '/branding/relay-forge-icon.png';
+const relayForgeWordmarkSrc = '/branding/relay-forge-wordmark.png';
+
 const navItems = [
   {
     to: '/',
@@ -48,11 +51,15 @@ export function AdminSidebar() {
     <aside className="bg-surface border-border flex h-full w-60 flex-col border-r">
       {/* Logo */}
       <div className="border-border flex items-center gap-2 border-b px-5 py-5">
-        <div className="bg-accent flex h-8 w-8 items-center justify-center rounded-lg">
-          <span className="text-sm font-bold text-white">RF</span>
-        </div>
         <div>
-          <h1 className="text-text-primary text-sm font-bold">RelayForge</h1>
+          <div className="mb-2 inline-flex items-center gap-3 rounded-[18px] border border-black/5 bg-white px-3 py-2 shadow-sm">
+            <img src={relayForgeIconSrc} alt="" className="h-9 w-9 rounded-[14px] object-cover" />
+            <img
+              src={relayForgeWordmarkSrc}
+              alt="RelayForge"
+              className="h-7 w-auto max-w-[150px] object-contain"
+            />
+          </div>
           <p className="text-text-secondary text-xs">Admin Console</p>
         </div>
       </div>

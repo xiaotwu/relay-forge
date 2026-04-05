@@ -57,8 +57,12 @@
     @apply grid gap-8 rounded-[36px] border border-stone-200 bg-white/95 p-7 shadow-[0_40px_120px_-64px_rgba(15,23,42,0.45)] lg:grid-cols-[minmax(0,1fr)_420px] lg:p-10;
   }
 
+  .doc-hero-wordmark {
+    @apply h-auto max-w-[340px];
+  }
+
   .doc-kicker {
-    @apply text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-500;
+    @apply mt-6 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-500;
   }
 
   .doc-title {
@@ -80,6 +84,18 @@
 
   .doc-pill-button.primary {
     @apply border-stone-950 bg-stone-950 text-stone-50 hover:border-stone-800 hover:bg-stone-800 hover:text-stone-50;
+  }
+
+  .doc-brand-card {
+    @apply flex items-center gap-3 rounded-[24px] border border-stone-200 bg-white px-4 py-3 shadow-sm;
+  }
+
+  .doc-brand-wordmark {
+    @apply block h-8 w-auto max-w-[180px];
+  }
+
+  .doc-brand-badge {
+    @apply rounded-full bg-stone-950 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-50;
   }
 
   .doc-skip-link {

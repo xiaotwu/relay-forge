@@ -1,4 +1,6 @@
-# RelayForge
+<p align="center">
+  <img src="./branding/relay-forge-wordmark.png" alt="RelayForge" width="460" />
+</p>
 
 RelayForge is the client-facing repository for the RelayForge platform. It contains the web app,
 admin console, desktop app, shared frontend packages, and the GitHub Pages handbook.
