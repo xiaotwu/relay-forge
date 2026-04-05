@@ -1,73 +1,47 @@
+import MermaidDiagram from './MermaidDiagram';
+
+const runtimeFlowChart = String.raw`
+flowchart LR
+    classDef client fill:#111827,stroke:#111827,color:#f8fafc;
+    classDef service fill:#ffffff,stroke:#d8dccf,color:#111827;
+    classDef delivery fill:#eef2ff,stroke:#c7d2fe,color:#312e81;
+    classDef state fill:#fff2e2,stroke:#f59e0b,color:#7c2d12;
+
+    CLIENTS["web / admin / desktop"]:::client
+
+    API["api"]:::service
+    REALTIME["realtime"]:::service
+    MEDIA["media"]:::service
+    WORKER["worker"]:::service
+
+    LIVEKIT["livekit"]:::delivery
+
+    POSTGRES["postgres"]:::state
+    VALKEY["valkey"]:::state
+    STORAGE["s3 storage"]:::state
+
+    CLIENTS -->|"REST, auth, metadata"| API
+    CLIENTS -->|"presence, typing, fan-out"| REALTIME
+    CLIENTS -->|"uploads and voice entry"| MEDIA
+    CLIENTS -->|"maintenance triggers"| WORKER
+
+    API --> POSTGRES
+    API --> VALKEY
+    REALTIME --> VALKEY
+    MEDIA --> STORAGE
+    MEDIA --> LIVEKIT
+    WORKER --> POSTGRES
+    WORKER --> VALKEY
+    WORKER --> STORAGE
+`;
+
 export default function RuntimeFlowDiagram() {
   return (
-    <div className="doc-diagram-frame">
-      <svg viewBox="0 0 760 360" role="img" aria-label="RelayForge request and realtime flow">
-        <rect x="0" y="0" width="760" height="360" rx="32" fill="#f5f7ff" />
-        <rect x="22" y="22" width="716" height="316" rx="26" fill="#fbfbff" stroke="#d6dff4" />
-
-        {[
-          ['Clients', 56],
-          ['Control plane', 254],
-          ['Delivery plane', 464],
-          ['State', 648],
-        ].map(([label, x]) => (
-          <text key={label} x={Number(x)} y="62" className="diagram-eyebrow">
-            {label}
-          </text>
-        ))}
-
-        {[
-          ['web / admin / desktop', 56, 94, 154],
-          ['api', 254, 94, 110],
-          ['realtime', 254, 154, 110],
-          ['media', 254, 214, 110],
-          ['worker', 254, 274, 110],
-          ['livekit', 464, 214, 112],
-          ['postgres', 648, 94, 92],
-          ['valkey', 648, 154, 92],
-          ['s3 storage', 648, 214, 92],
-        ].map(([label, x, y, width]) => (
-          <g key={label}>
-            <rect
-              x={Number(x)}
-              y={Number(y)}
-              width={Number(width)}
-              height="34"
-              rx="12"
-              className="diagram-pill"
-            />
-            <text x={Number(x) + 18} y={Number(y) + 22} className="diagram-pill-text">
-              {label}
-            </text>
-          </g>
-        ))}
-
-        {[
-          'M210 111 H236',
-          'M210 171 H236',
-          'M210 231 H236',
-          'M364 111 H620',
-          'M364 171 H620',
-          'M364 231 H620',
-          'M420 231 H446',
-          'M420 291 H620',
-        ].map((path) => (
-          <path key={path} d={path} className="diagram-link" />
-        ))}
-
-        <text x="392" y="109" className="diagram-note">
-          REST, auth, metadata
-        </text>
-        <text x="392" y="169" className="diagram-note">
-          WebSocket fan-out and presence
-        </text>
-        <text x="392" y="229" className="diagram-note">
-          Uploads and voice tokens
-        </text>
-        <text x="392" y="289" className="diagram-note">
-          Background jobs and retention
-        </text>
-      </svg>
-    </div>
+    <MermaidDiagram
+      chart={runtimeFlowChart}
+      eyebrow="Runtime flow"
+      title="Client traffic, backend services, delivery systems, and state stores"
+      note="REST, realtime, media, and background work are split by runtime behavior, not by unnecessary service sprawl."
+    />
   );
 }

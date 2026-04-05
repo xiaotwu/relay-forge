@@ -1,11 +1,13 @@
 import { NavLink } from 'react-router-dom';
+import { DocIcon } from './DocIcons';
 import { docsSections } from '../navigation';
 
 export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) {
   return (
     <nav className="space-y-7">
       <div className="rounded-[28px] border border-stone-200 bg-white/90 p-5 shadow-[0_22px_80px_-48px_rgba(15,23,42,0.45)]">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-500">
+        <p className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-500">
+          <DocIcon name="book" className="h-3.5 w-3.5" />
           Unified handbook
         </p>
         <p className="mt-3 text-sm leading-6 text-stone-700">
@@ -16,7 +18,8 @@ export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) 
 
       {docsSections.map((section) => (
         <div key={section.label} className="space-y-2">
-          <p className="px-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-500">
+          <p className="inline-flex items-center gap-2 px-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-500">
+            <DocIcon name={section.icon} className="h-3.5 w-3.5" />
             {section.label}
           </p>
           <ul className="space-y-1.5">
@@ -34,12 +37,19 @@ export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) 
                     }`
                   }
                 >
-                  <span className="block text-sm font-semibold">{item.label}</span>
-                  {item.blurb && (
-                    <span className="text-inherit/75 mt-1 block text-xs leading-5">
-                      {item.blurb}
+                  <span className="flex items-start gap-3">
+                    <span className="mt-0.5 inline-flex h-8 w-8 flex-none items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                      <DocIcon name={item.icon} className="h-4 w-4" />
                     </span>
-                  )}
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold">{item.label}</span>
+                      {item.blurb && (
+                        <span className="mt-1 block text-xs leading-5 opacity-75">
+                          {item.blurb}
+                        </span>
+                      )}
+                    </span>
+                  </span>
                 </NavLink>
               </li>
             ))}
@@ -48,7 +58,10 @@ export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) 
       ))}
 
       <div className="rounded-[28px] border border-stone-200 bg-stone-50/90 p-5 text-sm leading-6 text-stone-700">
-        <p className="font-semibold text-stone-900">Source of truth</p>
+        <p className="inline-flex items-center gap-2 font-semibold text-stone-900">
+          <DocIcon name="link" className="h-4 w-4" />
+          Source of truth
+        </p>
         <p className="mt-2">
           Publish docs, GitHub Pages, and contribution rules from <code>relay-forge</code>. Keep
           <code> relay-forge-server</code> focused on runtime code and deployment assets.

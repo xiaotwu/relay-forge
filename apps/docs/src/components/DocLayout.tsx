@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import DocSidebar from './DocSidebar';
-import { getDocTitle, primaryLinks } from '../navigation';
+import DocSearch from './DocSearch';
+import { DocIcon } from './DocIcons';
+import { getDocMeta, getDocTitle, primaryLinks } from '../navigation';
 
 export default function DocLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const pageTitle = getDocTitle(location.pathname);
+  const pageMeta = getDocMeta(location.pathname);
   const wordmarkSrc = `${import.meta.env.BASE_URL}branding/relay-forge-wordmark.png`;
 
   return (
@@ -20,17 +23,20 @@ export default function DocLayout() {
       <header className="bg-stone-50/88 sticky top-0 z-40 border-b border-stone-200/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1560px] items-center gap-4 px-4 py-3 lg:px-8">
           <button
-            className="rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm font-medium shadow-sm lg:hidden"
+            className="doc-icon-button lg:hidden"
             onClick={() => setSidebarOpen((value) => !value)}
             aria-label="Toggle navigation"
           >
-            Menu
+            <DocIcon name="menu" className="h-5 w-5" />
+            <span className="sr-only">Menu</span>
           </button>
 
           <Link to="/" className="no-underline">
             <div className="doc-brand-card">
+              <span className="doc-brand-mark" aria-hidden="true">
+                <DocIcon name="book" className="h-4 w-4" />
+              </span>
               <img src={wordmarkSrc} alt="RelayForge" className="doc-brand-wordmark" />
-              <span className="doc-brand-badge">Handbook</span>
             </div>
           </Link>
 
@@ -40,28 +46,28 @@ export default function DocLayout() {
                 key={item.to}
                 to={item.to}
                 end={item.to === '/'}
+                title={item.label}
+                aria-label={item.label}
                 className={({ isActive }) =>
-                  `rounded-full px-3 py-2 text-sm font-medium no-underline transition ${
-                    isActive
-                      ? 'bg-stone-950 text-stone-50'
-                      : 'text-stone-700 hover:bg-white hover:text-stone-950'
-                  }`
+                  `doc-toolbar-link ${isActive ? 'doc-toolbar-link-active' : ''}`
                 }
               >
-                {item.label}
+                <DocIcon name={item.icon} className="h-4 w-4" />
+                <span className="sr-only 2xl:not-sr-only 2xl:text-sm 2xl:font-medium">
+                  {item.label}
+                </span>
               </NavLink>
             ))}
           </nav>
 
-          <div className="hidden flex-1 xl:block">
-            <div className="mx-auto max-w-md rounded-full border border-stone-200 bg-white/90 px-4 py-2 text-sm text-stone-500 shadow-sm">
-              Search by sidebar section, repo path, or service name
-            </div>
+          <div className="hidden min-w-0 flex-1 lg:block">
+            <DocSearch />
           </div>
 
           <div className="flex-1 lg:hidden" />
 
-          <div className="hidden text-sm text-stone-500 xl:block">
+          <div className="hidden items-center gap-2 rounded-full border border-stone-200 bg-white/85 px-3 py-2 text-sm text-stone-500 shadow-sm xl:inline-flex">
+            {pageMeta ? <DocIcon name={pageMeta.icon} className="h-4 w-4 text-stone-700" /> : null}
             <span className="font-semibold text-stone-900">{pageTitle}</span>
           </div>
 
@@ -69,17 +75,23 @@ export default function DocLayout() {
             href="https://github.com/xiaotwu/relay-forge"
             target="_blank"
             rel="noreferrer"
-            className="hidden rounded-full border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-700 no-underline shadow-sm transition hover:border-stone-300 hover:text-stone-950 md:inline-flex"
+            className="doc-toolbar-link hidden md:inline-flex"
+            title="Open the relay-forge repository"
+            aria-label="Open the relay-forge repository"
           >
-            Client Repo
+            <DocIcon name="github" className="h-4 w-4" />
+            <span className="hidden xl:inline">Client</span>
           </a>
           <a
             href="https://github.com/xiaotwu/relay-forge-server"
             target="_blank"
             rel="noreferrer"
-            className="hidden rounded-full border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-700 no-underline shadow-sm transition hover:border-stone-300 hover:text-stone-950 md:inline-flex"
+            className="doc-toolbar-link hidden md:inline-flex"
+            title="Open the relay-forge-server repository"
+            aria-label="Open the relay-forge-server repository"
           >
-            Server Repo
+            <DocIcon name="server" className="h-4 w-4" />
+            <span className="hidden xl:inline">Server</span>
           </a>
         </div>
       </header>
@@ -98,6 +110,9 @@ export default function DocLayout() {
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
+          <div className="mb-5 lg:hidden">
+            <DocSearch />
+          </div>
           <DocSidebar onNavClick={() => setSidebarOpen(false)} />
         </aside>
 
