@@ -14,7 +14,7 @@
   }
 
   body {
-    @apply bg-stone-100 text-stone-950 antialiased;
+    @apply text-stone-950 antialiased;
     font-family:
       'Manrope',
       ui-sans-serif,
@@ -53,6 +53,16 @@
     display: grid;
   }
 
+  .doc-site-shell {
+    @apply bg-stone-100;
+    background-image:
+      radial-gradient(circle at top left, rgba(145, 166, 255, 0.28), transparent 30%),
+      radial-gradient(circle at 88% 10%, rgba(255, 255, 255, 0.92), transparent 18%),
+      radial-gradient(circle at 18% 58%, rgba(251, 191, 36, 0.12), transparent 24%),
+      linear-gradient(180deg, rgba(248, 247, 244, 1) 0%, rgba(242, 241, 236, 1) 100%);
+    background-repeat: no-repeat;
+  }
+
   .doc-hero {
     @apply grid gap-6 rounded-[36px] border border-stone-200 bg-white/95 p-7 shadow-[0_40px_120px_-64px_rgba(15,23,42,0.45)] lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)] lg:items-start lg:p-10;
   }
@@ -76,6 +86,71 @@
 
   .doc-actions {
     @apply mt-6 flex flex-wrap gap-3;
+  }
+
+  .doc-hero-panel {
+    @apply relative overflow-hidden rounded-[32px] border border-stone-200/90 bg-[linear-gradient(180deg,_rgba(255,255,255,0.96),_rgba(246,247,243,0.98))] p-6 shadow-[0_36px_110px_-70px_rgba(15,23,42,0.45)] lg:p-7;
+  }
+
+  .doc-hero-panel-glow {
+    @apply pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top_left,_rgba(145,166,255,0.22),_transparent_58%),radial-gradient(circle_at_top_right,_rgba(251,191,36,0.12),_transparent_52%)];
+  }
+
+  .doc-hero-panel-kicker {
+    @apply relative inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-500;
+  }
+
+  .doc-hero-panel-title {
+    @apply relative mt-3 max-w-lg text-[1.9rem] font-semibold tracking-[-0.04em] text-stone-950;
+    text-wrap: balance;
+  }
+
+  .doc-hero-panel-copy {
+    @apply relative mt-3 max-w-lg text-sm leading-7 text-stone-600;
+  }
+
+  .doc-hero-lanes {
+    @apply relative mt-6 grid gap-3;
+  }
+
+  .doc-hero-lane {
+    @apply rounded-[24px] border border-stone-200/90 bg-white/80 px-4 py-4 backdrop-blur;
+  }
+
+  .doc-hero-lane-header {
+    @apply flex items-center justify-between gap-3;
+  }
+
+  .doc-hero-lane-label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500;
+  }
+
+  .doc-hero-chip-row {
+    @apply mt-3 flex flex-wrap gap-2;
+  }
+
+  .doc-hero-chip {
+    @apply inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold;
+  }
+
+  .doc-hero-chip-surface {
+    @apply border-stone-900 bg-stone-900 text-stone-50;
+  }
+
+  .doc-hero-chip-shared {
+    @apply border-stone-200 bg-stone-50 text-stone-800;
+  }
+
+  .doc-hero-chip-accent {
+    @apply border-sky-200 bg-sky-50 text-sky-900;
+  }
+
+  .doc-hero-chip-infra {
+    @apply border-amber-200 bg-amber-50 text-amber-900;
+  }
+
+  .doc-hero-panel-note {
+    @apply relative mt-5 border-t border-stone-200/80 pt-4 text-sm leading-6 text-stone-600;
   }
 
   .doc-pill-button {
