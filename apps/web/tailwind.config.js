@@ -5,17 +5,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: '#0f1419',
-        surface: '#1a2332',
-        elevated: '#243447',
+        base: 'rgb(var(--rf-base) / <alpha-value>)',
+        surface: 'rgb(var(--rf-surface) / <alpha-value>)',
+        elevated: 'rgb(var(--rf-elevated) / <alpha-value>)',
         accent: {
-          DEFAULT: '#10b981',
-          hover: '#0d9668',
-          light: '#34d399',
+          DEFAULT: 'rgb(var(--rf-accent) / <alpha-value>)',
+          hover: 'rgb(var(--rf-accent-hover) / <alpha-value>)',
+          light: 'rgb(var(--rf-accent-light) / <alpha-value>)',
         },
-        'text-primary': '#e4e8ec',
-        'text-secondary': '#8899a6',
-        border: '#2d3e50',
+        'text-primary': 'rgb(var(--rf-text-primary) / <alpha-value>)',
+        'text-secondary': 'rgb(var(--rf-text-secondary) / <alpha-value>)',
+        border: 'rgb(var(--rf-border) / <alpha-value>)',
       },
       fontFamily: {
         sans: [

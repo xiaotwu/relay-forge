@@ -6,7 +6,7 @@ const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig({
   plugins: [react()],
-  envPrefix: ['VITE_', 'API_', 'WS_', 'LIVEKIT_'],
+  envPrefix: ['VITE_', 'API_', 'WS_', 'LIVEKIT_', 'MEDIA_'],
   resolve: {
     alias: {
       '@relayforge/types': path.resolve(__dirname, '../../packages/types/src'),

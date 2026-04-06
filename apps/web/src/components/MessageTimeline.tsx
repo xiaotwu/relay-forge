@@ -4,14 +4,19 @@ import { useMessagesStore } from '@/stores/messages';
 import { useRealtimeStore } from '@/stores/realtime';
 import { MessageItem } from './MessageItem';
 import { Spinner } from '@relayforge/ui';
+import type { Message } from '@relayforge/types';
 
 interface MessageTimelineProps {
   channelId: string;
+  onReply?: (message: Message) => void;
 }
 
-export function MessageTimeline({ channelId }: MessageTimelineProps) {
+const EMPTY_TYPING_USERS: Array<{ userId: string; username: string; expiresAt: number }> = [];
+
+export function MessageTimeline({ channelId, onReply }: MessageTimelineProps) {
   const { messagesByChannel, hasMore, fetchMessages } = useMessagesStore();
-  const typingUsers = useRealtimeStore((s) => s.typingUsers[channelId] ?? []);
+  const typingUserMap = useRealtimeStore((s) => s.typingUsers);
+  const typingUsers = typingUserMap[channelId] ?? EMPTY_TYPING_USERS;
   const messages = messagesByChannel[channelId] ?? [];
   const parentRef = useRef<HTMLDivElement>(null);
   const loadingRef = useRef(false);
@@ -112,7 +117,11 @@ export function MessageTimeline({ channelId }: MessageTimelineProps) {
   const activeTypers = typingUsers.filter((t) => t.expiresAt > Date.now());
 
   return (
-    <div ref={parentRef} onScroll={handleScroll} className="scrollbar-thin flex-1 overflow-y-auto">
+    <div
+      ref={parentRef}
+      onScroll={handleScroll}
+      className="scrollbar-thin flex-1 overflow-y-auto px-2 py-2 md:px-3"
+    >
       {hasMore[channelId] && (
         <div className="flex justify-center py-4">
           <Spinner size="sm" />
@@ -142,13 +151,19 @@ export function MessageTimeline({ channelId }: MessageTimelineProps) {
               ref={virtualizer.measureElement}
             >
               {item.type === 'separator' ? (
-                <div className="flex items-center gap-3 px-4 py-2">
-                  <div className="bg-border/30 h-px flex-1" />
-                  <span className="text-text-secondary text-xs font-medium">{item.date}</span>
-                  <div className="bg-border/30 h-px flex-1" />
+                <div className="flex items-center gap-3 px-4 py-3">
+                  <div className="bg-border/25 h-px flex-1" />
+                  <span className="apple-pill text-text-secondary rounded-full px-3 py-1 text-[11px] font-medium tracking-[0.08em]">
+                    {item.date}
+                  </span>
+                  <div className="bg-border/25 h-px flex-1" />
                 </div>
               ) : (
-                <MessageItem message={messages[item.index]} showHeader={isGroupStart(item.index)} />
+                <MessageItem
+                  message={messages[item.index]}
+                  showHeader={isGroupStart(item.index)}
+                  onReply={onReply}
+                />
               )}
             </div>
           );
@@ -157,8 +172,8 @@ export function MessageTimeline({ channelId }: MessageTimelineProps) {
 
       {/* Typing indicator */}
       {activeTypers.length > 0 && (
-        <div className="text-text-secondary px-4 py-1 text-xs">
-          <span className="inline-flex items-center gap-1">
+        <div className="px-4 py-3 text-xs">
+          <span className="apple-pill text-text-secondary inline-flex items-center gap-1 rounded-full px-3 py-1.5">
             <span className="flex gap-0.5">
               <span
                 className="bg-text-secondary h-1.5 w-1.5 animate-bounce rounded-full"

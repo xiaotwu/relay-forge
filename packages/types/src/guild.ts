@@ -1,4 +1,5 @@
 import type { PublicUser } from './user.js';
+import type { ChannelType } from './channel.js';
 
 export interface Guild {
   id: string;
@@ -44,6 +45,11 @@ export interface CreateGuildRequest {
   name: string;
   description?: string;
   iconUrl?: string;
+  initialChannels?: Array<{
+    name: string;
+    type: ChannelType;
+    topic?: string;
+  }>;
 }
 
 export interface UpdateGuildRequest {

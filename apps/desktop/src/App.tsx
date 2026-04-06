@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ToastProvider } from '@relayforge/ui';
+import { ToastProvider, useTheme } from '@relayforge/ui';
 import { useAuthStore } from '@/stores/auth';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { MainPage } from '@/pages/MainPage';
 import { SettingsPage } from '@/pages/SettingsPage';
+import { AdminPage } from '@/pages/AdminPage';
+import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage';
+import { ResetPasswordPage } from '@/pages/ResetPasswordPage';
 import { Spinner } from '@relayforge/ui';
 import { useDesktop } from '@/hooks/useDesktop';
+import { useServerConnections } from '@/lib/serverConnections';
 
 const relayForgeIconSrc = '/branding/relay-forge-icon.png';
 
@@ -73,10 +77,12 @@ function DesktopWrapper({ children }: { children: React.ReactNode }) {
 
 export function App() {
   const initialize = useAuthStore((s) => s.initialize);
+  const { currentConnection } = useServerConnections();
+  useTheme();
 
   useEffect(() => {
     initialize();
-  }, [initialize]);
+  }, [currentConnection.id, initialize]);
 
   return (
     <ToastProvider>
@@ -85,6 +91,8 @@ export function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route
               path="/"
               element={
@@ -98,6 +106,14 @@ export function App() {
               element={
                 <AuthGuard>
                   <SettingsPage />
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <AuthGuard>
+                  <AdminPage />
                 </AuthGuard>
               }
             />

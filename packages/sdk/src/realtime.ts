@@ -85,8 +85,18 @@ export class RealtimeClient {
     this._state = this.reconnectAttempts > 0 ? 'reconnecting' : 'connecting';
     this.emitInternal('_stateChange', this._state);
 
+    if (!this.token) {
+      this.scheduleReconnect();
+      return;
+    }
+
     try {
-      this.ws = new WebSocket(this.wsURL);
+      const url = new URL(this.wsURL);
+      url.searchParams.set('token', this.token);
+      for (const guildID of this.guildIDs) {
+        url.searchParams.append('guilds', guildID);
+      }
+      this.ws = new WebSocket(url.toString());
     } catch {
       this.scheduleReconnect();
       return;

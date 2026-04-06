@@ -1,17 +1,70 @@
 import { create } from 'zustand';
 import type { User, AuthTokens } from '@relayforge/types';
 import { ApiClient } from '@relayforge/sdk';
-import { API_BASE_URL } from '@relayforge/config';
+import { getCurrentConnection } from '@/lib/serverConnections';
 
-const LS_ACCESS_TOKEN = 'rf_access_token';
-const LS_REFRESH_TOKEN = 'rf_refresh_token';
+const AUTH_STORAGE_PREFIX = 'rf_auth';
 
 let apiClient: ApiClient | null = null;
+let apiClientBaseURL: string | null = null;
+
+function getTokenStorageKeys(connectionId: string) {
+  return {
+    access: `${AUTH_STORAGE_PREFIX}:${connectionId}:access_token`,
+    refresh: `${AUTH_STORAGE_PREFIX}:${connectionId}:refresh_token`,
+  };
+}
+
+function readStoredTokens(connectionId: string) {
+  const keys = getTokenStorageKeys(connectionId);
+  return {
+    accessToken: localStorage.getItem(keys.access),
+    refreshToken: localStorage.getItem(keys.refresh),
+  };
+}
+
+function writeStoredTokens(connectionId: string, accessToken: string, refreshToken: string) {
+  const keys = getTokenStorageKeys(connectionId);
+  localStorage.setItem(keys.access, accessToken);
+  localStorage.setItem(keys.refresh, refreshToken);
+}
+
+function clearStoredTokens(connectionId: string) {
+  const keys = getTokenStorageKeys(connectionId);
+  localStorage.removeItem(keys.access);
+  localStorage.removeItem(keys.refresh);
+}
+
+function normalizeUser(user: User | null): User | null {
+  if (!user) return null;
+
+  const raw = user as User & {
+    isVerified?: boolean;
+    isDisabled?: boolean;
+    twoFactorEnabled?: boolean;
+    emailVerified?: boolean;
+    disabled?: boolean;
+  };
+
+  return {
+    ...user,
+    displayName: user.displayName ?? user.username,
+    avatarUrl: user.avatarUrl ?? null,
+    bannerUrl: user.bannerUrl ?? null,
+    bio: user.bio ?? null,
+    customStatus: user.customStatus ?? null,
+    twoFactorEnabled: raw.twoFactorEnabled ?? false,
+    emailVerified: raw.emailVerified ?? raw.isVerified ?? false,
+    disabled: raw.disabled ?? raw.isDisabled ?? false,
+  };
+}
 
 export function getApiClient(): ApiClient {
-  if (!apiClient) {
+  const connection = getCurrentConnection();
+  const baseURL = connection.apiBaseUrl;
+  if (!apiClient || apiClientBaseURL !== baseURL) {
     apiClient = new ApiClient({
-      baseURL: API_BASE_URL,
+      baseURL,
       onTokenRefresh: (tokens: AuthTokens) => {
         useAuthStore.getState().setTokens(tokens.accessToken, tokens.refreshToken);
       },
@@ -19,6 +72,11 @@ export function getApiClient(): ApiClient {
         useAuthStore.getState().logout();
       },
     });
+    apiClientBaseURL = baseURL;
+    const { accessToken, refreshToken } = readStoredTokens(connection.id);
+    if (accessToken && refreshToken) {
+      apiClient.setTokens(accessToken, refreshToken);
+    }
   }
   return apiClient;
 }
@@ -30,11 +88,12 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
 
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, twoFactorCode?: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   initialize: () => Promise<void>;
   setTokens: (accessToken: string, refreshToken: string) => void;
+  setUser: (user: User | null) => void;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -45,20 +104,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: true,
 
   setTokens: (accessToken: string, refreshToken: string) => {
-    localStorage.setItem(LS_ACCESS_TOKEN, accessToken);
-    localStorage.setItem(LS_REFRESH_TOKEN, refreshToken);
+    writeStoredTokens(getCurrentConnection().id, accessToken, refreshToken);
     getApiClient().setTokens(accessToken, refreshToken);
-    set({ accessToken, refreshToken });
+    set({ accessToken, refreshToken, isAuthenticated: true });
   },
 
-  login: async (email: string, password: string) => {
+  setUser: (user: User | null) => {
+    set({ user: normalizeUser(user) });
+  },
+
+  login: async (email: string, password: string, twoFactorCode?: string) => {
     const client = getApiClient();
-    const res = await client.login({ email, password });
+    const res = await client.login({ email, password, twoFactorCode });
     const { accessToken, refreshToken } = res.data;
     get().setTokens(accessToken, refreshToken);
     client.setTokens(accessToken, refreshToken);
     const userRes = await client.getMe();
-    set({ user: userRes.data, isAuthenticated: true });
+    set({ user: normalizeUser(userRes.data), isAuthenticated: true });
   },
 
   register: async (username: string, email: string, password: string) => {
@@ -68,12 +130,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     get().setTokens(accessToken, refreshToken);
     client.setTokens(accessToken, refreshToken);
     const userRes = await client.getMe();
-    set({ user: userRes.data, isAuthenticated: true });
+    set({ user: normalizeUser(userRes.data), isAuthenticated: true });
   },
 
   logout: () => {
-    localStorage.removeItem(LS_ACCESS_TOKEN);
-    localStorage.removeItem(LS_REFRESH_TOKEN);
+    clearStoredTokens(getCurrentConnection().id);
     getApiClient().clearTokens();
     set({
       user: null,
@@ -85,11 +146,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   initialize: async () => {
-    const accessToken = localStorage.getItem(LS_ACCESS_TOKEN);
-    const refreshToken = localStorage.getItem(LS_REFRESH_TOKEN);
+    set({ isLoading: true });
+
+    const connection = getCurrentConnection();
+    const { accessToken, refreshToken } = readStoredTokens(connection.id);
 
     if (!accessToken || !refreshToken) {
-      set({ isLoading: false });
+      getApiClient().clearTokens();
+      set({
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        isAuthenticated: false,
+        isLoading: false,
+      });
       return;
     }
 
@@ -99,7 +169,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     try {
       const userRes = await client.getMe();
-      set({ user: userRes.data, isAuthenticated: true, isLoading: false });
+      set({ user: normalizeUser(userRes.data), isAuthenticated: true, isLoading: false });
     } catch {
       get().logout();
     }

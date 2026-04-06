@@ -53,6 +53,14 @@ export const LIVEKIT_URL: string =
   getEnv('LIVEKIT_URL', 'VITE_LIVEKIT_URL') ?? 'ws://localhost:7880';
 
 /**
+ * Base URL for the media service.
+ * Set via MEDIA_BASE_URL or the legacy VITE_MEDIA_URL / MEDIA_URL aliases.
+ * @default "http://localhost:8082/api/v1"
+ */
+export const MEDIA_BASE_URL: string =
+  getEnv('MEDIA_BASE_URL', 'VITE_MEDIA_URL', 'MEDIA_URL') ?? 'http://localhost:8082/api/v1';
+
+/**
  * Maximum file upload size in bytes (25 MB).
  */
 export const MAX_UPLOAD_SIZE = 25 * 1024 * 1024;

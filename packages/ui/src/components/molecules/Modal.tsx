@@ -68,7 +68,7 @@ export const Modal: React.FC<ModalProps> = ({
   const modal = (
     <div
       ref={overlayRef}
-      className="animate-in fade-in fixed inset-0 z-[1050] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm duration-200"
+      className="animate-fade-scale fixed inset-0 z-[1050] flex items-center justify-center bg-[rgba(var(--rf-overlay),0.34)] p-4 backdrop-blur-xl duration-200"
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
@@ -78,20 +78,22 @@ export const Modal: React.FC<ModalProps> = ({
         ref={contentRef}
         tabIndex={-1}
         className={[
-          'relative w-full rounded-xl border border-zinc-700 bg-zinc-900 shadow-xl',
+          'rf-window relative w-full rounded-[32px] border-[rgba(var(--rf-border),0.18)]',
           'focus:outline-none',
           sizeClasses[size],
         ].join(' ')}
       >
-        {/* Header */}
         {title && (
-          <div className="flex items-center justify-between border-b border-zinc-700 px-6 py-4">
-            <h2 id="modal-title" className="text-lg font-semibold text-zinc-100">
+          <div className="flex items-center justify-between border-b border-[rgba(var(--rf-border),0.14)] px-6 py-5">
+            <h2
+              id="modal-title"
+              className="text-[22px] font-semibold tracking-[-0.03em] text-[rgb(var(--rf-text-primary))]"
+            >
               {title}
             </h2>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
+              className="rf-control rounded-full p-2 text-[rgb(var(--rf-text-secondary))] transition-colors hover:text-[rgb(var(--rf-text-primary))]"
               aria-label="Close"
             >
               <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -105,12 +107,10 @@ export const Modal: React.FC<ModalProps> = ({
           </div>
         )}
 
-        {/* Body */}
-        <div className="px-6 py-4 text-zinc-300">{children}</div>
+        <div className="px-6 py-5 text-[rgb(var(--rf-text-secondary))]">{children}</div>
 
-        {/* Actions */}
         {actions && (
-          <div className="flex items-center justify-end gap-3 border-t border-zinc-700 px-6 py-4">
+          <div className="flex items-center justify-end gap-3 border-t border-[rgba(var(--rf-border),0.14)] px-6 py-5">
             {actions}
           </div>
         )}

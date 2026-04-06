@@ -9,6 +9,7 @@ export type {
   RegisterRequest,
   LoginRequest,
   PasswordResetRequest,
+  PasswordResetRequestResponse,
   PasswordResetConfirm,
   TwoFactorSetup,
   UpdateUserRequest,
@@ -69,6 +70,7 @@ export type {
   KeyBundleUploadRequest,
   SendDMRequest,
   CreateDMChannelRequest,
+  UpdateDMChannelRequest,
 } from './dm.js';
 
 export type {

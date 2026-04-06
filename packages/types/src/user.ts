@@ -31,12 +31,12 @@ export interface PublicUser {
 export interface Session {
   id: string;
   userId: string;
-  device: Device;
-  ipAddress: string;
+  userAgent: string | null;
+  ipAddress: string | null;
   lastActiveAt: string;
   createdAt: string;
   expiresAt: string;
-  current: boolean;
+  current?: boolean;
 }
 
 export interface Device {
@@ -70,6 +70,11 @@ export interface PasswordResetRequest {
   email: string;
 }
 
+export interface PasswordResetRequestResponse {
+  message: string;
+  resetToken?: string;
+}
+
 export interface PasswordResetConfirm {
   token: string;
   newPassword: string;
@@ -77,8 +82,8 @@ export interface PasswordResetConfirm {
 
 export interface TwoFactorSetup {
   secret: string;
-  qrCodeUrl: string;
-  backupCodes: string[];
+  url: string;
+  backupCodes?: string[];
 }
 
 export interface UpdateUserRequest {

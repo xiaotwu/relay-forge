@@ -209,7 +209,10 @@ export type ServerEvent =
 export type ClientEvent =
   | { type: 'IDENTIFY'; data: { token: string; guildIds: string[] } }
   | { type: 'HEARTBEAT'; data: { seq: number } }
-  | { type: 'TYPING_START'; data: { channelId: string; guildId?: string } }
+  | {
+      type: 'TYPING_START';
+      data: { channelId: string; guildId?: string; userId?: string; username?: string };
+    }
   | { type: 'PRESENCE_UPDATE'; data: { status: UserStatus; customStatus?: string | null } }
   | { type: 'READ_STATE_UPDATE'; data: { channelId: string; lastReadMessageId: string } }
   | {
