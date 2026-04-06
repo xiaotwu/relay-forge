@@ -77,7 +77,9 @@ export default function MermaidDiagram({ chart, title, eyebrow, note }: MermaidD
       } catch (renderError) {
         if (!ignore) {
           setError(
-            renderError instanceof Error ? renderError.message : 'Unable to render Mermaid diagram.',
+            renderError instanceof Error
+              ? renderError.message
+              : 'Unable to render Mermaid diagram.',
           );
         }
       }

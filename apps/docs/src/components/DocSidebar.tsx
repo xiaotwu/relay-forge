@@ -37,7 +37,7 @@ export default function DocSidebar({ onNavClick }: { onNavClick?: () => void }) 
                     <span className="mt-0.5 inline-flex h-8 w-8 flex-none items-center justify-center rounded-2xl border border-white/10 bg-white/10">
                       <DocIcon name={item.icon} className="h-4 w-4" />
                     </span>
-                    <span className="min-w-0 block text-sm font-semibold">{item.label}</span>
+                    <span className="block min-w-0 text-sm font-semibold">{item.label}</span>
                   </span>
                 </NavLink>
               </li>

@@ -177,13 +177,7 @@ export const docSearchEntries: DocSearchEntry[] = docsSections.flatMap((section)
     ...item,
     sectionLabel: section.label,
     sectionIcon: section.icon,
-    searchText: [
-      section.label,
-      item.label,
-      item.to,
-      item.blurb ?? '',
-      ...(item.keywords ?? []),
-    ]
+    searchText: [section.label, item.label, item.to, item.blurb ?? '', ...(item.keywords ?? [])]
       .join(' ')
       .toLowerCase(),
   })),

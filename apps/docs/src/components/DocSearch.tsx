@@ -54,7 +54,9 @@ function rankSearchResults(query: string) {
       return { item, score };
     })
     .filter((entry) => entry.score > 0)
-    .sort((left, right) => right.score - left.score || left.item.label.localeCompare(right.item.label))
+    .sort(
+      (left, right) => right.score - left.score || left.item.label.localeCompare(right.item.label),
+    )
     .slice(0, 8)
     .map((entry) => entry.item);
 }
