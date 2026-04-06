@@ -1,8 +1,0 @@
-go 1.23
-
-use (
-	./services/api
-	./services/realtime
-	./services/media
-	./services/worker
-)

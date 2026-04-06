@@ -206,7 +206,7 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
   return (
     <div
       ref={pickerRef}
-      className="bg-surface border-border/30 w-[320px] overflow-hidden rounded-xl border shadow-2xl"
+      className="animate-fade-scale w-[320px] overflow-hidden rounded-[24px] border border-[rgba(var(--rf-border),0.24)] bg-[rgba(var(--rf-surface),0.96)] shadow-[0_24px_60px_rgba(15,23,42,0.16)] backdrop-blur-2xl"
     >
       {/* Search */}
       <div className="border-border/20 border-b p-3">
@@ -215,22 +215,22 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search emojis..."
-          className="bg-elevated text-text-primary placeholder:text-text-secondary/50 w-full rounded-lg px-3 py-1.5 text-sm outline-none"
+          className="bg-elevated text-text-primary placeholder:text-text-secondary/50 w-full rounded-2xl border border-[rgba(var(--rf-border),0.2)] px-3 py-2 text-sm outline-none"
           autoFocus
         />
       </div>
 
       {/* Category tabs */}
       {!search && (
-        <div className="border-border/20 flex border-b px-2">
+        <div className="border-border/20 flex border-b px-2 py-1">
           {CATEGORY_NAMES.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`border-b-2 px-3 py-2 text-xs font-medium transition-colors ${
+              className={`rounded-full px-3 py-2 text-xs font-medium transition-colors ${
                 activeCategory === cat
-                  ? 'text-accent border-accent'
-                  : 'text-text-secondary hover:text-text-primary border-transparent'
+                  ? 'text-accent bg-[rgba(var(--rf-accent),0.14)]'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-[rgba(var(--rf-base),0.28)]'
               }`}
             >
               {cat}
@@ -251,7 +251,7 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
                   <button
                     key={`${emoji}-${i}`}
                     onClick={() => onSelect(emoji)}
-                    className="hover:bg-elevated flex h-9 w-9 items-center justify-center rounded-md text-xl transition-colors"
+                    className="hover:bg-elevated flex h-9 w-9 items-center justify-center rounded-xl text-xl transition-colors"
                     title={emoji}
                   >
                     {emoji}

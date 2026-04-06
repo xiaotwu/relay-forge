@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Modal, Input, Button } from '@relayforge/ui';
+import { ChannelType } from '@relayforge/types';
 import { useGuildStore } from '@/stores/guild';
 import { useAuthStore } from '@/stores/auth';
 
@@ -12,15 +13,41 @@ export function GuildSidebar() {
   const navigate = useNavigate();
   const [showCreate, setShowCreate] = useState(false);
   const [newGuildName, setNewGuildName] = useState('');
+  const [iconUrl, setIconUrl] = useState('');
+  const [createGeneral, setCreateGeneral] = useState(true);
+  const [createVoice, setCreateVoice] = useState(true);
   const [creating, setCreating] = useState(false);
 
   const handleCreateGuild = async () => {
     if (!newGuildName.trim()) return;
     setCreating(true);
     try {
-      await createGuild(newGuildName.trim());
+      const initialChannels = [];
+      if (createGeneral) {
+        initialChannels.push({
+          name: 'general',
+          type: ChannelType.TEXT,
+          topic: 'Start the conversation here.',
+        });
+      }
+      if (createVoice) {
+        initialChannels.push({
+          name: 'lounge',
+          type: ChannelType.VOICE,
+          topic: 'Voice, screen sharing, and streaming hangout.',
+        });
+      }
+
+      await createGuild({
+        name: newGuildName.trim(),
+        iconUrl: iconUrl.trim() || undefined,
+        initialChannels,
+      });
       setShowCreate(false);
       setNewGuildName('');
+      setIconUrl('');
+      setCreateGeneral(true);
+      setCreateVoice(true);
     } catch {
       // handle error
     } finally {
@@ -142,7 +169,7 @@ export function GuildSidebar() {
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Create a server">
         <div className="space-y-4">
           <p className="text-text-secondary text-sm">
-            Give your new server a name. You can always change it later.
+            Start with a polished server setup instead of a blank shell.
           </p>
           <Input
             label="Server name"
@@ -151,6 +178,43 @@ export function GuildSidebar() {
             placeholder="My awesome server"
             autoFocus
           />
+          <Input
+            label="Server icon URL"
+            value={iconUrl}
+            onChange={(e) => setIconUrl(e.target.value)}
+            placeholder="https://images.example.com/icon.png"
+          />
+          <div className="rounded-2xl border border-white/10 bg-black/10 p-4">
+            <p className="text-text-primary text-sm font-medium">Starter channels</p>
+            <div className="mt-3 space-y-3">
+              <label className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-text-primary text-sm">Text channel</p>
+                  <p className="text-text-secondary text-xs">
+                    Create `#general` for chat and updates.
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={createGeneral}
+                  onChange={(e) => setCreateGeneral(e.target.checked)}
+                />
+              </label>
+              <label className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-text-primary text-sm">Voice channel</p>
+                  <p className="text-text-secondary text-xs">
+                    Create `lounge` for voice, streaming, and screen sharing flows.
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={createVoice}
+                  onChange={(e) => setCreateVoice(e.target.checked)}
+                />
+              </label>
+            </div>
+          </div>
           <div className="flex justify-end gap-3 pt-2">
             <Button variant="ghost" onClick={() => setShowCreate(false)}>
               Cancel
@@ -158,7 +222,7 @@ export function GuildSidebar() {
             <Button
               onClick={handleCreateGuild}
               loading={creating}
-              disabled={!newGuildName.trim()}
+              disabled={!newGuildName.trim() || (!createGeneral && !createVoice)}
               className="!bg-accent hover:!bg-accent-hover"
             >
               Create

@@ -9,16 +9,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@relayforge/config": "*",
+    "@relayforge/crypto": "*",
+    "@relayforge/sdk": "*",
+    "@relayforge/types": "*",
+    "@relayforge/ui": "*",
+    "@tanstack/react-virtual": "^3.11.2",
+    "livekit-client": "^2.18.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
-    "zustand": "^5.0.2",
-    "@tanstack/react-virtual": "^3.11.2",
-    "@relayforge/types": "*",
-    "@relayforge/sdk": "*",
-    "@relayforge/ui": "*",
-    "@relayforge/config": "*",
-    "@relayforge/crypto": "*"
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",

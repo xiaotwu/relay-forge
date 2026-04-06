@@ -21,10 +21,17 @@ const sizeMap: Record<AvatarSize, { container: string; text: string; status: str
 };
 
 const statusColorMap: Record<string, string> = {
-  online: 'bg-green-500',
-  idle: 'bg-yellow-500',
-  dnd: 'bg-red-500',
-  offline: 'bg-zinc-500',
+  online: 'bg-[rgb(var(--rf-success))]',
+  idle: 'bg-[rgb(var(--rf-warning))]',
+  dnd: 'bg-[rgb(var(--rf-danger))]',
+  offline: 'bg-[rgb(var(--rf-text-tertiary))]',
+};
+
+const statusRingMap: Record<string, string> = {
+  online: 'shadow-[0_0_0_3px_rgba(var(--rf-success),0.16)]',
+  idle: 'shadow-[0_0_0_3px_rgba(var(--rf-warning),0.16)]',
+  dnd: 'shadow-[0_0_0_3px_rgba(var(--rf-danger),0.16)]',
+  offline: 'shadow-[0_0_0_3px_rgba(var(--rf-text-tertiary),0.12)]',
 };
 
 function getInitials(name: string): string {
@@ -66,7 +73,7 @@ export const Avatar: React.FC<AvatarProps> = ({
     >
       <div
         className={[
-          'flex items-center justify-center overflow-hidden rounded-full font-semibold',
+          'flex items-center justify-center overflow-hidden rounded-full border border-[rgba(var(--rf-border),0.16)] font-semibold shadow-[0_10px_24px_rgba(var(--rf-shadow-color),0.08)]',
           sizeConfig.container,
           sizeConfig.text,
         ].join(' ')}
@@ -86,9 +93,10 @@ export const Avatar: React.FC<AvatarProps> = ({
       {status && (
         <span
           className={[
-            'absolute bottom-0 right-0 rounded-full border-zinc-900',
+            'absolute bottom-0 right-0 rounded-full border-[rgba(var(--rf-surface),1)]',
             sizeConfig.status,
             statusColorMap[status],
+            statusRingMap[status],
           ].join(' ')}
         />
       )}

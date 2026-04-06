@@ -1,9 +1,11 @@
 import type {
   User,
+  PublicUser,
   AuthTokens,
   RegisterRequest,
   LoginRequest,
   PasswordResetRequest,
+  PasswordResetRequestResponse,
   PasswordResetConfirm,
   TwoFactorSetup,
   UpdateUserRequest,
@@ -24,6 +26,11 @@ import type {
   Role,
   CreateRoleRequest,
   UpdateRoleRequest,
+  DMChannel,
+  DMMessage,
+  CreateDMChannelRequest,
+  UpdateDMChannelRequest,
+  SendDMRequest,
   ApiResponse,
   PaginatedResponse,
   CursorPaginatedResponse,
@@ -38,6 +45,48 @@ export interface ApiClientOptions {
   baseURL?: string;
   onTokenRefresh?: (tokens: AuthTokens) => void;
   onAuthError?: () => void;
+}
+
+function toCamelCase(key: string): string {
+  return key.replace(/_([a-z])/g, (_, char: string) => char.toUpperCase());
+}
+
+function toSnakeCase(key: string): string {
+  return key.replace(/[A-Z]/g, (char) => `_${char.toLowerCase()}`);
+}
+
+function normalizeKeys<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizeKeys(item)) as T;
+  }
+
+  if (value && typeof value === 'object' && value.constructor === Object) {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, nestedValue]) => [
+        toCamelCase(key),
+        normalizeKeys(nestedValue),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
+
+function normalizeRequestKeys<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizeRequestKeys(item)) as T;
+  }
+
+  if (value && typeof value === 'object' && value.constructor === Object) {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, nestedValue]) => [
+        toSnakeCase(key),
+        normalizeRequestKeys(nestedValue),
+      ]),
+    ) as T;
+  }
+
+  return value;
 }
 
 export class ApiError extends Error {
@@ -129,7 +178,7 @@ export class ApiClient {
     const res = await fetch(url.toString(), {
       method,
       headers,
-      body: body ? JSON.stringify(body) : undefined,
+      body: body ? JSON.stringify(normalizeRequestKeys(body)) : undefined,
     });
 
     if (res.status === 401 && !options?.noAuth && this.refreshToken) {
@@ -140,7 +189,7 @@ export class ApiClient {
       const retryRes = await fetch(url.toString(), {
         method,
         headers,
-        body: body ? JSON.stringify(body) : undefined,
+        body: body ? JSON.stringify(normalizeRequestKeys(body)) : undefined,
       });
       return this.handleResponse<T>(retryRes);
     }
@@ -173,7 +222,7 @@ export class ApiClient {
     }
 
     const json = await res.json();
-    return json as T;
+    return normalizeKeys(json) as T;
   }
 
   private async performTokenRefresh(): Promise<AuthTokens> {
@@ -217,14 +266,16 @@ export class ApiClient {
   }
 
   async logout(): Promise<void> {
-    await this.request('POST', '/auth/logout');
+    await this.request('POST', '/auth/logout', {
+      refreshToken: this.refreshToken ?? undefined,
+    });
     this.clearTokens();
   }
 
   async requestPasswordReset(
     data: PasswordResetRequest,
-  ): Promise<ApiResponse<{ message: string }>> {
-    return this.request('POST', '/auth/password-reset', data, undefined, { noAuth: true });
+  ): Promise<ApiResponse<PasswordResetRequestResponse>> {
+    return this.request('POST', '/auth/password-reset/request', data, undefined, { noAuth: true });
   }
 
   async confirmPasswordReset(
@@ -241,6 +292,14 @@ export class ApiClient {
 
   async updateMe(data: UpdateUserRequest): Promise<ApiResponse<User>> {
     return this.request('PATCH', '/users/me', data);
+  }
+
+  async getUser(userId: string): Promise<ApiResponse<PublicUser>> {
+    return this.request('GET', `/users/${userId}`);
+  }
+
+  async searchUsers(query: string): Promise<ApiResponse<PublicUser[]>> {
+    return this.request('GET', '/users/', undefined, { q: query });
   }
 
   async listSessions(): Promise<ApiResponse<Session[]>> {
@@ -370,7 +429,7 @@ export class ApiClient {
     params: SearchMessagesRequest,
   ): Promise<PaginatedResponse<Message>> {
     return this.request('GET', `/channels/${channelId}/messages/search`, undefined, {
-      query: params.query,
+      q: params.query,
       authorId: params.authorId,
       before: params.before,
       after: params.after,
@@ -379,15 +438,15 @@ export class ApiClient {
   }
 
   async listPins(channelId: string): Promise<ApiResponse<Message[]>> {
-    return this.request('GET', `/channels/${channelId}/pins`);
+    return this.request('GET', `/channels/${channelId}/messages/pins`);
   }
 
   async pinMessage(channelId: string, messageId: string): Promise<void> {
-    return this.request('PUT', `/channels/${channelId}/pins/${messageId}`);
+    return this.request('POST', `/channels/${channelId}/messages/${messageId}/pin`);
   }
 
   async unpinMessage(channelId: string, messageId: string): Promise<void> {
-    return this.request('DELETE', `/channels/${channelId}/pins/${messageId}`);
+    return this.request('DELETE', `/channels/${channelId}/messages/${messageId}/pin`);
   }
 
   async addReaction(channelId: string, messageId: string, emoji: string): Promise<void> {
@@ -497,5 +556,34 @@ export class ApiClient {
 
   async listRooms(guildId: string): Promise<ApiResponse<VoiceRoom[]>> {
     return this.request('GET', `/guilds/${guildId}/voice/rooms`);
+  }
+
+  // --- Direct Messages ---
+
+  async listDMChannels(): Promise<ApiResponse<DMChannel[]>> {
+    return this.request('GET', '/dms');
+  }
+
+  async createDMChannel(data: CreateDMChannelRequest): Promise<ApiResponse<DMChannel>> {
+    return this.request('POST', '/dms', data);
+  }
+
+  async updateDMChannel(
+    dmChannelId: string,
+    data: UpdateDMChannelRequest,
+  ): Promise<ApiResponse<DMChannel>> {
+    return this.request('PATCH', `/dms/${dmChannelId}`, data);
+  }
+
+  async listDMMessages(dmChannelId: string): Promise<ApiResponse<DMMessage[]>> {
+    return this.request('GET', `/dms/${dmChannelId}/messages`);
+  }
+
+  async sendDMMessage(dmChannelId: string, data: SendDMRequest): Promise<ApiResponse<DMMessage>> {
+    return this.request('POST', `/dms/${dmChannelId}/messages`, data);
+  }
+
+  async deleteDMMessage(dmChannelId: string, messageId: string): Promise<void> {
+    return this.request('DELETE', `/dms/${dmChannelId}/messages/${messageId}`);
   }
 }

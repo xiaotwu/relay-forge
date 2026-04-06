@@ -1,31 +1,34 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'light' | 'system';
 
 const STORAGE_KEY = 'relayforge-theme';
+
+function resolveSystemTheme(): 'dark' | 'light' {
+  if (typeof window === 'undefined') return 'dark';
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
 
 function getInitialTheme(): Theme {
   if (typeof window === 'undefined') return 'dark';
 
   const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === 'dark' || stored === 'light') {
+  if (stored === 'dark' || stored === 'light' || stored === 'system') {
     return stored;
   }
 
-  if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-    return 'light';
-  }
-
-  return 'dark';
+  return 'system';
 }
 
 function applyTheme(theme: Theme): void {
   if (typeof document === 'undefined') return;
 
+  const resolvedTheme = theme === 'system' ? resolveSystemTheme() : theme;
   const root = document.documentElement;
   root.classList.remove('dark', 'light');
-  root.classList.add(theme);
-  root.setAttribute('data-theme', theme);
+  root.classList.add(resolvedTheme);
+  root.setAttribute('data-theme', resolvedTheme);
+  root.setAttribute('data-theme-mode', theme);
 }
 
 export function useTheme() {
@@ -37,12 +40,10 @@ export function useTheme() {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e: MediaQueryListEvent) => {
+    const handleChange = () => {
       const stored = localStorage.getItem(STORAGE_KEY);
-      // Only auto-switch if user hasn't manually set a preference
-      if (!stored) {
-        const newTheme = e.matches ? 'dark' : 'light';
-        setThemeState(newTheme);
+      if (!stored || stored === 'system') {
+        setThemeState('system');
       }
     };
     mediaQuery.addEventListener('change', handleChange);
@@ -50,13 +51,20 @@ export function useTheme() {
   }, []);
 
   const setTheme = useCallback((newTheme: Theme) => {
-    localStorage.setItem(STORAGE_KEY, newTheme);
+    if (newTheme === 'system') {
+      localStorage.setItem(STORAGE_KEY, 'system');
+    } else {
+      localStorage.setItem(STORAGE_KEY, newTheme);
+    }
     setThemeState(newTheme);
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    const resolvedTheme = theme === 'system' ? resolveSystemTheme() : theme;
+    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
 
-  return { theme, setTheme, toggleTheme, isDark: theme === 'dark' };
+  const effectiveTheme = theme === 'system' ? resolveSystemTheme() : theme;
+
+  return { theme, setTheme, toggleTheme, isDark: effectiveTheme === 'dark', effectiveTheme };
 }

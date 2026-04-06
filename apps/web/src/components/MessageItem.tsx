@@ -8,14 +8,16 @@ import { renderMarkdown } from '@/utils/markdown';
 interface MessageItemProps {
   message: Message;
   showHeader: boolean;
+  onReply?: (message: Message) => void;
 }
 
-export function MessageItem({ message, showHeader }: MessageItemProps) {
+export function MessageItem({ message, showHeader, onReply }: MessageItemProps) {
   const currentUser = useAuthStore((s) => s.user);
-  const { deleteMessage, editMessage } = useMessagesStore();
+  const { deleteMessage, editMessage, addReaction, removeReaction } = useMessagesStore();
   const [hovered, setHovered] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
+  const [showReactionPicker, setShowReactionPicker] = useState(false);
 
   const isOwn = currentUser?.id === message.author.id;
   const timestamp = new Date(message.createdAt);
@@ -42,11 +44,23 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
     }
   };
 
+  const handleReactionToggle = async (emoji: string) => {
+    const existingReaction = message.reactions.find((reaction) => reaction.emoji === emoji);
+    if (existingReaction?.me) {
+      await removeReaction(message.channelId, message.id, emoji);
+      return;
+    }
+
+    await addReaction(message.channelId, message.id, emoji);
+  };
+
   return (
     <div
-      className={`hover:bg-elevated/30 group relative px-4 transition-colors ${
-        showHeader ? 'pt-2' : 'pt-0.5'
-      }`}
+      className={`group relative mx-2 rounded-[24px] px-4 transition-colors ${
+        hovered
+          ? 'bg-[rgba(var(--rf-surface),0.46)] backdrop-blur-sm'
+          : 'hover:bg-[rgba(var(--rf-surface),0.32)]'
+      } ${showHeader ? 'pt-2' : 'pt-0.5'}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -59,7 +73,7 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
             name={message.replyTo.author.displayName}
             size="xs"
           />
-          <span className="text-text-primary/70 font-medium">
+          <span className="text-text-primary/70 font-medium tracking-[-0.01em]">
             {message.replyTo.author.displayName}
           </span>
           <span className="truncate opacity-70">{message.replyTo.content}</span>
@@ -82,7 +96,7 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
         <div className="min-w-0 flex-1">
           {showHeader && (
             <div className="mb-0.5 flex items-baseline gap-2">
-              <span className="text-text-primary cursor-pointer text-sm font-semibold hover:underline">
+              <span className="text-text-primary cursor-pointer text-sm font-semibold tracking-[-0.02em] hover:underline">
                 {message.author.displayName}
               </span>
               <span className="text-text-secondary text-[11px]">{timeStr}</span>
@@ -98,7 +112,7 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
                 onKeyDown={handleEditKeyDown}
-                className="bg-elevated text-text-primary focus:ring-accent/50 w-full resize-none rounded-lg px-3 py-2 text-sm outline-none focus:ring-1"
+                className="bg-elevated text-text-primary focus:ring-accent/50 w-full resize-none rounded-2xl border border-[rgba(var(--rf-border),0.22)] px-3 py-2 text-sm outline-none focus:ring-1"
                 rows={2}
                 autoFocus
               />
@@ -107,7 +121,7 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
               </p>
             </div>
           ) : (
-            <div className="text-text-primary/90 break-words text-sm leading-relaxed">
+            <div className="text-text-primary/90 break-words text-[14px] leading-7">
               {renderMarkdown(message.content)}
             </div>
           )}
@@ -128,7 +142,7 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
                     <img
                       src={att.proxyUrl || att.url}
                       alt={att.filename}
-                      className="max-h-80 rounded-lg object-contain"
+                      className="max-h-80 rounded-2xl border border-[rgba(var(--rf-border),0.18)] object-contain shadow-[0_12px_30px_rgba(15,23,42,0.08)]"
                       loading="lazy"
                     />
                   </a>
@@ -138,7 +152,7 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
                     href={att.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-elevated text-accent flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:underline"
+                    className="bg-elevated text-accent flex items-center gap-2 rounded-2xl border border-[rgba(var(--rf-border),0.18)] px-3 py-2 text-sm hover:underline"
                   >
                     <svg
                       className="h-4 w-4 shrink-0"
@@ -169,7 +183,8 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
               {message.reactions.map((r) => (
                 <button
                   key={r.emoji}
-                  className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition-colors ${
+                  onClick={() => void handleReactionToggle(r.emoji)}
+                  className={`flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-colors ${
                     r.me
                       ? 'bg-accent/20 border-accent/40 text-accent'
                       : 'bg-elevated border-border/30 text-text-secondary hover:border-border/50'
@@ -186,9 +201,10 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
 
       {/* Hover actions */}
       {hovered && !editing && (
-        <div className="bg-surface border-border/30 absolute -top-3 right-4 flex items-center overflow-hidden rounded-lg border shadow-lg">
+        <div className="animate-fade-scale absolute -top-3 right-4 flex items-center overflow-hidden rounded-2xl border border-[rgba(var(--rf-border),0.24)] bg-[rgba(var(--rf-surface),0.94)] shadow-[0_18px_40px_rgba(15,23,42,0.14)] backdrop-blur-xl">
           <button
-            className="text-text-secondary hover:text-text-primary hover:bg-elevated px-2.5 py-1.5 transition-colors"
+            onClick={() => onReply?.(message)}
+            className="text-text-secondary hover:text-text-primary px-2.5 py-2 transition-colors hover:bg-[rgba(var(--rf-base),0.4)]"
             title="Reply"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,19 +216,41 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
               />
             </svg>
           </button>
-          <button
-            className="text-text-secondary hover:text-text-primary hover:bg-elevated px-2.5 py-1.5 transition-colors"
-            title="Add reaction"
-          >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowReactionPicker((value) => !value)}
+              className="text-text-secondary hover:text-text-primary px-2.5 py-2 transition-colors hover:bg-[rgba(var(--rf-base),0.4)]"
+              title="Add reaction"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </button>
+            {showReactionPicker && (
+              <div className="absolute right-0 top-12 z-20">
+                <div className="grid grid-cols-4 gap-1 rounded-2xl border border-[rgba(var(--rf-border),0.24)] bg-[rgba(var(--rf-surface),0.98)] p-2 shadow-[0_18px_40px_rgba(15,23,42,0.14)] backdrop-blur-xl">
+                  {['👍', '❤️', '😂', '🎉', '🔥', '✅', '👀', '👏'].map((emoji) => (
+                    <button
+                      key={emoji}
+                      onClick={() => {
+                        void handleReactionToggle(emoji);
+                        setShowReactionPicker(false);
+                      }}
+                      className="flex h-9 w-9 items-center justify-center rounded-xl text-lg transition-colors hover:bg-[rgba(var(--rf-base),0.42)]"
+                      title={`React with ${emoji}`}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
           {isOwn && (
             <>
               <button
@@ -220,7 +258,7 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
                   setEditing(true);
                   setEditContent(message.content);
                 }}
-                className="text-text-secondary hover:text-text-primary hover:bg-elevated px-2.5 py-1.5 transition-colors"
+                className="text-text-secondary hover:text-text-primary px-2.5 py-2 transition-colors hover:bg-[rgba(var(--rf-base),0.4)]"
                 title="Edit"
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,7 +272,7 @@ export function MessageItem({ message, showHeader }: MessageItemProps) {
               </button>
               <button
                 onClick={() => deleteMessage(message.channelId, message.id)}
-                className="text-text-secondary hover:bg-elevated px-2.5 py-1.5 transition-colors hover:text-red-400"
+                className="text-text-secondary px-2.5 py-2 transition-colors hover:bg-[rgba(var(--rf-base),0.4)] hover:text-red-500"
                 title="Delete"
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

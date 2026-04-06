@@ -62,4 +62,34 @@ describe('ApiClient', () => {
       expect(typeof client.deleteMessage).toBe('function');
     });
   });
+
+  describe('response normalization', () => {
+    it('normalizes snake_case auth fields to camelCase', async () => {
+      const originalFetch = global.fetch;
+      global.fetch = (async () =>
+        new Response(
+          JSON.stringify({
+            data: {
+              access_token: 'access-123',
+              refresh_token: 'refresh-456',
+              expires_in: 900,
+            },
+          }),
+          {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          },
+        )) as typeof fetch;
+
+      try {
+        const client = new ApiClient({ baseURL: 'http://localhost:8080/api/v1' });
+        const res = await client.login({ email: 'user@example.com', password: 'Password123@' });
+        expect(res.data.accessToken).toBe('access-123');
+        expect(res.data.refreshToken).toBe('refresh-456');
+        expect(res.data.expiresIn).toBe(900);
+      } finally {
+        global.fetch = originalFetch;
+      }
+    });
+  });
 });

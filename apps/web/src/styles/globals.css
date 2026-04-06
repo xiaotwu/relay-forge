@@ -3,11 +3,80 @@
 @tailwind utilities;
 
 @layer base {
+  :root,
+  :root.dark,
+  [data-theme='dark'] {
+    --rf-base: 30 31 34;
+    --rf-base-alt: 35 36 40;
+    --rf-surface: 43 45 49;
+    --rf-surface-muted: 49 51 56;
+    --rf-elevated: 56 58 64;
+    --rf-accent: 88 101 242;
+    --rf-accent-hover: 71 82 196;
+    --rf-accent-light: 121 132 245;
+    --rf-text-primary: 242 243 245;
+    --rf-text-secondary: 219 222 225;
+    --rf-text-tertiary: 181 186 193;
+    --rf-border: 30 31 34;
+    --rf-shadow-color: 0 0 0;
+    --rf-overlay: 17 18 20;
+    --rf-input-bg: 17 18 20;
+    --rf-input-bg-strong: 12 13 15;
+    --rf-input-border: 58 60 68;
+    --rf-input-text: 17 24 39;
+    --rf-input-placeholder: 107 114 128;
+    --rf-success: 35 165 90;
+    --rf-warning: 250 166 26;
+    --rf-danger: 237 66 69;
+  }
+
+  :root.light,
+  [data-theme='light'] {
+    --rf-base: 244 245 247;
+    --rf-base-alt: 235 237 240;
+    --rf-surface: 255 255 255;
+    --rf-surface-muted: 242 243 245;
+    --rf-elevated: 230 232 236;
+    --rf-accent: 88 101 242;
+    --rf-accent-hover: 71 82 196;
+    --rf-accent-light: 121 132 245;
+    --rf-text-primary: 46 51 56;
+    --rf-text-secondary: 79 84 92;
+    --rf-text-tertiary: 116 127 141;
+    --rf-border: 220 222 225;
+    --rf-shadow-color: 17 24 39;
+    --rf-overlay: 228 230 235;
+    --rf-input-bg: 255 255 255;
+    --rf-input-bg-strong: 248 249 250;
+    --rf-input-border: 220 222 225;
+    --rf-input-text: 17 24 39;
+    --rf-input-placeholder: 107 114 128;
+    --rf-success: 35 165 90;
+    --rf-warning: 250 166 26;
+    --rf-danger: 237 66 69;
+  }
+
+  html,
   body {
-    @apply bg-base text-text-primary font-sans antialiased;
+    @apply bg-base text-text-primary antialiased;
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-family:
+      'SF Pro Display',
+      'SF Pro Text',
+      'Inter',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
+    background: rgb(var(--rf-base));
+    color: rgb(var(--rf-text-primary));
+  }
+
+  body {
+    letter-spacing: -0.01em;
+    text-rendering: optimizeLegibility;
   }
 
   *,
@@ -26,23 +95,247 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #2d3e50;
+    background: rgba(var(--rf-border), 0.48);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #3d5066;
+    background: rgba(var(--rf-border), 0.7);
   }
 
   ::selection {
-    background-color: rgba(16, 185, 129, 0.3);
-    color: #e4e8ec;
+    background-color: rgba(var(--rf-accent), 0.18);
+    color: rgb(var(--rf-text-primary));
+  }
+
+  input,
+  textarea,
+  select {
+    color: rgb(var(--rf-input-text));
+    caret-color: rgb(var(--rf-input-text));
+    -webkit-text-fill-color: rgb(var(--rf-input-text));
+  }
+
+  input::placeholder,
+  textarea::placeholder,
+  select::placeholder {
+    color: rgba(var(--rf-input-placeholder), 0.98);
+    -webkit-text-fill-color: rgba(var(--rf-input-placeholder), 0.98);
+    opacity: 1;
+  }
+
+  input::-webkit-input-placeholder,
+  textarea::-webkit-input-placeholder,
+  select::-webkit-input-placeholder {
+    color: rgba(var(--rf-input-placeholder), 0.98);
+    -webkit-text-fill-color: rgba(var(--rf-input-placeholder), 0.98);
+    opacity: 1;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus {
+    -webkit-text-fill-color: rgb(var(--rf-input-text));
+    caret-color: rgb(var(--rf-input-text));
+    box-shadow:
+      0 0 0 1000px rgba(var(--rf-input-bg), 1) inset,
+      0 6px 14px rgba(var(--rf-shadow-color), 0.06);
+    transition: background-color 9999s ease-out 0s;
   }
 }
 
 @layer components {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #2d3e50 transparent;
+    scrollbar-color: rgba(var(--rf-border), 0.8) transparent;
+  }
+
+  .ambient-shell {
+    background:
+      radial-gradient(circle at top left, rgba(var(--rf-accent), 0.14), transparent 22%),
+      radial-gradient(circle at bottom right, rgba(123, 92, 255, 0.08), transparent 24%),
+      linear-gradient(180deg, rgba(var(--rf-base), 1), rgba(var(--rf-base-alt), 1));
+  }
+
+  .glass-panel {
+    background: linear-gradient(
+      180deg,
+      rgba(var(--rf-surface), 0.98),
+      rgba(var(--rf-surface-muted), 0.98)
+    );
+    box-shadow: 0 10px 28px rgba(var(--rf-shadow-color), 0.16);
+    backdrop-filter: blur(8px);
+  }
+
+  .animate-fade-up {
+    animation: fade-up 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .animate-fade-scale {
+    animation: fade-scale 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .animate-soft-float {
+    animation: soft-float 6s ease-in-out infinite;
+  }
+
+  .auth-shell {
+    background:
+      radial-gradient(circle at top left, rgba(var(--rf-accent), 0.16), transparent 18%),
+      radial-gradient(circle at bottom right, rgba(123, 92, 255, 0.08), transparent 20%),
+      linear-gradient(180deg, rgba(var(--rf-base), 1), rgba(var(--rf-base-alt), 1));
+  }
+
+  .apple-card {
+    border: 1px solid rgba(var(--rf-border), 0.8);
+    background:
+      linear-gradient(180deg, rgba(var(--rf-surface), 0.96), rgba(var(--rf-surface-muted), 0.98)),
+      rgba(var(--rf-surface), 0.92);
+    box-shadow:
+      0 18px 46px rgba(var(--rf-shadow-color), 0.18),
+      0 2px 8px rgba(var(--rf-shadow-color), 0.08);
+    backdrop-filter: blur(12px) saturate(1.08);
+  }
+
+  .apple-pill {
+    border: 1px solid rgba(var(--rf-border), 0.7);
+    background: rgba(var(--rf-surface-muted), 1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(4px);
+  }
+
+  .chat-wallpaper {
+    background: rgb(var(--rf-base-alt));
+  }
+
+  .rf-window {
+    border: 1px solid rgba(var(--rf-border), 0.78);
+    background:
+      linear-gradient(180deg, rgba(var(--rf-surface), 0.96), rgba(var(--rf-surface-muted), 0.98)),
+      rgba(var(--rf-surface), 0.94);
+    box-shadow:
+      0 14px 40px rgba(var(--rf-shadow-color), 0.16),
+      0 2px 6px rgba(var(--rf-shadow-color), 0.08);
+    backdrop-filter: blur(12px) saturate(1.08);
+  }
+
+  .rf-sidebar-surface {
+    background: linear-gradient(180deg, rgba(var(--rf-base-alt), 1), rgba(var(--rf-surface), 1));
+    backdrop-filter: blur(4px);
+  }
+
+  .rf-control {
+    border: 1px solid rgba(var(--rf-border), 0.72);
+    background: rgba(var(--rf-surface-muted), 1);
+    box-shadow: 0 2px 8px rgba(var(--rf-shadow-color), 0.08);
+    transition:
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .rf-control:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(var(--rf-shadow-color), 0.12);
+  }
+
+  .rf-edge-toggle {
+    border: 1px solid rgba(var(--rf-border), 0.72);
+    background: rgba(var(--rf-surface-muted), 1);
+    box-shadow: 0 6px 16px rgba(var(--rf-shadow-color), 0.14);
+    backdrop-filter: blur(4px);
+  }
+
+  .rf-floating-shell {
+    border: 1px solid rgba(var(--rf-border), 0.62);
+    background:
+      linear-gradient(180deg, rgba(var(--rf-surface), 0.94), rgba(var(--rf-surface-muted), 0.96)),
+      rgba(var(--rf-surface), 0.9);
+    box-shadow:
+      0 24px 64px rgba(var(--rf-shadow-color), 0.2),
+      0 6px 22px rgba(var(--rf-shadow-color), 0.12);
+    backdrop-filter: blur(18px) saturate(1.08);
+  }
+
+  .rf-settings-card {
+    border: 1px solid rgba(var(--rf-border), 0.58);
+    background:
+      linear-gradient(180deg, rgba(var(--rf-surface), 0.92), rgba(var(--rf-surface-muted), 0.92)),
+      rgba(var(--rf-surface), 0.88);
+    box-shadow: 0 12px 30px rgba(var(--rf-shadow-color), 0.12);
+    backdrop-filter: blur(10px);
+  }
+
+  .rf-textarea {
+    width: 100%;
+    resize: none;
+    border-radius: 20px;
+    border: 1px solid rgba(var(--rf-input-border), 0.9);
+    background: linear-gradient(
+      180deg,
+      rgba(var(--rf-input-bg), 0.98),
+      rgba(var(--rf-input-bg-strong), 0.98)
+    );
+    color: rgb(var(--rf-input-text));
+    caret-color: rgb(var(--rf-input-text));
+    -webkit-text-fill-color: rgb(var(--rf-input-text));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 8px 18px rgba(var(--rf-shadow-color), 0.08);
+    padding: 14px 16px;
+    outline: none;
+    transition:
+      border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .rf-textarea::placeholder {
+    color: rgba(var(--rf-input-placeholder), 0.98);
+  }
+
+  .rf-textarea:focus {
+    border-color: rgba(var(--rf-accent), 0.7);
+    box-shadow:
+      0 0 0 2px rgba(var(--rf-accent), 0.16),
+      0 14px 28px rgba(var(--rf-shadow-color), 0.12);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-scale {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes soft-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
   }
 }

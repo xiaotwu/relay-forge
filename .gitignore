@@ -22,6 +22,7 @@ coverage.html
 
 # Tauri
 apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/
 apps/desktop/src-tauri/WixTools/
 apps/desktop/src-tauri/Frameworks/
 

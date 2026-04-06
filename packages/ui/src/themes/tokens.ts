@@ -1,75 +1,69 @@
 export const colors = {
-  // Primary brand colors
   primary: {
-    50: '#eef2ff',
-    100: '#e0e7ff',
-    200: '#c7d2fe',
-    300: '#a5b4fc',
-    400: '#818cf8',
-    500: '#6366f1',
-    600: '#4f46e5',
-    700: '#4338ca',
-    800: '#3730a3',
-    900: '#312e81',
-    950: '#1e1b4b',
+    50: '#eef0ff',
+    100: '#dfe3ff',
+    200: '#c5cbff',
+    300: '#a7afff',
+    400: '#8994ff',
+    500: '#5865f2',
+    600: '#4752c4',
+    700: '#3c45a5',
+    800: '#31377f',
+    900: '#252a5a',
+    950: '#171a35',
   },
 
-  // Dark theme backgrounds
   bg: {
-    primary: '#0f0f12',
-    secondary: '#16161d',
-    tertiary: '#1e1e28',
-    elevated: '#252532',
-    hover: '#2a2a3a',
-    active: '#32324a',
-    overlay: 'rgba(0, 0, 0, 0.6)',
+    primary: '#1e1f22',
+    secondary: '#232428',
+    tertiary: '#2b2d31',
+    elevated: '#313338',
+    hover: '#3a3c43',
+    active: '#404249',
+    overlay: 'rgba(17, 18, 20, 0.56)',
   },
 
-  // Text colors
   text: {
-    primary: '#f0f0f5',
-    secondary: '#a0a0b8',
-    tertiary: '#6b6b82',
-    muted: '#4a4a60',
-    inverse: '#0f0f12',
-    link: '#818cf8',
+    primary: '#f2f3f5',
+    secondary: '#dbdee1',
+    tertiary: '#b5bac1',
+    muted: '#8e9297',
+    inverse: '#2e3338',
+    link: '#5865f2',
   },
 
-  // Status / semantic
   success: {
-    light: '#4ade80',
-    DEFAULT: '#22c55e',
-    dark: '#16a34a',
+    light: '#7df0a0',
+    DEFAULT: '#34c759',
+    dark: '#1aa03f',
   },
   warning: {
-    light: '#fbbf24',
-    DEFAULT: '#f59e0b',
-    dark: '#d97706',
+    light: '#ffcf73',
+    DEFAULT: '#ff9500',
+    dark: '#d97800',
   },
   danger: {
-    light: '#f87171',
-    DEFAULT: '#ef4444',
-    dark: '#dc2626',
+    light: '#ff8d86',
+    DEFAULT: '#ff453a',
+    dark: '#d9362d',
   },
   info: {
-    light: '#60a5fa',
-    DEFAULT: '#3b82f6',
-    dark: '#2563eb',
+    light: '#8bc8ff',
+    DEFAULT: '#5ac8fa',
+    dark: '#32a5d6',
   },
 
-  // Presence indicators
   presence: {
-    online: '#22c55e',
-    idle: '#f59e0b',
-    dnd: '#ef4444',
-    offline: '#6b6b82',
+    online: '#34c759',
+    idle: '#ff9f0a',
+    dnd: '#ff453a',
+    offline: '#8b93a2',
   },
 
-  // Borders
   border: {
-    DEFAULT: '#2a2a3a',
-    light: '#32324a',
-    strong: '#4a4a60',
+    DEFAULT: '#1e1f22',
+    light: '#404249',
+    strong: '#4f545c',
   },
 } as const;
 
@@ -99,7 +93,7 @@ export const spacing = {
 
 export const typography = {
   fontFamily: {
-    sans: '"Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    sans: '"SF Pro Display", "SF Pro Text", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     mono: '"JetBrains Mono", "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace',
   },
   fontSize: {
@@ -121,21 +115,21 @@ export const typography = {
 
 export const borderRadius = {
   none: '0',
-  sm: '0.25rem',
-  DEFAULT: '0.375rem',
-  md: '0.5rem',
-  lg: '0.75rem',
-  xl: '1rem',
-  '2xl': '1.5rem',
+  sm: '0.5rem',
+  DEFAULT: '0.75rem',
+  md: '1rem',
+  lg: '1.25rem',
+  xl: '1.5rem',
+  '2xl': '1.875rem',
   full: '9999px',
 } as const;
 
 export const shadows = {
-  sm: '0 1px 2px 0 rgba(0, 0, 0, 0.3)',
-  DEFAULT: '0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4)',
-  md: '0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4)',
-  lg: '0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4)',
-  xl: '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5)',
+  sm: '0 4px 10px rgba(15, 23, 42, 0.05)',
+  DEFAULT: '0 10px 24px rgba(15, 23, 42, 0.08)',
+  md: '0 18px 40px rgba(15, 23, 42, 0.1)',
+  lg: '0 24px 60px rgba(15, 23, 42, 0.12)',
+  xl: '0 32px 80px rgba(15, 23, 42, 0.16)',
   none: 'none',
 } as const;
 
@@ -153,14 +147,14 @@ export const zIndex = {
 
 export const animation = {
   duration: {
-    fast: '100ms',
-    normal: '200ms',
-    slow: '300ms',
+    fast: '140ms',
+    normal: '220ms',
+    slow: '320ms',
   },
   easing: {
-    default: 'cubic-bezier(0.4, 0, 0.2, 1)',
-    in: 'cubic-bezier(0.4, 0, 1, 1)',
-    out: 'cubic-bezier(0, 0, 0.2, 1)',
-    inOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    default: 'cubic-bezier(0.22, 1, 0.36, 1)',
+    in: 'cubic-bezier(0.32, 0, 0.67, 0)',
+    out: 'cubic-bezier(0.12, 0.84, 0.32, 1)',
+    inOut: 'cubic-bezier(0.65, 0, 0.35, 1)',
   },
 } as const;

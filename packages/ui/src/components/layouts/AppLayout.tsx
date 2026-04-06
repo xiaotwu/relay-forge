@@ -23,8 +23,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   return (
     <div
       className={[
-        'flex h-screen w-screen overflow-hidden',
-        'bg-[#0f0f12] text-zinc-100',
+        'ambient-shell flex h-screen w-screen overflow-hidden',
+        'bg-base text-text-primary',
         'font-sans antialiased',
         className,
       ]
@@ -35,22 +35,25 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       {sidebar}
 
       {/* Main area */}
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="relative flex min-w-0 flex-1 flex-col">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.08),_transparent_24%),radial-gradient(circle_at_bottom_left,_rgba(74,222,128,0.10),_transparent_28%)]" />
         {/* Header */}
         {header && (
-          <div className="flex h-12 flex-shrink-0 items-center border-b border-zinc-800 bg-[#16161d] px-4">
+          <div className="bg-white/88 relative flex h-16 flex-shrink-0 items-center border-b border-black/5 px-5 backdrop-blur-xl">
             {header}
           </div>
         )}
 
         {/* Content + Right panel */}
-        <div className="flex min-h-0 flex-1">
+        <div className="relative flex min-h-0 flex-1">
           {/* Main content */}
-          <main className="flex min-w-0 flex-1 flex-col bg-[#16161d]">{children}</main>
+          <main className="bg-white/82 flex min-w-0 flex-1 flex-col backdrop-blur-xl">
+            {children}
+          </main>
 
           {/* Optional right panel */}
           {rightPanel && (
-            <aside className="w-60 flex-shrink-0 overflow-y-auto border-l border-zinc-800 bg-[#0f0f12]">
+            <aside className="w-60 flex-shrink-0 overflow-y-auto border-l border-black/5 bg-[#f7faf8]/95 backdrop-blur-xl">
               {rightPanel}
             </aside>
           )}

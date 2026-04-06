@@ -21,19 +21,19 @@ let toastCounter = 0;
 
 const variantStyles: Record<ToastVariant, { bg: string; icon: string; border: string }> = {
   success: {
-    bg: 'bg-green-900/80',
-    icon: 'text-green-400',
-    border: 'border-green-700',
+    bg: 'bg-[linear-gradient(180deg,rgba(var(--rf-surface),0.96),rgba(var(--rf-surface-muted),0.84))]',
+    icon: 'text-[rgb(var(--rf-success))]',
+    border: 'border-[rgba(var(--rf-success),0.22)]',
   },
   error: {
-    bg: 'bg-red-900/80',
-    icon: 'text-red-400',
-    border: 'border-red-700',
+    bg: 'bg-[linear-gradient(180deg,rgba(var(--rf-surface),0.96),rgba(var(--rf-surface-muted),0.84))]',
+    icon: 'text-[rgb(var(--rf-danger))]',
+    border: 'border-[rgba(var(--rf-danger),0.22)]',
   },
   info: {
-    bg: 'bg-blue-900/80',
-    icon: 'text-blue-400',
-    border: 'border-blue-700',
+    bg: 'bg-[linear-gradient(180deg,rgba(var(--rf-surface),0.96),rgba(var(--rf-surface-muted),0.84))]',
+    icon: 'text-[rgb(var(--rf-accent))]',
+    border: 'border-[rgba(var(--rf-accent),0.18)]',
   },
 };
 
@@ -85,7 +85,7 @@ const ToastItem: React.FC<{
   return (
     <div
       className={[
-        'flex items-start gap-3 rounded-lg border px-4 py-3 shadow-lg backdrop-blur-sm',
+        'flex items-start gap-3 rounded-[22px] border px-4 py-3.5 shadow-[0_18px_40px_rgba(var(--rf-shadow-color),0.12)] backdrop-blur-xl',
         'transition-all duration-300 ease-out',
         style.bg,
         style.border,
@@ -93,10 +93,12 @@ const ToastItem: React.FC<{
       role="alert"
     >
       <span className={['mt-0.5 flex-shrink-0', style.icon].join(' ')}>{icons[toast.variant]}</span>
-      <p className="flex-1 text-sm text-zinc-100">{toast.message}</p>
+      <p className="flex-1 text-sm font-medium tracking-[-0.01em] text-[rgb(var(--rf-text-primary))]">
+        {toast.message}
+      </p>
       <button
         onClick={() => onRemove(toast.id)}
-        className="flex-shrink-0 text-zinc-400 transition-colors hover:text-zinc-200"
+        className="flex-shrink-0 text-[rgb(var(--rf-text-secondary))] transition-colors hover:text-[rgb(var(--rf-text-primary))]"
         aria-label="Dismiss"
       >
         <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">

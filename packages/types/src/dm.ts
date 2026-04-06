@@ -7,7 +7,7 @@ export interface DMChannel {
   name: string | null;
   iconUrl: string | null;
   ownerId: string | null;
-  lastMessageId: string | null;
+  lastMessage: string | null;
   lastMessageAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -18,11 +18,7 @@ export interface DMMessage {
   channelId: string;
   authorId: string;
   author: PublicUser;
-  encryptedContent: string;
-  nonce: string;
-  senderKeyId: string;
-  messageIndex: number;
-  chainIndex: number;
+  content: string;
   attachments: DMAttachment[];
   replyToId: string | null;
   edited: boolean;
@@ -68,16 +64,15 @@ export interface KeyBundleUploadRequest {
 }
 
 export interface SendDMRequest {
-  encryptedContent: string;
-  nonce: string;
-  senderKeyId: string;
-  messageIndex: number;
-  chainIndex: number;
+  content: string;
   replyToId?: string;
-  attachmentIds?: string[];
 }
 
 export interface CreateDMChannelRequest {
   participantIds: string[];
+  name?: string;
+}
+
+export interface UpdateDMChannelRequest {
   name?: string;
 }
