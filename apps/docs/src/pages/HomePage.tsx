@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import ArchitectureDiagram from '../components/ArchitectureDiagram';
 import { DocIcon, type DocIconName } from '../components/DocIcons';
 
 const stats = [
@@ -76,6 +75,29 @@ const readingPaths = [
   },
 ];
 
+const heroLanes = [
+  {
+    label: 'Client surfaces',
+    tone: 'surface' as const,
+    items: ['apps/web', 'apps/admin', 'apps/desktop', 'apps/docs'],
+  },
+  {
+    label: 'Shared contracts',
+    tone: 'shared' as const,
+    items: ['config', 'sdk', 'types', 'crypto', 'ui'],
+  },
+  {
+    label: 'Backend platform',
+    tone: 'accent' as const,
+    items: ['api', 'realtime', 'media', 'worker'],
+  },
+  {
+    label: 'Delivery surface',
+    tone: 'infra' as const,
+    items: ['GitHub Pages', 'releases', 'GHCR', 'operations notes'],
+  },
+];
+
 export default function HomePage() {
   const wordmarkSrc = `${import.meta.env.BASE_URL}branding/relay-forge-wordmark.png`;
 
@@ -119,7 +141,42 @@ export default function HomePage() {
           </div>
         </div>
 
-        <ArchitectureDiagram />
+        <aside className="doc-hero-panel" aria-label="Platform overview">
+          <div className="doc-hero-panel-glow" aria-hidden="true" />
+          <p className="doc-hero-panel-kicker">
+            <DocIcon name="layers" className="h-3.5 w-3.5" />
+            Platform overview
+          </p>
+          <h2 className="doc-hero-panel-title">
+            A cleaner map of what this handbook actually owns.
+          </h2>
+          <p className="doc-hero-panel-copy">
+            Client apps, shared packages, backend services, and delivery notes are grouped here by
+            responsibility instead of being shown as a static architecture figure.
+          </p>
+
+          <div className="doc-hero-lanes">
+            {heroLanes.map((lane) => (
+              <section key={lane.label} className="doc-hero-lane">
+                <div className="doc-hero-lane-header">
+                  <p className="doc-hero-lane-label">{lane.label}</p>
+                </div>
+                <div className="doc-hero-chip-row">
+                  {lane.items.map((item) => (
+                    <span key={item} className={`doc-hero-chip doc-hero-chip-${lane.tone}`}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+
+          <p className="doc-hero-panel-note">
+            One public handbook now carries repository boundaries, release flow, and operating
+            context for the full RelayForge stack.
+          </p>
+        </aside>
       </section>
 
       <section className="doc-stat-grid">

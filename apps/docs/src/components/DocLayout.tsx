@@ -13,12 +13,10 @@ export default function DocLayout() {
   const wordmarkSrc = `${import.meta.env.BASE_URL}branding/relay-forge-wordmark.png`;
 
   return (
-    <div className="min-h-screen bg-stone-100 text-stone-950">
+    <div className="doc-site-shell min-h-screen text-stone-950">
       <a href="#main-content" className="doc-skip-link">
         Skip to main content
       </a>
-
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(circle_at_top_left,_rgba(145,166,255,0.35),_transparent_48%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.92),_transparent_42%)]" />
 
       <header className="bg-stone-50/88 sticky top-0 z-40 border-b border-stone-200/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1560px] items-center gap-4 px-4 py-3 lg:px-8">
