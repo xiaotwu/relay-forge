@@ -17,7 +17,7 @@ function getInitialTheme(): Theme {
     return stored;
   }
 
-  return 'system';
+  return 'dark';
 }
 
 function applyTheme(theme: Theme): void {

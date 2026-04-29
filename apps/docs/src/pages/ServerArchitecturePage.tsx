@@ -4,37 +4,37 @@ const serviceRows = [
   {
     service: 'api',
     responsibility:
-      'Authoritative REST API, auth, guild state, message persistence, DM key bundle coordination, and migrations.',
+      'Authoritative REST API, auth, admin endpoints, guild state, message persistence, OpenAPI contract, realtime publishing, and migrations.',
   },
   {
     service: 'realtime',
     responsibility:
-      'WebSocket gateway for message fan-out, presence, typing indicators, read-state broadcasts, and reconnect behavior.',
+      'JWT-protected WebSocket gateway with uppercase event envelopes, validated guild subscriptions, Valkey Pub/Sub fan-out, and disabled-user rechecks.',
   },
   {
     service: 'media',
     responsibility:
-      'Upload orchestration, MIME validation, S3-compatible storage coordination, and LiveKit integration.',
+      'Upload orchestration, media ACL enforcement, MIME/size validation, S3-compatible storage coordination, and LiveKit token/room integration.',
   },
   {
     service: 'worker',
     responsibility:
-      'Scheduled or queued jobs including cleanup, retention, and asynchronous side effects.',
+      'Schema-aligned cleanup and retention jobs for sessions, invites, password resets, uploads, audit logs, messages, and disabled users.',
   },
 ];
 
 const dataRows = [
   {
-    domain: 'Users, guilds, channels, messages, audit',
+    domain: 'Users, guilds, channels, roles, messages, DMs, reports, settings, audit',
     owner: 'PostgreSQL via API service',
   },
   {
-    domain: 'Presence, typing, fan-out coordination',
-    owner: 'Valkey via realtime service',
+    domain: 'Realtime mutation fan-out',
+    owner: 'API publishes to Valkey; realtime subscribes and delivers to validated recipients',
   },
   {
-    domain: 'Uploads and media blobs',
-    owner: 'S3-compatible storage via media service',
+    domain: 'Upload metadata and media ACLs',
+    owner: 'PostgreSQL file_uploads plus S3-compatible object storage via media service',
   },
   {
     domain: 'Voice and video transport',

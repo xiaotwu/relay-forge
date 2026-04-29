@@ -5,7 +5,7 @@ const packages = [
   },
   {
     title: '@relayforge/sdk',
-    copy: 'Wraps REST and realtime communication so product surfaces share one client contract for auth, requests, and websocket behavior.',
+    copy: 'Wraps REST and realtime communication. Public request helpers are handwritten but route through OpenAPI-backed typed path builders.',
   },
   {
     title: '@relayforge/types',
@@ -48,8 +48,8 @@ export default function SharedPackagesPage() {
         <h2 className="doc-section-title">Why package-first work matters</h2>
         <ol className="doc-list">
           <li>
-            It keeps the endpoint contract explicit and documented instead of buried inside app
-            code.
+            It keeps endpoint contracts explicit through generated OpenAPI path types and shared
+            path builders instead of app-local route strings.
           </li>
           <li>It reduces drift between the web client, admin console, and desktop shell.</li>
           <li>

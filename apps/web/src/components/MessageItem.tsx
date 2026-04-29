@@ -4,6 +4,8 @@ import { Avatar } from '@relayforge/ui';
 import { useAuthStore } from '@/stores/auth';
 import { useMessagesStore } from '@/stores/messages';
 import { renderMarkdown } from '@/utils/markdown';
+import { getCurrentConnection } from '@/lib/serverConnections';
+import { resolveAttachmentUrl } from '@/lib/messageContent';
 
 interface MessageItemProps {
   message: Message;
@@ -13,6 +15,7 @@ interface MessageItemProps {
 
 export function MessageItem({ message, showHeader, onReply }: MessageItemProps) {
   const currentUser = useAuthStore((s) => s.user);
+  const accessToken = useAuthStore((s) => s.accessToken);
   const { deleteMessage, editMessage, addReaction, removeReaction } = useMessagesStore();
   const [hovered, setHovered] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -131,16 +134,22 @@ export function MessageItem({ message, showHeader, onReply }: MessageItemProps) 
             <div className="mt-2 flex flex-wrap gap-2">
               {message.attachments.map((att) => {
                 const isImage = att.contentType.startsWith('image/');
+                const mediaBaseUrl = getCurrentConnection().mediaBaseUrl;
+                const attachmentUrl = resolveAttachmentUrl(
+                  att.proxyUrl || att.url,
+                  mediaBaseUrl,
+                  accessToken,
+                );
                 return isImage ? (
                   <a
                     key={att.id}
-                    href={att.url}
+                    href={attachmentUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block max-w-sm"
                   >
                     <img
-                      src={att.proxyUrl || att.url}
+                      src={attachmentUrl}
                       alt={att.filename}
                       className="max-h-80 rounded-2xl border border-[rgba(var(--rf-border),0.18)] object-contain shadow-[0_12px_30px_rgba(15,23,42,0.08)]"
                       loading="lazy"
@@ -149,7 +158,7 @@ export function MessageItem({ message, showHeader, onReply }: MessageItemProps) 
                 ) : (
                   <a
                     key={att.id}
-                    href={att.url}
+                    href={attachmentUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-elevated text-accent flex items-center gap-2 rounded-2xl border border-[rgba(var(--rf-border),0.18)] px-3 py-2 text-sm hover:underline"

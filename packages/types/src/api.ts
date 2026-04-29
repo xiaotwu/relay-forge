@@ -3,6 +3,7 @@
  */
 export interface ApiResponse<T> {
   data: T;
+  meta?: unknown;
   message?: string;
 }
 
@@ -11,7 +12,8 @@ export interface ApiResponse<T> {
  */
 export interface PaginatedResponse<T> {
   data: T[];
-  pagination: PaginationMeta;
+  meta?: PaginationMeta;
+  pagination?: PaginationMeta;
 }
 
 export interface PaginationMeta {
@@ -54,10 +56,12 @@ export interface ErrorResponse {
  * Presigned upload response.
  */
 export interface PresignedUploadResponse {
-  uploadId: string;
   uploadUrl: string;
-  fields: Record<string, string>;
-  expiresAt: string;
+  fileId: string;
+  key: string;
+  uploadId?: string;
+  fields?: Record<string, string>;
+  expiresAt?: string;
 }
 
 /**
@@ -65,11 +69,13 @@ export interface PresignedUploadResponse {
  */
 export interface UploadCompleteResponse {
   id: string;
+  fileId?: string;
   url: string;
-  proxyUrl: string;
+  proxyUrl?: string;
   filename: string;
   contentType: string;
   size: number;
+  status?: string;
 }
 
 /**
@@ -78,7 +84,8 @@ export interface UploadCompleteResponse {
 export interface VoiceTokenResponse {
   token: string;
   url: string;
-  roomName: string;
+  roomName?: string;
+  expiresAt?: number;
 }
 
 /**
@@ -86,8 +93,10 @@ export interface VoiceTokenResponse {
  */
 export interface VoiceRoom {
   name: string;
-  guildId: string;
-  channelId: string;
-  participantCount: number;
-  createdAt: string;
+  guildId?: string;
+  channelId?: string;
+  participantCount?: number;
+  createdAt?: string;
+  maxParticipants?: number;
+  status?: string;
 }

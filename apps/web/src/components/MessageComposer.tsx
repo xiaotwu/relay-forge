@@ -98,7 +98,12 @@ export function MessageComposer({
 
       <div className="relative flex items-end gap-2 rounded-[24px] border border-[rgba(var(--rf-border),0.22)] bg-[rgba(var(--rf-surface),0.84)] px-4 py-2 shadow-[0_12px_30px_rgba(15,23,42,0.06)]">
         {/* File upload button */}
-        <button className="text-text-secondary hover:text-text-primary mb-0.5 shrink-0 rounded-full p-1 transition-colors hover:bg-[rgba(var(--rf-base),0.42)]">
+        <button
+          disabled
+          className="text-text-secondary mb-0.5 shrink-0 rounded-full p-1 opacity-35"
+          title="Channel attachments are not available yet"
+          aria-label="Channel attachments unavailable"
+        >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"

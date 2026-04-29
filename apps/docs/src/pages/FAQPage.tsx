@@ -20,9 +20,9 @@ const faqs = [
       'Client release workflows live in relay-forge. Backend binary and container release workflows live in relay-forge-server.',
   },
   {
-    question: 'Why change the license away from AGPL?',
+    question: 'Where is the API contract?',
     answer:
-      'The relicensing decision here is to optimize adoption and contribution flexibility while keeping a clear patent grant, which Apache-2.0 provides.',
+      'The backend-owned OpenAPI file lives at relay-forge-server/openapi/relayforge.yaml, and the client SDK consumes generated path types from that file.',
   },
 ];
 

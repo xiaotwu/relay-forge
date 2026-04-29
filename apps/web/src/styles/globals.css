@@ -155,8 +155,8 @@
 
   .ambient-shell {
     background:
-      radial-gradient(circle at top left, rgba(var(--rf-accent), 0.14), transparent 22%),
-      radial-gradient(circle at bottom right, rgba(123, 92, 255, 0.08), transparent 24%),
+      linear-gradient(135deg, rgba(var(--rf-accent), 0.12), transparent 30%),
+      linear-gradient(315deg, rgba(56, 189, 248, 0.08), transparent 28%),
       linear-gradient(180deg, rgba(var(--rf-base), 1), rgba(var(--rf-base-alt), 1));
   }
 
@@ -184,9 +184,168 @@
 
   .auth-shell {
     background:
-      radial-gradient(circle at top left, rgba(var(--rf-accent), 0.16), transparent 18%),
-      radial-gradient(circle at bottom right, rgba(123, 92, 255, 0.08), transparent 20%),
+      linear-gradient(135deg, rgba(var(--rf-accent), 0.14), transparent 30%),
+      linear-gradient(315deg, rgba(56, 189, 248, 0.08), transparent 28%),
       linear-gradient(180deg, rgba(var(--rf-base), 1), rgba(var(--rf-base-alt), 1));
+  }
+
+  .rf-primary-rail {
+    border-right: 1px solid rgba(var(--rf-border), 0.22);
+    background:
+      linear-gradient(180deg, rgba(var(--rf-base), 0.96), rgba(var(--rf-base-alt), 0.98)),
+      rgba(var(--rf-base), 0.94);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .rf-rail-button {
+    position: relative;
+    display: inline-flex;
+    height: 48px;
+    width: 48px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(var(--rf-border), 0.26);
+    border-radius: 18px;
+    background: rgba(var(--rf-surface-muted), 0.78);
+    color: rgb(var(--rf-text-secondary));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 8px 18px rgba(var(--rf-shadow-color), 0.08);
+    transition:
+      border-radius 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .rf-rail-button:hover {
+    transform: translateY(-1px);
+    border-radius: 14px;
+    background: rgba(var(--rf-elevated), 0.92);
+    color: rgb(var(--rf-text-primary));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 14px 26px rgba(var(--rf-shadow-color), 0.14);
+  }
+
+  .rf-rail-button.is-active {
+    border-color: rgba(var(--rf-accent), 0.52);
+    border-radius: 14px;
+    background: linear-gradient(
+      180deg,
+      rgba(var(--rf-accent), 0.94),
+      rgba(var(--rf-accent-hover), 0.96)
+    );
+    color: white;
+    box-shadow: 0 14px 28px rgba(var(--rf-accent), 0.28);
+  }
+
+  .rf-rail-indicator {
+    position: absolute;
+    left: -13px;
+    top: 50%;
+    height: 28px;
+    width: 4px;
+    border-radius: 999px;
+    background: rgb(var(--rf-text-primary));
+    transform: translateY(-50%);
+  }
+
+  .rf-context-sidebar {
+    border-right: 1px solid rgba(var(--rf-border), 0.2);
+    background:
+      linear-gradient(180deg, rgba(var(--rf-surface), 0.72), rgba(var(--rf-surface-muted), 0.78)),
+      rgba(var(--rf-base-alt), 0.82);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(16px) saturate(1.08);
+  }
+
+  .rf-shell-main {
+    border: 1px solid rgba(var(--rf-border), 0.2);
+    background:
+      linear-gradient(180deg, rgba(var(--rf-surface), 0.9), rgba(var(--rf-surface-muted), 0.94)),
+      rgba(var(--rf-surface), 0.9);
+    box-shadow:
+      0 18px 48px rgba(var(--rf-shadow-color), 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(14px) saturate(1.08);
+  }
+
+  .rf-search-shell {
+    border: 1px solid rgba(var(--rf-border), 0.24);
+    background: rgba(var(--rf-input-bg), 0.74);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transition:
+      border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .rf-search-shell:focus-within {
+    border-color: rgba(var(--rf-accent), 0.52);
+    background: rgba(var(--rf-input-bg), 0.92);
+    box-shadow: 0 0 0 3px rgba(var(--rf-accent), 0.14);
+  }
+
+  .rf-list-row {
+    transition:
+      background-color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 160ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .rf-list-row:hover {
+    transform: translateY(-1px);
+  }
+
+  .rf-empty-state {
+    border: 1px solid rgba(var(--rf-border), 0.18);
+    background:
+      linear-gradient(180deg, rgba(var(--rf-surface), 0.66), rgba(var(--rf-surface-muted), 0.74)),
+      rgba(var(--rf-surface), 0.64);
+    box-shadow:
+      0 14px 30px rgba(var(--rf-shadow-color), 0.11),
+      inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(10px);
+  }
+
+  .rf-auth-card {
+    border: 1px solid rgba(var(--rf-border), 0.22);
+    background:
+      linear-gradient(180deg, rgba(var(--rf-surface), 0.9), rgba(var(--rf-surface-muted), 0.94)),
+      rgba(var(--rf-surface), 0.88);
+    box-shadow:
+      0 24px 70px rgba(var(--rf-shadow-color), 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(18px) saturate(1.1);
+  }
+
+  .rf-settings-tab {
+    color: rgb(var(--rf-text-secondary));
+    transition:
+      background-color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .rf-settings-tab:hover {
+    transform: translateY(-1px);
+    color: rgb(var(--rf-text-primary));
+    background: rgba(var(--rf-elevated), 0.54);
+  }
+
+  .rf-settings-tab.is-active {
+    color: white;
+    background: linear-gradient(
+      180deg,
+      rgba(var(--rf-accent-light), 0.42),
+      rgba(var(--rf-accent), 0.34)
+    );
+    box-shadow:
+      inset 0 0 0 1px rgba(var(--rf-accent-light), 0.28),
+      0 8px 18px rgba(var(--rf-accent), 0.14);
   }
 
   .apple-card {
@@ -212,14 +371,14 @@
   }
 
   .rf-window {
-    border: 1px solid rgba(var(--rf-border), 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     background:
-      linear-gradient(180deg, rgba(var(--rf-surface), 0.96), rgba(var(--rf-surface-muted), 0.98)),
-      rgba(var(--rf-surface), 0.94);
+      linear-gradient(180deg, rgba(var(--rf-surface), 0.99), rgba(var(--rf-surface-muted), 1)),
+      rgba(var(--rf-surface), 0.98);
     box-shadow:
-      0 14px 40px rgba(var(--rf-shadow-color), 0.16),
-      0 2px 6px rgba(var(--rf-shadow-color), 0.08);
-    backdrop-filter: blur(12px) saturate(1.08);
+      0 28px 90px rgba(var(--rf-shadow-color), 0.44),
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    backdrop-filter: blur(18px) saturate(1.12);
   }
 
   .rf-sidebar-surface {
@@ -261,12 +420,34 @@
   }
 
   .rf-settings-card {
-    border: 1px solid rgba(var(--rf-border), 0.58);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     background:
-      linear-gradient(180deg, rgba(var(--rf-surface), 0.92), rgba(var(--rf-surface-muted), 0.92)),
+      linear-gradient(180deg, rgba(var(--rf-elevated), 0.84), rgba(var(--rf-surface-muted), 0.9)),
       rgba(var(--rf-surface), 0.88);
-    box-shadow: 0 12px 30px rgba(var(--rf-shadow-color), 0.12);
+    box-shadow: 0 14px 32px rgba(var(--rf-shadow-color), 0.18);
     backdrop-filter: blur(10px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-up,
+    .animate-fade-scale,
+    .animate-soft-float {
+      animation: none;
+    }
+
+    .rf-control,
+    .rf-rail-button,
+    .rf-list-row,
+    .rf-settings-tab {
+      transition: none;
+    }
+
+    .rf-control:hover,
+    .rf-rail-button:hover,
+    .rf-list-row:hover,
+    .rf-settings-tab:hover {
+      transform: none;
+    }
   }
 
   .rf-textarea {

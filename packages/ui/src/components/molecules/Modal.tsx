@@ -78,7 +78,7 @@ export const Modal: React.FC<ModalProps> = ({
         ref={contentRef}
         tabIndex={-1}
         className={[
-          'rf-window relative w-full rounded-[32px] border-[rgba(var(--rf-border),0.18)]',
+          'rf-window relative w-full overflow-hidden rounded-[32px]',
           'focus:outline-none',
           sizeClasses[size],
         ].join(' ')}

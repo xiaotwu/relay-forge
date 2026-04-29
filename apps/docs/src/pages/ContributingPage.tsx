@@ -32,6 +32,7 @@ export default function ContributingPage() {
           <pre>{`npm run lint
 npm run typecheck
 npm test
+npm run check:api-contract
 npm run build:docs`}</pre>
         </div>
 

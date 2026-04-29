@@ -61,7 +61,8 @@ make deploy-migrate`}</pre>
 
         <div className="doc-callout">
           The docs site is part of the product now. Treat docs changes like product changes: build
-          them locally, review them visually, and keep the README files intentionally short.
+          them locally, review them visually, and keep the README files aligned with the OpenAPI
+          contract.
         </div>
       </section>
     </>

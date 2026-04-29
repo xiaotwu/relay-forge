@@ -1,15 +1,15 @@
 const surfaces = [
   {
     title: 'apps/web',
-    copy: 'The main end-user browser surface. It owns the highest-volume messaging workflows, guild navigation, inbox behavior, and the primary product experience.',
+    copy: 'The main end-user browser surface. It owns the compact navigation rail, contextual sidebar, conversation panes, floating settings modal, guild navigation, DMs, media, and voice entry points.',
   },
   {
     title: 'apps/admin',
-    copy: 'The operator surface. It focuses on dashboards, reports, moderation, audit, and system settings rather than the member experience.',
+    copy: 'The operator surface. It focuses on backed dashboard data, users, guilds, reports, audit logs, and system settings rather than member chat workflows.',
   },
   {
     title: 'apps/desktop',
-    copy: 'A Tauri-based native wrapper that packages the RelayForge product with tray, notification, and installer support.',
+    copy: 'A Tauri-based native wrapper that reuses shared client packages with desktop packaging and an explicit CSP.',
   },
   {
     title: 'apps/docs',

@@ -53,28 +53,17 @@ export function RegisterPage() {
 
   return (
     <div className="auth-shell flex min-h-screen items-center justify-center overflow-hidden px-4">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="animate-soft-float absolute left-[10%] top-[14%] h-44 w-44 rounded-full bg-[rgba(var(--rf-accent),0.10)] blur-3xl" />
-        <div className="animate-soft-float absolute bottom-[16%] right-[12%] h-56 w-56 rounded-full bg-[rgba(56,189,248,0.09)] blur-3xl [animation-delay:900ms]" />
-      </div>
-
       <div className="relative z-10 w-full max-w-md">
-        <div className="rf-floating-shell animate-fade-scale rounded-[36px] p-8">
-          <div className="mb-8 text-center">
+        <div className="rf-auth-card animate-fade-scale rounded-[30px] p-7">
+          <div className="mb-7 text-center">
             <img
               src={relayForgeIconSrc}
               alt="RelayForge"
-              className="mx-auto mb-5 h-20 w-20 rounded-[28px] border border-black/5 bg-white object-cover shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
+              className="mx-auto mb-4 h-16 w-16 rounded-[22px] border border-white/70 bg-white object-cover shadow-[0_16px_34px_rgba(15,23,42,0.14)]"
             />
-            <p className="text-text-secondary text-[11px] font-semibold uppercase tracking-[0.28em]">
-              RelayForge
-            </p>
-            <h1 className="text-text-primary mt-3 text-[34px] font-semibold tracking-[-0.05em]">
+            <h1 className="text-text-primary text-[30px] font-semibold tracking-[-0.04em]">
               Create account
             </h1>
-            <p className="text-text-secondary mt-2 text-sm leading-6">
-              Set up your identity once, then move between servers, DMs, and calls seamlessly.
-            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">

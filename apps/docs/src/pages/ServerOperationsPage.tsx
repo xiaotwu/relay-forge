@@ -1,6 +1,8 @@
 const readinessItems = [
   'Set production secrets for JWT, database, Valkey, storage, and LiveKit before exposing public traffic.',
+  'Set explicit API, media, and realtime CORS/origin lists; production config rejects wildcard origins.',
   'Run PostgreSQL and Valkey with explicit limits, health checks, and backup schedules.',
+  'Run migrations before starting workers so retention jobs see deleted_at, upload status, and media ACL columns.',
   'Publish metrics, health probes, and structured logs from every service before calling a deployment production-ready.',
   'Smoke-test registration, login, guild creation, messaging, uploads, and voice flows after every release.',
 ];
@@ -67,8 +69,8 @@ make build`}</pre>
 
         <div className="doc-callout">
           API and media services stay easiest to scale because they are mostly stateless. Realtime
-          depends on Valkey coordination, and database scale remains the dominant constraint for
-          most self-hosted deployments.
+          depends on Valkey Pub/Sub coordination, workers depend on the current migration set, and
+          database scale remains the dominant constraint for most self-hosted deployments.
         </div>
       </section>
     </>

@@ -15,6 +15,8 @@ const referenceGroups = [
       ['Go', 'https://go.dev/'],
       ['PostgreSQL', 'https://www.postgresql.org/'],
       ['Valkey', 'https://valkey.io/'],
+      ['OpenAPI', 'https://www.openapis.org/'],
+      ['MinIO', 'https://min.io/'],
       ['OpenTelemetry', 'https://opentelemetry.io/'],
       ['ClamAV', 'https://www.clamav.net/'],
     ],
@@ -29,7 +31,6 @@ const referenceGroups = [
         'https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry',
       ],
       ['Apache License 2.0', 'https://www.apache.org/licenses/LICENSE-2.0'],
-      ['GNU AGPL 3.0', 'https://www.gnu.org/licenses/agpl-3.0.en.html'],
     ],
   },
 ];

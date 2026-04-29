@@ -48,9 +48,9 @@ export function AdminSidebar() {
   };
 
   return (
-    <aside className="bg-surface border-border flex h-full w-60 flex-col border-r">
+    <aside className="admin-panel flex h-full w-64 shrink-0 flex-col overflow-hidden rounded-[28px]">
       {/* Logo */}
-      <div className="border-border flex items-center gap-2 border-b px-5 py-5">
+      <div className="border-border/40 flex items-center gap-2 border-b px-5 py-5">
         <div>
           <div className="mb-2 inline-flex items-center gap-3 rounded-[18px] border border-black/5 bg-white px-3 py-2 shadow-sm">
             <img src={relayForgeIconSrc} alt="" className="h-9 w-9 rounded-[14px] object-cover" />
@@ -72,10 +72,10 @@ export function AdminSidebar() {
             to={item.to}
             end={item.to === '/'}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+              `flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-accent/10 text-accent'
-                  : 'text-text-secondary hover:bg-elevated hover:text-text-primary'
+                  ? 'bg-accent text-white shadow-[0_12px_24px_rgba(var(--rf-accent),0.24)]'
+                  : 'text-text-secondary hover:bg-elevated/70 hover:text-text-primary'
               }`
             }
           >
@@ -94,10 +94,10 @@ export function AdminSidebar() {
       </nav>
 
       {/* Logout */}
-      <div className="border-border border-t px-3 py-4">
+      <div className="border-border/40 border-t px-3 py-4">
         <button
           onClick={handleLogout}
-          className="text-text-secondary hover:bg-elevated flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:text-red-400"
+          className="text-text-secondary hover:bg-elevated/70 flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-colors hover:text-red-400"
         >
           <svg
             className="h-5 w-5"

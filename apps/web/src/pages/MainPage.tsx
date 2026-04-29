@@ -1,23 +1,27 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Avatar, Button, Input, Modal } from '@relayforge/ui';
 import type { DMMessage, PublicUser } from '@relayforge/types';
-import { useNavigate } from 'react-router-dom';
 import { getApiClient } from '@/stores/auth';
 import { useAuthStore } from '@/stores/auth';
 import { useDMStore } from '@/stores/dm';
+import { useGuildStore } from '@/stores/guild';
 import { useRealtimeStore } from '@/stores/realtime';
+import { ChannelList } from '@/components/ChannelList';
 import { ConversationSidebar } from '@/components/ConversationSidebar';
 import { ConversationDetailsPanel } from '@/components/ConversationDetailsPanel';
 import { DMComposer } from '@/components/DMComposer';
 import { DMThread } from '@/components/DMThread';
+import { GuildSidebar } from '@/components/GuildSidebar';
+import { MemberList } from '@/components/MemberList';
+import { MessageComposer } from '@/components/MessageComposer';
+import { MessageTimeline } from '@/components/MessageTimeline';
+import { SettingsModal } from '@/components/SettingsModal';
 import { VoiceChannel } from '@/components/VoiceChannel';
 import {
   getConversationParticipantCount,
   getConversationOthers,
   getConversationTitle,
 } from '@/components/conversationUtils';
-
-type ConversationFilter = 'all' | 'direct' | 'group';
 
 function useViewportWidth() {
   const [width, setWidth] = useState(() => window.innerWidth);
@@ -32,7 +36,6 @@ function useViewportWidth() {
 }
 
 export function MainPage() {
-  const navigate = useNavigate();
   const viewportWidth = useViewportWidth();
   const isCompact = viewportWidth < 1180;
   const { user } = useAuthStore();
@@ -47,11 +50,18 @@ export function MainPage() {
     createConversation,
     updateChannel,
   } = useDMStore();
+  const {
+    guilds,
+    selectedGuildId,
+    channels: guildChannels,
+    members: guildMembers,
+    selectedChannelId: selectedGuildChannelId,
+    fetchGuilds,
+  } = useGuildStore();
   const { connect, disconnect } = useRealtimeStore();
 
-  const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(true);
-  const [filter, setFilter] = useState<ConversationFilter>('all');
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [activeCallMode, setActiveCallMode] = useState<'call' | null>(null);
   const [composeOpen, setComposeOpen] = useState(false);
@@ -67,12 +77,15 @@ export function MainPage() {
   const searchInputRef = React.useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    void fetchChannels();
-    connect();
+    let cancelled = false;
+    void Promise.all([fetchChannels(), fetchGuilds()]).finally(() => {
+      if (!cancelled) connect();
+    });
     return () => {
+      cancelled = true;
       disconnect();
     };
-  }, [fetchChannels, connect, disconnect]);
+  }, [fetchChannels, fetchGuilds, connect, disconnect]);
 
   useEffect(() => {
     const refreshChannels = () => {
@@ -102,13 +115,10 @@ export function MainPage() {
     };
   }, [accessToken, fetchChannels]);
 
-  useEffect(() => {
-    if (isCompact && rightCollapsed === false) {
-      setLeftCollapsed(true);
-    }
-  }, [isCompact, rightCollapsed]);
-
   const selectedChannel = channels.find((channel) => channel.id === selectedChannelId) ?? null;
+  const selectedGuild = guilds.find((guild) => guild.id === selectedGuildId) ?? null;
+  const selectedGuildChannel =
+    guildChannels.find((channel) => channel.id === selectedGuildChannelId) ?? null;
   const conversationOthers = useMemo(
     () => (selectedChannel ? getConversationOthers(selectedChannel, user?.id) : []),
     [selectedChannel, user?.id],
@@ -123,6 +133,38 @@ export function MainPage() {
       deafened: false,
     }));
   }, [selectedChannel]);
+
+  const guildVoiceUsers = useMemo(
+    () =>
+      guildMembers.map((member) => {
+        const raw = member as typeof member & {
+          user?: PublicUser;
+          userId?: string;
+          isMuted?: boolean;
+          isDeafened?: boolean;
+        };
+        const fallbackName =
+          member.nickname ?? raw.user?.displayName ?? raw.user?.username ?? 'Member';
+        return {
+          user:
+            raw.user ??
+            ({
+              id: raw.userId ?? member.guildId,
+              username: fallbackName,
+              displayName: fallbackName,
+              avatarUrl: null,
+              bannerUrl: null,
+              bio: null,
+              status: 'offline',
+              customStatus: null,
+            } satisfies PublicUser),
+          speaking: false,
+          muted: raw.isMuted ?? member.mute ?? false,
+          deafened: raw.isDeafened ?? member.deaf ?? false,
+        };
+      }),
+    [guildMembers],
+  );
 
   useEffect(() => {
     if (!composeOpen) return;
@@ -154,9 +196,6 @@ export function MainPage() {
   }, [editOpen, selectedChannel?.name]);
 
   const openDetailsPanel = () => {
-    if (isCompact) {
-      setLeftCollapsed(true);
-    }
     setRightCollapsed(false);
   };
 
@@ -213,9 +252,6 @@ export function MainPage() {
         name: composeSelection.length > 1 ? conversationName.trim() || undefined : undefined,
       });
       resetCompose();
-      if (isCompact) {
-        setLeftCollapsed(true);
-      }
       selectChannel(channel.id);
     } finally {
       setSubmittingCompose(false);
@@ -245,24 +281,81 @@ export function MainPage() {
   return (
     <>
       <div className="ambient-shell flex h-screen w-screen overflow-hidden text-[rgb(var(--rf-text-primary))]">
-        <ConversationSidebar
-          channels={channels}
-          currentUser={user ?? null}
-          selectedChannelId={selectedChannelId}
-          collapsed={leftCollapsed}
-          search={search}
-          filter={filter}
-          searchInputRef={searchInputRef}
-          onSearchChange={setSearch}
-          onFilterChange={setFilter}
-          onToggleCollapse={() => setLeftCollapsed((value) => !value)}
-          onSelectChannel={handleSelectConversation}
-          onCompose={() => setComposeOpen(true)}
-          onOpenSettings={() => navigate('/settings')}
-        />
+        <GuildSidebar onOpenSettings={() => setSettingsOpen(true)} />
 
-        <main className="m-2 ml-0 flex min-w-0 flex-1 rounded-[28px] bg-[rgba(var(--rf-surface),0.92)] shadow-[0_14px_40px_rgba(var(--rf-shadow-color),0.16)] backdrop-blur-[12px]">
-          {selectedChannel && activeCallMode ? (
+        {selectedGuildId ? (
+          <aside className="rf-context-sidebar relative flex h-full w-[316px] shrink-0 flex-col">
+            <ChannelList />
+          </aside>
+        ) : (
+          <ConversationSidebar
+            channels={channels}
+            currentUser={user ?? null}
+            selectedChannelId={selectedChannelId}
+            search={search}
+            searchInputRef={searchInputRef}
+            onSearchChange={setSearch}
+            onSelectChannel={handleSelectConversation}
+            onCompose={() => setComposeOpen(true)}
+          />
+        )}
+
+        <main className="rf-shell-main m-2 ml-0 flex min-w-0 flex-1 overflow-hidden rounded-[28px]">
+          {selectedGuildId ? (
+            selectedGuild && selectedGuildChannel ? (
+              <div className="flex min-w-0 flex-1">
+                <section className="flex min-w-0 flex-1 flex-col">
+                  <header className="border-b border-[rgba(var(--rf-border),0.18)] px-5 py-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-[rgb(var(--rf-text-primary))]">
+                          {selectedGuildChannel.type === 'voice' ? '◖' : '#'}{' '}
+                          {selectedGuildChannel.name}
+                        </p>
+                        {selectedGuildChannel.topic && (
+                          <p className="mt-1 truncate text-xs text-[rgb(var(--rf-text-tertiary))]">
+                            {selectedGuildChannel.topic}
+                          </p>
+                        )}
+                      </div>
+                      <span className="apple-pill hidden rounded-full px-3 py-1 text-xs text-[rgb(var(--rf-text-secondary))] sm:inline-flex">
+                        {selectedGuild.name}
+                      </span>
+                    </div>
+                  </header>
+
+                  {selectedGuildChannel.type === 'voice' ? (
+                    <VoiceChannel
+                      roomKey={`guild-${selectedGuildId}-${selectedGuildChannel.id}`}
+                      roomLabel={selectedGuildChannel.name}
+                      users={guildVoiceUsers}
+                      onDisconnect={() => {}}
+                    />
+                  ) : (
+                    <div className="flex min-h-0 flex-1 flex-col bg-[rgb(var(--rf-base-alt))]">
+                      <MessageTimeline channelId={selectedGuildChannel.id} />
+                      <MessageComposer
+                        channelId={selectedGuildChannel.id}
+                        channelName={selectedGuildChannel.name}
+                      />
+                    </div>
+                  )}
+                </section>
+                {!isCompact && <MemberList />}
+              </div>
+            ) : (
+              <div className="flex flex-1 items-center justify-center px-6">
+                <div className="rf-empty-state animate-fade-scale w-full max-w-sm rounded-[28px] px-7 py-7 text-center">
+                  <p className="text-xl font-semibold tracking-[-0.03em] text-[rgb(var(--rf-text-primary))]">
+                    Pick a channel
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-[rgb(var(--rf-text-secondary))]">
+                    Choose a space from {selectedGuild?.name ?? 'this server'}.
+                  </p>
+                </div>
+              </div>
+            )
+          ) : selectedChannel && activeCallMode ? (
             <div className="flex min-w-0 flex-1 flex-col">
               <VoiceChannel
                 roomKey={`dm-${selectedChannel.id}`}
@@ -362,12 +455,12 @@ export function MainPage() {
             </div>
           ) : (
             <div className="flex flex-1 items-center justify-center px-6">
-              <div className="apple-card w-full max-w-xl rounded-[32px] px-8 py-10 text-center">
-                <p className="text-[32px] font-semibold tracking-[-0.04em] text-[rgb(var(--rf-text-primary))]">
-                  Choose a conversation
+              <div className="rf-empty-state animate-fade-scale w-full max-w-sm rounded-[28px] px-7 py-7 text-center">
+                <p className="text-xl font-semibold tracking-[-0.03em] text-[rgb(var(--rf-text-primary))]">
+                  Pick a conversation
                 </p>
-                <p className="mt-3 text-sm leading-6 text-[rgb(var(--rf-text-secondary))]">
-                  Start a direct message, create a group, or open a recent chat from the list.
+                <p className="mt-2 text-sm leading-6 text-[rgb(var(--rf-text-secondary))]">
+                  Open a chat or start something new.
                 </p>
               </div>
             </div>
@@ -460,8 +553,17 @@ export function MainPage() {
               disabled={composeSelection.length === 0}
               loading={submittingCompose}
               aria-label="Create direct message"
+              title="Create direct message"
+              className="!min-h-11 !w-11 !rounded-full !p-0"
             >
-              ⁀જ➣
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.8}
+                  d="M5 12h14M13 6l6 6-6 6"
+                />
+              </svg>
             </Button>
           </div>
         </div>
@@ -485,6 +587,8 @@ export function MainPage() {
           </div>
         </div>
       </Modal>
+
+      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </>
   );
 }

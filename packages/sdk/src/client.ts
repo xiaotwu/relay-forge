@@ -40,9 +40,11 @@ import type {
   VoiceTokenResponse,
   VoiceRoom,
 } from '@relayforge/types';
+import { API_PATHS, buildPath } from './paths.js';
 
 export interface ApiClientOptions {
   baseURL?: string;
+  mediaBaseURL?: string;
   onTokenRefresh?: (tokens: AuthTokens) => void;
   onAuthError?: () => void;
 }
@@ -104,6 +106,7 @@ export class ApiError extends Error {
 
 export class ApiClient {
   private baseURL: string;
+  private mediaBaseURL: string;
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
   private refreshPromise: Promise<AuthTokens> | null = null;
@@ -112,6 +115,7 @@ export class ApiClient {
 
   constructor(options: ApiClientOptions = {}) {
     this.baseURL = options.baseURL ?? 'http://localhost:8080/api/v1';
+    this.mediaBaseURL = options.mediaBaseURL ?? 'http://localhost:8082/api/v1';
     this.onTokenRefresh = options.onTokenRefresh;
     this.onAuthError = options.onAuthError;
   }
@@ -156,9 +160,9 @@ export class ApiClient {
     path: string,
     body?: unknown,
     query?: Record<string, string | number | boolean | undefined>,
-    options?: { noAuth?: boolean; rawResponse?: boolean },
+    options?: { noAuth?: boolean; rawResponse?: boolean; baseURL?: string },
   ): Promise<T> {
-    const url = new URL(`${this.baseURL}${path}`);
+    const url = new URL(`${options?.baseURL ?? this.baseURL}${path}`);
     if (query) {
       for (const [key, value] of Object.entries(query)) {
         if (value !== undefined) {
@@ -232,7 +236,7 @@ export class ApiClient {
 
     this.refreshPromise = this.request<ApiResponse<AuthTokens>>(
       'POST',
-      '/auth/refresh',
+      buildPath(API_PATHS.authRefresh),
       { refreshToken: this.refreshToken },
       undefined,
       { noAuth: true },
@@ -253,11 +257,11 @@ export class ApiClient {
   // --- Auth ---
 
   async register(data: RegisterRequest): Promise<ApiResponse<AuthTokens>> {
-    return this.request('POST', '/auth/register', data, undefined, { noAuth: true });
+    return this.request('POST', buildPath(API_PATHS.authRegister), data, undefined, { noAuth: true });
   }
 
   async login(data: LoginRequest): Promise<ApiResponse<AuthTokens>> {
-    return this.request('POST', '/auth/login', data, undefined, { noAuth: true });
+    return this.request('POST', buildPath(API_PATHS.authLogin), data, undefined, { noAuth: true });
   }
 
   async refreshTokens(): Promise<ApiResponse<AuthTokens>> {
@@ -266,7 +270,7 @@ export class ApiClient {
   }
 
   async logout(): Promise<void> {
-    await this.request('POST', '/auth/logout', {
+    await this.request('POST', buildPath(API_PATHS.authLogout), {
       refreshToken: this.refreshToken ?? undefined,
     });
     this.clearTokens();
@@ -275,124 +279,143 @@ export class ApiClient {
   async requestPasswordReset(
     data: PasswordResetRequest,
   ): Promise<ApiResponse<PasswordResetRequestResponse>> {
-    return this.request('POST', '/auth/password-reset/request', data, undefined, { noAuth: true });
+    return this.request('POST', buildPath(API_PATHS.authPasswordResetRequest), data, undefined, {
+      noAuth: true,
+    });
   }
 
   async confirmPasswordReset(
     data: PasswordResetConfirm,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request('POST', '/auth/password-reset/confirm', data, undefined, { noAuth: true });
+    return this.request('POST', buildPath(API_PATHS.authPasswordResetConfirm), data, undefined, {
+      noAuth: true,
+    });
   }
 
   // --- Users ---
 
   async getMe(): Promise<ApiResponse<User>> {
-    return this.request('GET', '/users/me');
+    return this.request('GET', buildPath(API_PATHS.userMe));
   }
 
   async updateMe(data: UpdateUserRequest): Promise<ApiResponse<User>> {
-    return this.request('PATCH', '/users/me', data);
+    return this.request('PATCH', buildPath(API_PATHS.userMe), data);
   }
 
   async getUser(userId: string): Promise<ApiResponse<PublicUser>> {
-    return this.request('GET', `/users/${userId}`);
+    return this.request('GET', buildPath(API_PATHS.user, { userID: userId }));
   }
 
   async searchUsers(query: string): Promise<ApiResponse<PublicUser[]>> {
-    return this.request('GET', '/users/', undefined, { q: query });
+    return this.request('GET', buildPath(API_PATHS.users), undefined, { q: query });
   }
 
   async listSessions(): Promise<ApiResponse<Session[]>> {
-    return this.request('GET', '/users/me/sessions');
+    return this.request('GET', buildPath(API_PATHS.userSessions));
   }
 
   async revokeSession(sessionId: string): Promise<void> {
-    return this.request('DELETE', `/users/me/sessions/${sessionId}`);
+    return this.request('DELETE', buildPath(API_PATHS.userSession, { sessionID: sessionId }));
   }
 
   async enable2FA(): Promise<ApiResponse<TwoFactorSetup>> {
-    return this.request('POST', '/users/me/2fa/enable');
+    return this.request('POST', buildPath(API_PATHS.user2FAEnable));
   }
 
   async verify2FA(code: string): Promise<ApiResponse<{ backupCodes: string[] }>> {
-    return this.request('POST', '/users/me/2fa/verify', { code });
+    return this.request('POST', buildPath(API_PATHS.user2FAVerify), { code });
   }
 
   async disable2FA(code: string): Promise<void> {
-    return this.request('POST', '/users/me/2fa/disable', { code });
+    return this.request('POST', buildPath(API_PATHS.user2FADisable), { code });
   }
 
   // --- Guilds ---
 
   async createGuild(data: CreateGuildRequest): Promise<ApiResponse<Guild>> {
-    return this.request('POST', '/guilds', data);
+    return this.request('POST', buildPath(API_PATHS.guilds), data);
   }
 
   async listGuilds(): Promise<ApiResponse<Guild[]>> {
-    return this.request('GET', '/guilds');
+    return this.request('GET', buildPath(API_PATHS.guilds));
   }
 
   async getGuild(guildId: string): Promise<ApiResponse<Guild>> {
-    return this.request('GET', `/guilds/${guildId}`);
+    return this.request('GET', buildPath(API_PATHS.guild, { guildID: guildId }));
   }
 
   async updateGuild(guildId: string, data: UpdateGuildRequest): Promise<ApiResponse<Guild>> {
-    return this.request('PATCH', `/guilds/${guildId}`, data);
+    return this.request('PATCH', buildPath(API_PATHS.guild, { guildID: guildId }), data);
   }
 
   async deleteGuild(guildId: string): Promise<void> {
-    return this.request('DELETE', `/guilds/${guildId}`);
+    return this.request('DELETE', buildPath(API_PATHS.guild, { guildID: guildId }));
   }
 
   async listMembers(
     guildId: string,
     params?: { page?: number; pageSize?: number },
   ): Promise<PaginatedResponse<GuildMember>> {
-    return this.request('GET', `/guilds/${guildId}/members`, undefined, {
-      page: params?.page,
-      pageSize: params?.pageSize,
+    const pageSize = params?.pageSize ?? 50;
+    const page = params?.page ?? 1;
+    return this.request('GET', buildPath(API_PATHS.guildMembers, { guildID: guildId }), undefined, {
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
     });
   }
 
-  async joinGuild(inviteCode: string): Promise<ApiResponse<Guild>> {
-    return this.request('POST', `/invites/${inviteCode}/join`);
+  async joinGuild(guildId: string, inviteCode: string): Promise<ApiResponse<{ message: string }>> {
+    return this.request('POST', buildPath(API_PATHS.guildMembers, { guildID: guildId }), {
+      inviteCode,
+    });
   }
 
   async kickMember(guildId: string, userId: string): Promise<void> {
-    return this.request('DELETE', `/guilds/${guildId}/members/${userId}`);
+    return this.request('DELETE', buildPath(API_PATHS.guildMember, { guildID: guildId, userID: userId }));
   }
 
   async createInvite(guildId: string, data: CreateInviteRequest): Promise<ApiResponse<Invite>> {
-    return this.request('POST', `/guilds/${guildId}/invites`, data);
+    return this.request('POST', buildPath(API_PATHS.guildInvites, { guildID: guildId }), data);
   }
 
   async listInvites(guildId: string): Promise<ApiResponse<Invite[]>> {
-    return this.request('GET', `/guilds/${guildId}/invites`);
+    return this.request('GET', buildPath(API_PATHS.guildInvites, { guildID: guildId }));
   }
 
   // --- Channels ---
 
   async createChannel(guildId: string, data: CreateChannelRequest): Promise<ApiResponse<Channel>> {
-    return this.request('POST', `/guilds/${guildId}/channels`, data);
+    return this.request('POST', buildPath(API_PATHS.guildChannels, { guildID: guildId }), data);
   }
 
   async listChannels(guildId: string): Promise<ApiResponse<Channel[]>> {
-    return this.request('GET', `/guilds/${guildId}/channels`);
+    return this.request('GET', buildPath(API_PATHS.guildChannels, { guildID: guildId }));
   }
 
-  async getChannel(channelId: string): Promise<ApiResponse<Channel>> {
-    return this.request('GET', `/channels/${channelId}`);
+  async getChannel(guildId: string, channelId: string): Promise<ApiResponse<Channel>> {
+    return this.request(
+      'GET',
+      buildPath(API_PATHS.guildChannel, { guildID: guildId, channelID: channelId }),
+    );
   }
 
   async updateChannel(
+    guildId: string,
     channelId: string,
     data: UpdateChannelRequest,
   ): Promise<ApiResponse<Channel>> {
-    return this.request('PATCH', `/channels/${channelId}`, data);
+    return this.request(
+      'PATCH',
+      buildPath(API_PATHS.guildChannel, { guildID: guildId, channelID: channelId }),
+      data,
+    );
   }
 
-  async deleteChannel(channelId: string): Promise<void> {
-    return this.request('DELETE', `/channels/${channelId}`);
+  async deleteChannel(guildId: string, channelId: string): Promise<void> {
+    return this.request(
+      'DELETE',
+      buildPath(API_PATHS.guildChannel, { guildID: guildId, channelID: channelId }),
+    );
   }
 
   // --- Messages ---
@@ -401,7 +424,7 @@ export class ApiClient {
     channelId: string,
     params?: { before?: string; after?: string; limit?: number },
   ): Promise<CursorPaginatedResponse<Message>> {
-    return this.request('GET', `/channels/${channelId}/messages`, undefined, {
+    return this.request('GET', buildPath(API_PATHS.channelMessages, { channelID: channelId }), undefined, {
       before: params?.before,
       after: params?.after,
       limit: params?.limit,
@@ -409,7 +432,7 @@ export class ApiClient {
   }
 
   async sendMessage(channelId: string, data: SendMessageRequest): Promise<ApiResponse<Message>> {
-    return this.request('POST', `/channels/${channelId}/messages`, data);
+    return this.request('POST', buildPath(API_PATHS.channelMessages, { channelID: channelId }), data);
   }
 
   async editMessage(
@@ -417,18 +440,25 @@ export class ApiClient {
     messageId: string,
     data: EditMessageRequest,
   ): Promise<ApiResponse<Message>> {
-    return this.request('PATCH', `/channels/${channelId}/messages/${messageId}`, data);
+    return this.request(
+      'PATCH',
+      buildPath(API_PATHS.channelMessage, { channelID: channelId, messageID: messageId }),
+      data,
+    );
   }
 
   async deleteMessage(channelId: string, messageId: string): Promise<void> {
-    return this.request('DELETE', `/channels/${channelId}/messages/${messageId}`);
+    return this.request(
+      'DELETE',
+      buildPath(API_PATHS.channelMessage, { channelID: channelId, messageID: messageId }),
+    );
   }
 
   async searchMessages(
     channelId: string,
     params: SearchMessagesRequest,
   ): Promise<PaginatedResponse<Message>> {
-    return this.request('GET', `/channels/${channelId}/messages/search`, undefined, {
+    return this.request('GET', buildPath(API_PATHS.channelMessageSearch, { channelID: channelId }), undefined, {
       q: params.query,
       authorId: params.authorId,
       before: params.before,
@@ -438,39 +468,50 @@ export class ApiClient {
   }
 
   async listPins(channelId: string): Promise<ApiResponse<Message[]>> {
-    return this.request('GET', `/channels/${channelId}/messages/pins`);
+    return this.request('GET', buildPath(API_PATHS.channelMessagePins, { channelID: channelId }));
   }
 
   async pinMessage(channelId: string, messageId: string): Promise<void> {
-    return this.request('POST', `/channels/${channelId}/messages/${messageId}/pin`);
+    return this.request(
+      'POST',
+      buildPath(API_PATHS.channelMessagePin, { channelID: channelId, messageID: messageId }),
+    );
   }
 
   async unpinMessage(channelId: string, messageId: string): Promise<void> {
-    return this.request('DELETE', `/channels/${channelId}/messages/${messageId}/pin`);
+    return this.request(
+      'DELETE',
+      buildPath(API_PATHS.channelMessagePin, { channelID: channelId, messageID: messageId }),
+    );
   }
 
   async addReaction(channelId: string, messageId: string, emoji: string): Promise<void> {
     return this.request(
-      'PUT',
-      `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}`,
+      'POST',
+      buildPath(API_PATHS.channelMessageReactions, { channelID: channelId, messageID: messageId }),
+      { emoji },
     );
   }
 
   async removeReaction(channelId: string, messageId: string, emoji: string): Promise<void> {
     return this.request(
       'DELETE',
-      `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}`,
+      buildPath(API_PATHS.channelMessageReaction, {
+        channelID: channelId,
+        messageID: messageId,
+        emoji,
+      }),
     );
   }
 
   // --- Roles ---
 
   async createRole(guildId: string, data: CreateRoleRequest): Promise<ApiResponse<Role>> {
-    return this.request('POST', `/guilds/${guildId}/roles`, data);
+    return this.request('POST', buildPath(API_PATHS.guildRoles, { guildID: guildId }), data);
   }
 
   async listRoles(guildId: string): Promise<ApiResponse<Role[]>> {
-    return this.request('GET', `/guilds/${guildId}/roles`);
+    return this.request('GET', buildPath(API_PATHS.guildRoles, { guildID: guildId }));
   }
 
   async updateRole(
@@ -478,19 +519,29 @@ export class ApiClient {
     roleId: string,
     data: UpdateRoleRequest,
   ): Promise<ApiResponse<Role>> {
-    return this.request('PATCH', `/guilds/${guildId}/roles/${roleId}`, data);
+    return this.request(
+      'PATCH',
+      buildPath(API_PATHS.guildRole, { guildID: guildId, roleID: roleId }),
+      data,
+    );
   }
 
   async deleteRole(guildId: string, roleId: string): Promise<void> {
-    return this.request('DELETE', `/guilds/${guildId}/roles/${roleId}`);
+    return this.request('DELETE', buildPath(API_PATHS.guildRole, { guildID: guildId, roleID: roleId }));
   }
 
   async assignRole(guildId: string, userId: string, roleId: string): Promise<void> {
-    return this.request('PUT', `/guilds/${guildId}/members/${userId}/roles/${roleId}`);
+    return this.request(
+      'POST',
+      buildPath(API_PATHS.guildRoleMember, { guildID: guildId, roleID: roleId, userID: userId }),
+    );
   }
 
   async removeRole(guildId: string, userId: string, roleId: string): Promise<void> {
-    return this.request('DELETE', `/guilds/${guildId}/members/${userId}/roles/${roleId}`);
+    return this.request(
+      'DELETE',
+      buildPath(API_PATHS.guildRoleMember, { guildID: guildId, roleID: roleId, userID: userId }),
+    );
   }
 
   // --- Admin ---
@@ -499,9 +550,11 @@ export class ApiClient {
     page?: number;
     pageSize?: number;
   }): Promise<PaginatedResponse<User>> {
-    return this.request('GET', '/admin/users', undefined, {
-      page: params?.page,
-      pageSize: params?.pageSize,
+    const pageSize = params?.pageSize ?? 50;
+    const page = params?.page ?? 1;
+    return this.request('GET', buildPath(API_PATHS.adminUsers), undefined, {
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
     });
   }
 
@@ -509,18 +562,63 @@ export class ApiClient {
     page?: number;
     pageSize?: number;
   }): Promise<PaginatedResponse<Guild>> {
-    return this.request('GET', '/admin/guilds', undefined, {
-      page: params?.page,
-      pageSize: params?.pageSize,
+    const pageSize = params?.pageSize ?? 50;
+    const page = params?.page ?? 1;
+    return this.request('GET', buildPath(API_PATHS.adminGuilds), undefined, {
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
     });
   }
 
   async disableUser(userId: string): Promise<void> {
-    return this.request('POST', `/admin/users/${userId}/disable`);
+    return this.request('POST', buildPath(API_PATHS.adminUserDisable, { userID: userId }));
+  }
+
+  async enableUser(userId: string): Promise<void> {
+    return this.request('POST', buildPath(API_PATHS.adminUserEnable, { userID: userId }));
+  }
+
+  async getAdminDashboardStats<T = unknown>(): Promise<ApiResponse<T>> {
+    return this.request('GET', buildPath(API_PATHS.adminDashboardStats));
+  }
+
+  async getAdminDashboardActivity<T = unknown>(): Promise<ApiResponse<T>> {
+    return this.request('GET', buildPath(API_PATHS.adminDashboardActivity));
+  }
+
+  async listAuditLogs<T = unknown>(params?: {
+    limit?: number;
+    offset?: number;
+    action?: string;
+  }): Promise<ApiResponse<T> & { meta?: unknown }> {
+    return this.request('GET', buildPath(API_PATHS.adminAudit), undefined, params);
+  }
+
+  async listReports<T = unknown>(params?: {
+    limit?: number;
+    offset?: number;
+  }): Promise<ApiResponse<T> & { meta?: unknown }> {
+    return this.request('GET', buildPath(API_PATHS.adminReports), undefined, params);
+  }
+
+  async resolveReport(reportId: string): Promise<void> {
+    return this.request('POST', buildPath(API_PATHS.adminReportResolve, { reportID: reportId }));
+  }
+
+  async dismissReport(reportId: string): Promise<void> {
+    return this.request('POST', buildPath(API_PATHS.adminReportDismiss, { reportID: reportId }));
+  }
+
+  async getAdminSettings<T = unknown>(): Promise<ApiResponse<T>> {
+    return this.request('GET', buildPath(API_PATHS.adminSettings));
+  }
+
+  async updateAdminSettings<T = unknown>(settings: T): Promise<ApiResponse<T>> {
+    return this.request('POST', buildPath(API_PATHS.adminSettings), settings);
   }
 
   async adminDeleteGuild(guildId: string): Promise<void> {
-    return this.request('DELETE', `/admin/guilds/${guildId}`);
+    return this.request('DELETE', buildPath(API_PATHS.adminGuild, { guildID: guildId }));
   }
 
   // --- Upload ---
@@ -529,61 +627,127 @@ export class ApiClient {
     filename: string;
     contentType: string;
     size: number;
-  }): Promise<ApiResponse<PresignedUploadResponse>> {
-    return this.request('POST', '/uploads/presign', params);
+  }): Promise<PresignedUploadResponse> {
+    return this.request(
+      'POST',
+      buildPath(API_PATHS.mediaUploadPresign),
+      {
+        fileName: params.filename,
+        contentType: params.contentType,
+        fileSize: params.size,
+      },
+      undefined,
+      { baseURL: this.mediaBaseURL },
+    );
   }
 
-  async completeUpload(uploadId: string): Promise<ApiResponse<UploadCompleteResponse>> {
-    return this.request('POST', `/uploads/${uploadId}/complete`);
+  async completeUpload(params: {
+    fileId: string;
+    key: string;
+    filename: string;
+    contentType: string;
+    size: number;
+    ownerType: 'dm_channel' | 'channel' | 'guild' | 'user_profile';
+    ownerId: string;
+  }): Promise<UploadCompleteResponse> {
+    return this.request(
+      'POST',
+      buildPath(API_PATHS.mediaUploadComplete),
+      {
+        fileId: params.fileId,
+        key: params.key,
+        fileName: params.filename,
+        contentType: params.contentType,
+        fileSize: params.size,
+        ownerType: params.ownerType,
+        ownerId: params.ownerId,
+      },
+      undefined,
+      { baseURL: this.mediaBaseURL },
+    );
   }
 
   // --- Voice ---
 
-  async getVoiceToken(
-    guildId: string,
-    channelId: string,
-  ): Promise<ApiResponse<VoiceTokenResponse>> {
-    return this.request('POST', `/guilds/${guildId}/channels/${channelId}/voice/token`);
+  async getVoiceToken(params: {
+    roomName: string;
+    identity: string;
+    displayName?: string;
+    canPublish?: boolean;
+    canSubscribe?: boolean;
+  }): Promise<VoiceTokenResponse> {
+    return this.request(
+      'POST',
+      buildPath(API_PATHS.voiceToken),
+      {
+        roomName: params.roomName,
+        identity: params.identity,
+        displayName: params.displayName,
+        canPublish: params.canPublish ?? true,
+        canSubscribe: params.canSubscribe ?? true,
+      },
+      undefined,
+      { baseURL: this.mediaBaseURL },
+    );
   }
 
-  async createRoom(guildId: string, channelId: string): Promise<ApiResponse<VoiceRoom>> {
-    return this.request('POST', `/guilds/${guildId}/channels/${channelId}/voice/room`);
+  async createRoom(params: { name: string; maxParticipants?: number }): Promise<VoiceRoom> {
+    return this.request(
+      'POST',
+      buildPath(API_PATHS.voiceRooms),
+      { name: params.name, maxParticipants: params.maxParticipants },
+      undefined,
+      { baseURL: this.mediaBaseURL },
+    );
   }
 
-  async deleteRoom(guildId: string, channelId: string): Promise<void> {
-    return this.request('DELETE', `/guilds/${guildId}/channels/${channelId}/voice/room`);
+  async deleteRoom(roomName: string): Promise<void> {
+    return this.request(
+      'DELETE',
+      buildPath(API_PATHS.voiceRoom, { roomName }),
+      undefined,
+      undefined,
+      {
+        baseURL: this.mediaBaseURL,
+      },
+    );
   }
 
-  async listRooms(guildId: string): Promise<ApiResponse<VoiceRoom[]>> {
-    return this.request('GET', `/guilds/${guildId}/voice/rooms`);
+  async listRooms(): Promise<{ rooms: VoiceRoom[] }> {
+    return this.request('GET', buildPath(API_PATHS.voiceRooms), undefined, undefined, {
+      baseURL: this.mediaBaseURL,
+    });
   }
 
   // --- Direct Messages ---
 
   async listDMChannels(): Promise<ApiResponse<DMChannel[]>> {
-    return this.request('GET', '/dms');
+    return this.request('GET', buildPath(API_PATHS.dms));
   }
 
   async createDMChannel(data: CreateDMChannelRequest): Promise<ApiResponse<DMChannel>> {
-    return this.request('POST', '/dms', data);
+    return this.request('POST', buildPath(API_PATHS.dms), data);
   }
 
   async updateDMChannel(
     dmChannelId: string,
     data: UpdateDMChannelRequest,
   ): Promise<ApiResponse<DMChannel>> {
-    return this.request('PATCH', `/dms/${dmChannelId}`, data);
+    return this.request('PATCH', buildPath(API_PATHS.dm, { dmChannelID: dmChannelId }), data);
   }
 
   async listDMMessages(dmChannelId: string): Promise<ApiResponse<DMMessage[]>> {
-    return this.request('GET', `/dms/${dmChannelId}/messages`);
+    return this.request('GET', buildPath(API_PATHS.dmMessages, { dmChannelID: dmChannelId }));
   }
 
   async sendDMMessage(dmChannelId: string, data: SendDMRequest): Promise<ApiResponse<DMMessage>> {
-    return this.request('POST', `/dms/${dmChannelId}/messages`, data);
+    return this.request('POST', buildPath(API_PATHS.dmMessages, { dmChannelID: dmChannelId }), data);
   }
 
   async deleteDMMessage(dmChannelId: string, messageId: string): Promise<void> {
-    return this.request('DELETE', `/dms/${dmChannelId}/messages/${messageId}`);
+    return this.request(
+      'DELETE',
+      buildPath(API_PATHS.dmMessage, { dmChannelID: dmChannelId, messageID: messageId }),
+    );
   }
 }

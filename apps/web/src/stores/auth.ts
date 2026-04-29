@@ -7,6 +7,7 @@ const AUTH_STORAGE_PREFIX = 'rf_auth';
 
 let apiClient: ApiClient | null = null;
 let apiClientBaseURL: string | null = null;
+let apiClientMediaBaseURL: string | null = null;
 
 function getTokenStorageKeys(connectionId: string) {
   return {
@@ -62,9 +63,11 @@ function normalizeUser(user: User | null): User | null {
 export function getApiClient(): ApiClient {
   const connection = getCurrentConnection();
   const baseURL = connection.apiBaseUrl;
-  if (!apiClient || apiClientBaseURL !== baseURL) {
+  const mediaBaseURL = connection.mediaBaseUrl;
+  if (!apiClient || apiClientBaseURL !== baseURL || apiClientMediaBaseURL !== mediaBaseURL) {
     apiClient = new ApiClient({
       baseURL,
+      mediaBaseURL,
       onTokenRefresh: (tokens: AuthTokens) => {
         useAuthStore.getState().setTokens(tokens.accessToken, tokens.refreshToken);
       },
@@ -73,6 +76,7 @@ export function getApiClient(): ApiClient {
       },
     });
     apiClientBaseURL = baseURL;
+    apiClientMediaBaseURL = mediaBaseURL;
     const { accessToken, refreshToken } = readStoredTokens(connection.id);
     if (accessToken && refreshToken) {
       apiClient.setTokens(accessToken, refreshToken);

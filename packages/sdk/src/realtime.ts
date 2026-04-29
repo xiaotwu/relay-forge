@@ -16,6 +16,27 @@ export interface RealtimeClientOptions {
 
 type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'reconnecting';
 
+function toCamelCase(key: string): string {
+  return key.replace(/_([a-z])/g, (_, char: string) => char.toUpperCase());
+}
+
+function normalizeKeys<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizeKeys(item)) as T;
+  }
+
+  if (value && typeof value === 'object' && value.constructor === Object) {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, nestedValue]) => [
+        toCamelCase(key),
+        normalizeKeys(nestedValue),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
+
 export class RealtimeClient {
   private wsURL: string;
   private ws: WebSocket | null = null;
@@ -121,7 +142,7 @@ export class RealtimeClient {
 
     this.ws.onmessage = (event: MessageEvent) => {
       try {
-        const parsed = JSON.parse(event.data as string) as ServerEvent;
+        const parsed = normalizeKeys(JSON.parse(event.data as string)) as ServerEvent;
         this.seq = parsed.seq;
         this.emitInternal(parsed.type, parsed.data);
 

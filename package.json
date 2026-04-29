@@ -36,11 +36,13 @@
     "build:crypto": "npm -w packages/crypto run build",
     "build:packages": "npm run build:types && npm run build:config && npm run build:crypto && npm run build:ui && npm run build:sdk",
     "build": "npm run build:packages && npm run build:web && npm run build:admin && npm run build:desktop && npm run build:docs",
+    "generate:api": "openapi-typescript ../relay-forge-server/openapi/relayforge.yaml -o packages/sdk/src/generated/relayforge.ts",
+    "check:api-contract": "npm run generate:api && git diff --exit-code -- packages/sdk/src/generated/relayforge.ts",
     "lint": "eslint 'apps/*/src/**/*.{ts,tsx}' 'packages/*/src/**/*.{ts,tsx}'",
     "format": "prettier --write '**/*.{ts,tsx,js,json,css,md,yaml,yml}'",
     "format:check": "prettier --check '**/*.{ts,tsx,js,json,css,md,yaml,yml}'",
     "test": "npm run test:ts",
-    "test:ts": "vitest run --globals --environment jsdom packages/types/src/__tests__/role.test.ts packages/sdk/src/__tests__/client.test.ts packages/crypto/src/__tests__/crypto.test.ts",
+    "test:ts": "vitest run --globals --environment jsdom packages/types/src/__tests__/role.test.ts packages/sdk/src/__tests__/client.test.ts packages/crypto/src/__tests__/crypto.test.ts apps/web/src/utils/__tests__/markdown.test.ts",
     "typecheck": "npm run build:packages && npm run typecheck:apps",
     "typecheck:apps": "npm -w apps/web exec -- tsc -p tsconfig.json --noEmit && npm -w apps/admin exec -- tsc -p tsconfig.json --noEmit && npm -w apps/desktop exec -- tsc -p tsconfig.json --noEmit && npm -w apps/docs exec -- tsc -p tsconfig.json --noEmit",
     "package:desktop": "npm run build:packages && npm -w apps/desktop run tauri build",
@@ -48,13 +50,14 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^9.16.0",
-    "typescript-eslint": "^8.18.0",
+    "openapi-typescript": "^7.13.0",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "typescript-eslint": "^8.18.0",
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=20.0.0",

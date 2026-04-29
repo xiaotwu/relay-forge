@@ -4,8 +4,8 @@ import { useDMStore } from '@/stores/dm';
 import { useToast } from '@relayforge/ui';
 import { getCurrentConnection } from '@/lib/serverConnections';
 import { MAX_UPLOAD_SIZE } from '@relayforge/config';
-import { useAuthStore } from '@/stores/auth';
-import { buildMessageContent, resolveAttachmentUrl } from '@/lib/messageContent';
+import { getApiClient } from '@/stores/auth';
+import { buildMessageContent } from '@/lib/messageContent';
 
 interface DMComposerProps {
   channelId: string;
@@ -24,7 +24,6 @@ export function DMComposer({ channelId, placeholder, replyTo, onClearReply }: DM
   const fileInputRef = useRef<HTMLInputElement>(null);
   const sendMessage = useDMStore((state) => state.sendMessage);
   const sending = useDMStore((state) => state.sending);
-  const accessToken = useAuthStore((state) => state.accessToken);
   const { addToast } = useToast();
 
   useEffect(() => {
@@ -63,30 +62,14 @@ export function DMComposer({ channelId, placeholder, replyTo, onClearReply }: DM
   const uploadAttachment = useCallback(
     async (file: File) => {
       const mediaBaseUrl = getCurrentConnection().mediaBaseUrl;
-      const presignResponse = await fetch(`${mediaBaseUrl}/media/upload/presign`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        },
-        body: JSON.stringify({
-          file_name: file.name,
-          content_type: file.type,
-          file_size: file.size,
-        }),
+      const client = getApiClient();
+      const presign = await client.createPresignedUpload({
+        filename: file.name,
+        contentType: file.type,
+        size: file.size,
       });
 
-      if (!presignResponse.ok) {
-        throw new Error('Could not prepare this upload.');
-      }
-
-      const presign = (await presignResponse.json()) as {
-        upload_url: string;
-        file_id: string;
-        key: string;
-      };
-
-      const uploadResponse = await fetch(presign.upload_url, {
+      const uploadResponse = await fetch(presign.uploadUrl, {
         method: 'PUT',
         headers: {
           'Content-Type': file.type,
@@ -98,36 +81,19 @@ export function DMComposer({ channelId, placeholder, replyTo, onClearReply }: DM
         throw new Error('Could not upload this file.');
       }
 
-      const completeResponse = await fetch(`${mediaBaseUrl}/media/upload/complete`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        },
-        body: JSON.stringify({
-          file_id: presign.file_id,
-          key: presign.key,
-          file_name: file.name,
-          content_type: file.type,
-          file_size: file.size,
-        }),
+      const completed = await client.completeUpload({
+        fileId: presign.fileId,
+        key: presign.key,
+        filename: file.name,
+        contentType: file.type,
+        size: file.size,
+        ownerType: 'dm_channel',
+        ownerId: channelId,
       });
 
-      if (!completeResponse.ok) {
-        throw new Error('Could not finish this upload.');
-      }
-
-      const completed = (await completeResponse.json()) as {
-        proxy_url?: string;
-        url?: string;
-      };
-
-      return resolveAttachmentUrl(
-        completed.proxy_url ?? completed.url ?? `${mediaBaseUrl}/media/files/${presign.file_id}`,
-        mediaBaseUrl,
-      );
+      return completed.proxyUrl ?? completed.url ?? `${mediaBaseUrl}/media/files/${presign.fileId}`;
     },
-    [accessToken],
+    [channelId],
   );
 
   const handleAttachmentChange = useCallback(

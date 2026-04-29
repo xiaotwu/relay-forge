@@ -7,6 +7,17 @@ interface MarkdownNode {
   href?: string;
 }
 
+export function getSafeMarkdownHref(href: string | undefined): string | null {
+  if (!href) return null;
+
+  try {
+    const url = new URL(href);
+    return ['http:', 'https:', 'mailto:'].includes(url.protocol) ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Parse simple markdown into a flat list of nodes.
  * Supports: **bold**, *italic*, `code`, ```codeblock```, [text](url), @mention
@@ -72,7 +83,7 @@ function parseMarkdown(text: string): MarkdownNode[] {
     }
 
     // Plain text: consume until next special character
-    const nextSpecial = remaining.slice(1).search(/[`*[@\n]/);
+    const nextSpecial = remaining.slice(1).search(/[`*\[@\n]/);
     if (nextSpecial === -1) {
       nodes.push({ type: 'text', content: remaining });
       remaining = '';
@@ -117,11 +128,15 @@ export function renderMarkdown(text: string): React.ReactNode[] {
           React.createElement('code', null, node.content),
         );
       case 'link':
+        const href = getSafeMarkdownHref(node.href);
+        if (!href) {
+          return React.createElement(React.Fragment, { key: i }, node.content);
+        }
         return React.createElement(
           'a',
           {
             key: i,
-            href: node.href,
+            href,
             target: '_blank',
             rel: 'noopener noreferrer',
             className: 'text-accent hover:underline',

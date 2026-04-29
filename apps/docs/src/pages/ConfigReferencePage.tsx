@@ -21,7 +21,7 @@ const configRows = [
     key: 'MEDIA_BASE_URL',
     usedBy: 'sdk and upload flows',
     defaultValue: 'http://localhost:8082/api/v1',
-    note: 'Optional override for media-oriented endpoints and storage coordination.',
+    note: 'Targets the media service API root for uploads, media proxy reads, and voice helper routes.',
   },
 ];
 
@@ -105,7 +105,14 @@ export default function ConfigReferencePage() {
           <pre>{`API_BASE_URL=https://relayforge.example.com/api/v1
 WS_URL=wss://relayforge.example.com/ws
 LIVEKIT_URL=wss://livekit.example.com
-MEDIA_BASE_URL=https://relayforge.example.com/api/v1/media`}</pre>
+MEDIA_BASE_URL=https://media.relayforge.example.com/api/v1`}</pre>
+        </div>
+
+        <div className="doc-callout">
+          If API and media are served behind one reverse proxy, <code>MEDIA_BASE_URL</code> should
+          still point at the API root that contains <code>/media</code>, for example{' '}
+          <code>https://relayforge.example.com/api/v1</code>, not a duplicated{' '}
+          <code>/api/v1/media</code> path.
         </div>
       </section>
     </>

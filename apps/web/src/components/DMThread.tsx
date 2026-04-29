@@ -15,6 +15,7 @@ const EMPTY_MESSAGES: ReturnType<typeof useDMStore.getState>['messagesByChannel'
 
 export function DMThread({ channelId, onReply }: DMThreadProps) {
   const currentUserId = useAuthStore((state) => state.user?.id);
+  const accessToken = useAuthStore((state) => state.accessToken);
   const messages = useDMStore((state) => state.messagesByChannel[channelId] ?? EMPTY_MESSAGES);
   const fetchMessages = useDMStore((state) => state.fetchMessages);
   const deleteMessage = useDMStore((state) => state.deleteMessage);
@@ -188,13 +189,13 @@ export function DMThread({ channelId, onReply }: DMThreadProps) {
                         >
                           {attachment.isImage && (
                             <a
-                              href={resolveAttachmentUrl(attachment.url, mediaBaseUrl)}
+                              href={resolveAttachmentUrl(attachment.url, mediaBaseUrl, accessToken)}
                               download={attachment.filename}
                               target="_blank"
                               rel="noreferrer"
                             >
                               <img
-                                src={resolveAttachmentUrl(attachment.url, mediaBaseUrl)}
+                                src={resolveAttachmentUrl(attachment.url, mediaBaseUrl, accessToken)}
                                 alt={attachment.filename}
                                 className="max-h-[320px] w-full object-cover"
                               />
@@ -212,7 +213,7 @@ export function DMThread({ channelId, onReply }: DMThreadProps) {
                               </p>
                             </div>
                             <a
-                              href={resolveAttachmentUrl(attachment.url, mediaBaseUrl)}
+                              href={resolveAttachmentUrl(attachment.url, mediaBaseUrl, accessToken)}
                               download={attachment.filename}
                               target="_blank"
                               rel="noreferrer"

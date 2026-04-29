@@ -8,7 +8,7 @@ import {
   type LocalVideoTrack,
   type RemoteVideoTrack,
 } from 'livekit-client';
-import { useAuthStore } from '@/stores/auth';
+import { getApiClient, useAuthStore } from '@/stores/auth';
 import { getCurrentConnection } from '@/lib/serverConnections';
 
 interface VoiceUser {
@@ -36,12 +36,6 @@ interface VideoTile {
   track: LocalVideoTrack | RemoteVideoTrack;
   isLocal: boolean;
   kind: 'camera' | 'screen';
-}
-
-interface VoiceTokenResponse {
-  token: string;
-  url?: string;
-  expires_at?: number;
 }
 
 function getActiveVideoTrack(
@@ -150,7 +144,6 @@ function ControlButton({
 
 export function VoiceChannel({ roomKey, roomLabel, users, onDisconnect }: VoiceChannelProps) {
   const authUser = useAuthStore((state) => state.user);
-  const accessToken = useAuthStore((state) => state.accessToken);
   const [selfMuted, setSelfMuted] = useState(true);
   const [selfDeafened, setSelfDeafened] = useState(false);
   const [selfCameraEnabled, setSelfCameraEnabled] = useState(false);
@@ -366,27 +359,14 @@ export function VoiceChannel({ roomKey, roomLabel, users, onDisconnect }: VoiceC
       setRoomState('connecting');
       setRoomError(null);
       try {
-        const { mediaBaseUrl, livekitUrl } = getCurrentConnection();
-        const response = await fetch(`${mediaBaseUrl}/voice/token`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-          },
-          body: JSON.stringify({
-            room_name: roomKey,
-            identity: authUser.id,
-            display_name: authUser.displayName ?? authUser.username,
-            can_publish: true,
-            can_subscribe: true,
-          }),
+        const { livekitUrl } = getCurrentConnection();
+        const data = await getApiClient().getVoiceToken({
+          roomName: roomKey,
+          identity: authUser.id,
+          displayName: authUser.displayName ?? authUser.username,
+          canPublish: true,
+          canSubscribe: true,
         });
-
-        if (!response.ok) {
-          throw new Error(`Voice token request failed (${response.status})`);
-        }
-
-        const data = (await response.json()) as VoiceTokenResponse;
         await room.connect(data.url || livekitUrl, data.token);
       } catch (error) {
         if (cancelled) return;
@@ -408,7 +388,7 @@ export function VoiceChannel({ roomKey, roomLabel, users, onDisconnect }: VoiceC
         roomRef.current = null;
       }
     };
-  }, [accessToken, authUser, roomKey, updateConnectedUsers, updateVideoTiles]);
+  }, [authUser, roomKey, updateConnectedUsers, updateVideoTiles]);
 
   const toggleMute = useCallback(async () => {
     const room = roomRef.current;

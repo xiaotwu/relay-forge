@@ -92,4 +92,148 @@ describe('ApiClient', () => {
       }
     });
   });
+
+  describe('contract paths', () => {
+    async function captureRequest(run: (client: ApiClient) => Promise<unknown>) {
+      const originalFetch = global.fetch;
+      const calls: { method: string; url: string; body?: string }[] = [];
+      global.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+        calls.push({
+          method: init?.method ?? 'GET',
+          url: String(input),
+          body: typeof init?.body === 'string' ? init.body : undefined,
+        });
+        return new Response(JSON.stringify({ data: {} }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }) as typeof fetch;
+
+      try {
+        const client = new ApiClient({
+          baseURL: 'http://api.test/api/v1',
+          mediaBaseURL: 'http://media.test/api/v1',
+        });
+        await run(client);
+        return calls[0];
+      } finally {
+        global.fetch = originalFetch;
+      }
+    }
+
+    it('uses OpenAPI-backed auth routes', async () => {
+      const call = await captureRequest((client) =>
+        client.login({ email: 'user@example.com', password: 'Password123@' }),
+      );
+      expect(call.method).toBe('POST');
+      expect(call.url).toBe('http://api.test/api/v1/auth/login');
+    });
+
+    it('uses OpenAPI-backed guild collection routes', async () => {
+      const call = await captureRequest((client) => client.listGuilds());
+      expect(call.method).toBe('GET');
+      expect(call.url).toBe('http://api.test/api/v1/guilds');
+    });
+
+    it('uses nested guild channel routes', async () => {
+      const call = await captureRequest((client) => client.getChannel('guild-1', 'channel-2'));
+      expect(call.method).toBe('GET');
+      expect(call.url).toBe('http://api.test/api/v1/guilds/guild-1/channels/channel-2');
+    });
+
+    it('uses backend role member routes', async () => {
+      const call = await captureRequest((client) =>
+        client.assignRole('guild-1', 'user-2', 'role-3'),
+      );
+      expect(call.method).toBe('POST');
+      expect(call.url).toBe('http://api.test/api/v1/guilds/guild-1/roles/role-3/members/user-2');
+    });
+
+    it('posts reaction payloads to the backend reaction route', async () => {
+      const call = await captureRequest((client) =>
+        client.addReaction('channel-1', 'message-2', ':+1:'),
+      );
+      expect(call.method).toBe('POST');
+      expect(call.url).toBe('http://api.test/api/v1/channels/channel-1/messages/message-2/reactions');
+      expect(call.body).toBe(JSON.stringify({ emoji: ':+1:' }));
+    });
+
+    it('uses OpenAPI-backed message routes', async () => {
+      const call = await captureRequest((client) =>
+        client.sendMessage('channel-1', { content: 'hello' }),
+      );
+      expect(call.method).toBe('POST');
+      expect(call.url).toBe('http://api.test/api/v1/channels/channel-1/messages');
+    });
+
+    it('uses OpenAPI-backed DM routes', async () => {
+      const call = await captureRequest((client) => client.listDMMessages('dm-1'));
+      expect(call.method).toBe('GET');
+      expect(call.url).toBe('http://api.test/api/v1/dms/dm-1/messages');
+    });
+
+    it('uses OpenAPI-backed admin routes', async () => {
+      const call = await captureRequest((client) => client.disableUser('user-1'));
+      expect(call.method).toBe('POST');
+      expect(call.url).toBe('http://api.test/api/v1/admin/users/user-1/disable');
+    });
+
+    it('uses media service upload routes', async () => {
+      const call = await captureRequest((client) =>
+        client.createPresignedUpload({
+          filename: 'photo.png',
+          contentType: 'image/png',
+          size: 512,
+        }),
+      );
+      expect(call.method).toBe('POST');
+      expect(call.url).toBe('http://media.test/api/v1/media/upload/presign');
+      expect(call.body).toBe(
+        JSON.stringify({ file_name: 'photo.png', content_type: 'image/png', file_size: 512 }),
+      );
+    });
+
+    it('uses media upload completion ACL ownership fields', async () => {
+      const call = await captureRequest((client) =>
+        client.completeUpload({
+          fileId: 'file-1',
+          key: 'uploads/file-1',
+          filename: 'photo.png',
+          contentType: 'image/png',
+          size: 512,
+          ownerType: 'dm_channel',
+          ownerId: 'dm-1',
+        }),
+      );
+      expect(call.method).toBe('POST');
+      expect(call.url).toBe('http://media.test/api/v1/media/upload/complete');
+      expect(call.body).toBe(
+        JSON.stringify({
+          file_id: 'file-1',
+          key: 'uploads/file-1',
+          file_name: 'photo.png',
+          content_type: 'image/png',
+          file_size: 512,
+          owner_type: 'dm_channel',
+          owner_id: 'dm-1',
+        }),
+      );
+    });
+
+    it('uses media service voice routes', async () => {
+      const call = await captureRequest((client) =>
+        client.getVoiceToken({ roomName: 'guild-channel', identity: 'user-1' }),
+      );
+      expect(call.method).toBe('POST');
+      expect(call.url).toBe('http://media.test/api/v1/voice/token');
+      expect(call.body).toBe(
+        JSON.stringify({
+          room_name: 'guild-channel',
+          identity: 'user-1',
+          can_publish: true,
+          can_subscribe: true,
+        }),
+      );
+    });
+  });
 });

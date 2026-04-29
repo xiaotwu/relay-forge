@@ -49,8 +49,20 @@ export interface Report {
   reporter: string;
   target: string;
   reason: string;
-  status: 'pending' | 'resolved' | 'dismissed';
+  status: 'open' | 'investigating' | 'resolved' | 'dismissed';
   createdAt: string;
+}
+
+interface Envelope<T> {
+  data: T;
+  meta?: {
+    total?: number;
+    limit?: number;
+    offset?: number;
+    page?: number;
+    pageSize?: number;
+    totalPages?: number;
+  };
 }
 
 interface AdminState {
@@ -146,12 +158,14 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   fetchUsers: async (page = 1, _search?: string) => {
     try {
       const client = getAdminClient();
-      const res = await client.get<{ users: AdminUser[]; total: number }>(
-        `/admin/users?page=${page}&limit=20${_search ? `&search=${encodeURIComponent(_search)}` : ''}`,
+      const offset = (page - 1) * 20;
+      const res = await client.get<AdminUser[]>(
+        `/admin/users?limit=20&offset=${offset}${_search ? `&search=${encodeURIComponent(_search)}` : ''}`,
       );
+      const envelope = res as Envelope<AdminUser[]>;
       set({
-        users: res.data.users ?? [],
-        usersTotal: res.data.total ?? 0,
+        users: envelope.data ?? [],
+        usersTotal: envelope.meta?.total ?? envelope.data?.length ?? 0,
         usersPage: page,
       });
     } catch (err) {
@@ -186,12 +200,14 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   fetchGuilds: async (page = 1, _search?: string) => {
     try {
       const client = getAdminClient();
-      const res = await client.get<{ guilds: AdminGuild[]; total: number }>(
-        `/admin/guilds?page=${page}&limit=20${_search ? `&search=${encodeURIComponent(_search)}` : ''}`,
+      const offset = (page - 1) * 20;
+      const res = await client.get<AdminGuild[]>(
+        `/admin/guilds?limit=20&offset=${offset}${_search ? `&search=${encodeURIComponent(_search)}` : ''}`,
       );
+      const envelope = res as Envelope<AdminGuild[]>;
       set({
-        guilds: res.data.guilds ?? [],
-        guildsTotal: res.data.total ?? 0,
+        guilds: envelope.data ?? [],
+        guildsTotal: envelope.meta?.total ?? envelope.data?.length ?? 0,
         guildsPage: page,
       });
     } catch (err) {
@@ -214,12 +230,14 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   fetchAuditLogs: async (page = 1, actionFilter?: string) => {
     try {
       const client = getAdminClient();
-      const res = await client.get<{ logs: AuditEntry[]; total: number }>(
-        `/admin/audit?page=${page}&limit=25${actionFilter ? `&action=${encodeURIComponent(actionFilter)}` : ''}`,
+      const offset = (page - 1) * 25;
+      const res = await client.get<AuditEntry[]>(
+        `/admin/audit?limit=25&offset=${offset}${actionFilter ? `&action=${encodeURIComponent(actionFilter)}` : ''}`,
       );
+      const envelope = res as Envelope<AuditEntry[]>;
       set({
-        auditLogs: res.data.logs ?? [],
-        auditTotal: res.data.total ?? 0,
+        auditLogs: envelope.data ?? [],
+        auditTotal: envelope.meta?.total ?? envelope.data?.length ?? 0,
         auditPage: page,
       });
     } catch (err) {
@@ -230,12 +248,12 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   fetchReports: async (page = 1) => {
     try {
       const client = getAdminClient();
-      const res = await client.get<{ reports: Report[]; total: number }>(
-        `/admin/reports?page=${page}&limit=20`,
-      );
+      const offset = (page - 1) * 20;
+      const res = await client.get<Report[]>(`/admin/reports?limit=20&offset=${offset}`);
+      const envelope = res as Envelope<Report[]>;
       set({
-        reports: res.data.reports ?? [],
-        reportsTotal: res.data.total ?? 0,
+        reports: envelope.data ?? [],
+        reportsTotal: envelope.meta?.total ?? envelope.data?.length ?? 0,
         reportsPage: page,
       });
     } catch (err) {

@@ -1,37 +1,43 @@
 const threatRows = [
   {
-    vector: 'Brute-force and token theft',
+    vector: 'Disabled users with existing access tokens',
     mitigation:
-      'Short-lived access tokens, rotation flows, rate limits, and server-side session revocation.',
+      'Authenticated API middleware and realtime connection checks re-read user status from PostgreSQL and reject disabled or missing users.',
   },
   {
-    vector: 'Upload abuse and malware',
+    vector: 'Unauthorized media reads',
     mitigation:
-      'MIME allowlists, size limits, direct storage coordination, and optional antivirus scanning.',
+      'Media proxy reads enforce owner_type and owner_id ACLs for DM, channel, guild, pending upload, and profile contexts before redirecting to storage.',
   },
   {
-    vector: 'Privilege escalation',
-    mitigation: 'Server-side RBAC and channel-level override evaluation on every operation.',
+    vector: 'Realtime event disclosure',
+    mitigation:
+      'WebSocket connections require JWTs, guild subscriptions are validated against membership, and Valkey fan-out routes events to guild or user recipients.',
   },
   {
-    vector: 'DM content disclosure',
+    vector: 'Upload completion spoofing',
     mitigation:
-      'DM payloads are encrypted end to end; the server stores ciphertext and key bundles, not plaintext.',
+      'Only the uploader can complete a pending upload, the object key must match the file id, and size/content type are checked against storage metadata.',
+  },
+  {
+    vector: 'Production origin mistakes',
+    mitigation:
+      'API, media, and realtime config reject wildcard CORS/origin settings in production and require explicit origins.',
   },
 ];
 
 const tradeoffs = [
   {
-    title: 'Only DMs are E2EE',
-    copy: 'Guild content remains server-readable so search, moderation, and audit workflows remain viable.',
+    title: 'Media read tokens',
+    copy: 'Browser media elements currently use token query auth. Short-lived scoped media read tokens remain the recommended next hardening step.',
   },
   {
-    title: 'Modular monolith, not many microservices',
-    copy: 'The main complexity is runtime shape, not organizational purity, so the split follows connection behavior.',
+    title: 'Server-side checks',
+    copy: 'The API performs a user-status database check on authenticated requests. This prioritizes disable correctness over avoiding every DB read.',
   },
   {
-    title: 'Shared PostgreSQL',
-    copy: 'A single transactional database keeps the deployment story practical for the target scale.',
+    title: 'Moderation visibility',
+    copy: 'Guild content remains server-authoritative so search, moderation, audit, and admin workflows can operate predictably.',
   },
 ];
 
@@ -41,11 +47,12 @@ export default function ServerSecurityPage() {
       <section className="doc-section">
         <p className="doc-kicker">Security model</p>
         <h1 className="doc-title !mt-2 !text-4xl md:!text-5xl">
-          The backend trusts the server, except where the product explicitly should not.
+          The backend is authoritative for access, delivery, and media ownership.
         </h1>
         <p className="doc-section-copy !mt-4">
-          RelayForge uses a server-authoritative model for permissions, moderation, and most message
-          state. Direct messages are the notable exception and use end-to-end encryption boundaries.
+          RelayForge protects API routes with JWT middleware, checks disabled users before access
+          token TTL expires, validates realtime subscriptions, and enforces recipient-level media
+          ACLs before storage redirects.
         </p>
       </section>
 

@@ -66,10 +66,10 @@ export function DataTable<T>({
 
   return (
     <div>
-      <div className="border-border overflow-x-auto rounded-lg border">
+      <div className="border-border/60 overflow-x-auto rounded-[22px] border bg-[rgba(var(--rf-surface),0.72)] shadow-[0_14px_34px_rgba(var(--rf-shadow-color),0.08)]">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-border bg-elevated/50 border-b">
+            <tr className="border-border/60 bg-elevated/50 border-b">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -84,7 +84,7 @@ export function DataTable<T>({
             {data.map((row) => (
               <tr
                 key={rowKey(row)}
-                className="border-border/50 hover:bg-elevated/30 border-b transition-colors"
+                className="border-border/40 hover:bg-elevated/30 border-b transition-colors"
               >
                 {columns.map((col) => (
                   <td
@@ -113,7 +113,7 @@ export function DataTable<T>({
             <button
               onClick={() => onPageChange(page - 1)}
               disabled={page <= 1}
-              className="border-border text-text-secondary hover:bg-elevated rounded-lg border px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+              className="border-border/60 text-text-secondary hover:bg-elevated rounded-2xl border px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40"
             >
               Previous
             </button>
@@ -132,7 +132,7 @@ export function DataTable<T>({
                 <button
                   key={pageNum}
                   onClick={() => onPageChange(pageNum)}
-                  className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded-2xl px-3 py-1.5 text-sm font-medium transition-colors ${
                     pageNum === page
                       ? 'bg-accent text-white'
                       : 'text-text-secondary hover:bg-elevated'
@@ -145,7 +145,7 @@ export function DataTable<T>({
             <button
               onClick={() => onPageChange(page + 1)}
               disabled={page >= totalPages}
-              className="border-border text-text-secondary hover:bg-elevated rounded-lg border px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+              className="border-border/60 text-text-secondary hover:bg-elevated rounded-2xl border px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40"
             >
               Next
             </button>

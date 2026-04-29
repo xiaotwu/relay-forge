@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Avatar, Modal, Input, Button } from '@relayforge/ui';
 import { ChannelType } from '@relayforge/types';
 import { useGuildStore } from '@/stores/guild';
@@ -7,10 +6,13 @@ import { useAuthStore } from '@/stores/auth';
 
 const relayForgeIconSrc = '/branding/relay-forge-icon.png';
 
-export function GuildSidebar() {
+interface GuildSidebarProps {
+  onOpenSettings: () => void;
+}
+
+export function GuildSidebar({ onOpenSettings }: GuildSidebarProps) {
   const { guilds, selectedGuildId, selectGuild, createGuild } = useGuildStore();
   const { user } = useAuthStore();
-  const navigate = useNavigate();
   const [showCreate, setShowCreate] = useState(false);
   const [newGuildName, setNewGuildName] = useState('');
   const [iconUrl, setIconUrl] = useState('');
@@ -57,32 +59,28 @@ export function GuildSidebar() {
 
   return (
     <>
-      <div className="bg-base scrollbar-thin border-border/10 flex w-[72px] flex-col items-center gap-2 overflow-y-auto border-r py-3">
-        {/* Home / DM button */}
+      <nav
+        className="rf-primary-rail scrollbar-thin flex w-[76px] shrink-0 flex-col items-center gap-2 overflow-y-auto px-3 py-4"
+        aria-label="Primary navigation"
+      >
         <button
           onClick={() => selectGuild(null)}
           className="group relative"
           title="Direct Messages"
         >
           <div
-            className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded-[18px] border border-white/60 bg-white shadow-sm transition-all duration-200 ${
-              selectedGuildId === null
-                ? 'rounded-xl shadow-[0_14px_28px_rgba(var(--rf-accent),0.28)] ring-2 ring-[rgba(var(--rf-accent),0.4)]'
-                : 'hover:-translate-y-0.5 hover:rounded-xl hover:shadow-[0_16px_30px_rgba(15,23,42,0.16)]'
-            }`}
+            className={[
+              'rf-rail-button overflow-hidden !border-white/60 !bg-white !p-0',
+              selectedGuildId === null ? 'is-active !bg-white' : '',
+            ].join(' ')}
           >
             <img src={relayForgeIconSrc} alt="" className="h-full w-full object-cover" />
           </div>
-          {/* Selected indicator */}
-          {selectedGuildId === null && (
-            <div className="bg-text-primary absolute left-0 top-1/2 h-8 w-1 -translate-x-1 -translate-y-1/2 rounded-r-full" />
-          )}
+          {selectedGuildId === null && <div className="rf-rail-indicator" />}
         </button>
 
-        {/* Separator */}
-        <div className="bg-border/40 my-1 h-px w-8" />
+        <div className="my-2 h-px w-9 bg-[rgba(var(--rf-border),0.36)]" />
 
-        {/* Guild list */}
         {guilds.map((guild) => {
           const isSelected = selectedGuildId === guild.id;
           return (
@@ -92,13 +90,7 @@ export function GuildSidebar() {
               className="group relative"
               title={guild.name}
             >
-              <div
-                className={`flex h-12 w-12 items-center justify-center transition-all duration-200 ${
-                  isSelected
-                    ? 'bg-accent rounded-xl'
-                    : 'bg-elevated hover:bg-accent rounded-2xl hover:rounded-xl'
-                }`}
-              >
+              <div className={['rf-rail-button', isSelected ? 'is-active' : ''].join(' ')}>
                 {guild.iconUrl ? (
                   <img
                     src={guild.iconUrl}
@@ -106,36 +98,27 @@ export function GuildSidebar() {
                     className="h-full w-full rounded-[inherit] object-cover"
                   />
                 ) : (
-                  <span className="text-text-primary text-sm font-semibold">
+                  <span className="text-sm font-semibold text-current">
                     {guild.name.charAt(0).toUpperCase()}
                   </span>
                 )}
               </div>
-              {/* Selected indicator */}
-              {isSelected && (
-                <div className="bg-text-primary absolute left-0 top-1/2 h-8 w-1 -translate-x-1 -translate-y-1/2 rounded-r-full" />
-              )}
-              {/* Hover indicator */}
-              {!isSelected && (
-                <div className="bg-text-primary absolute left-0 top-1/2 h-0 w-1 -translate-x-1 -translate-y-1/2 rounded-r-full transition-all group-hover:h-5" />
-              )}
-              {/* Tooltip */}
-              <div className="bg-elevated text-text-primary pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+              {isSelected && <div className="rf-rail-indicator" />}
+              <div className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[14px] border border-[rgba(var(--rf-border),0.2)] bg-[rgba(var(--rf-elevated),0.96)] px-3 py-1.5 text-sm font-medium text-[rgb(var(--rf-text-primary))] opacity-0 shadow-lg backdrop-blur-xl transition-opacity group-hover:opacity-100">
                 {guild.name}
               </div>
             </button>
           );
         })}
 
-        {/* Create guild button */}
         <button
           onClick={() => setShowCreate(true)}
           className="group relative"
           title="Create a server"
         >
-          <div className="bg-elevated hover:bg-accent flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-200 hover:rounded-xl">
+          <div className="rf-rail-button">
             <svg
-              className="text-accent h-6 w-6 transition-colors group-hover:text-white"
+              className="h-5 w-5 text-[rgb(var(--rf-accent-light))] transition-colors group-hover:text-[rgb(var(--rf-text-primary))]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -150,10 +133,9 @@ export function GuildSidebar() {
           </div>
         </button>
 
-        {/* Settings gear at the bottom */}
         <div className="mt-auto pt-2">
-          <button onClick={() => navigate('/settings')} className="group relative" title="Settings">
-            <div className="hover:bg-elevated flex h-12 w-12 items-center justify-center rounded-2xl transition-all">
+          <button onClick={onOpenSettings} className="group relative" title="Settings">
+            <div className="rf-rail-button !rounded-full !p-0">
               <Avatar
                 src={user?.avatarUrl}
                 name={user?.displayName ?? user?.username ?? ''}
@@ -161,9 +143,25 @@ export function GuildSidebar() {
                 status={user?.status ?? 'online'}
               />
             </div>
+            <div className="pointer-events-none absolute bottom-0 right-0 flex h-5 w-5 items-center justify-center rounded-full border border-[rgba(var(--rf-base),0.9)] bg-[rgb(var(--rf-elevated))] text-[rgb(var(--rf-text-secondary))]">
+              <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15.5A3.5 3.5 0 1012 8a3.5 3.5 0 000 7.5z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19.4 15a1.7 1.7 0 00.34 1.87l.05.05a2 2 0 01-2.83 2.83l-.05-.05a1.7 1.7 0 00-1.87-.34 1.7 1.7 0 00-1.04 1.56V21a2 2 0 01-4 0v-.08a1.7 1.7 0 00-1.04-1.56 1.7 1.7 0 00-1.87.34l-.05.05a2 2 0 01-2.83-2.83l.05-.05A1.7 1.7 0 004.6 15a1.7 1.7 0 00-1.56-1.04H3a2 2 0 010-4h.08A1.7 1.7 0 004.6 8a1.7 1.7 0 00-.34-1.87l-.05-.05a2 2 0 012.83-2.83l.05.05A1.7 1.7 0 008.96 3.6 1.7 1.7 0 0010 2.04V2a2 2 0 014 0v.08a1.7 1.7 0 001.04 1.56 1.7 1.7 0 001.87-.34l.05-.05a2 2 0 012.83 2.83l-.05.05A1.7 1.7 0 0019.4 8c.23.6.8.98 1.56 1H21a2 2 0 010 4h-.08A1.7 1.7 0 0019.4 15z"
+                />
+              </svg>
+            </div>
           </button>
         </div>
-      </div>
+      </nav>
 
       {/* Create Guild Modal */}
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Create a server">

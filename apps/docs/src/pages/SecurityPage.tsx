@@ -1,35 +1,37 @@
 const securityRules = [
-  'Never hard-code backend endpoints or secrets into product surfaces; keep the contract explicit in environment configuration.',
-  'Treat desktop packaging, tokens, and notification credentials as platform-specific secrets and scope them to the smallest practical surface.',
-  'Do not publish backend-only operational secrets, infrastructure IPs, or credential values in docs, READMEs, or example configs.',
+  'Keep runtime endpoints explicit through API_BASE_URL, WS_URL, LIVEKIT_URL, and MEDIA_BASE_URL.',
+  'Render message text through React text nodes and keep markdown links limited to safe URL schemes.',
+  'Route browser media reads through the media proxy so backend recipient-level ACLs remain authoritative.',
+  'Keep Tauri CSP enabled and treat desktop signing, notification, and release credentials as deployment secrets.',
+  'Use OpenAPI-backed SDK path builders for public SDK methods instead of scattering raw route strings.',
 ];
 
-const licenseReasons = [
-  'Apache-2.0 is materially easier for commercial adopters, integrators, and package consumers than AGPL-3.0.',
-  'It includes an explicit patent grant, which is valuable for a multi-repo platform with shared SDK and cryptography code.',
-  'The commit history is single-author today, so relicensing is operationally feasible without a contributor-consent campaign.',
+const knownLimits = [
+  'The SDK request layer is handwritten, but paths are checked through generated OpenAPI path types and request tests.',
+  'Browser image and media tags currently use an access token in the token query parameter; short-lived scoped media read tokens are the preferred future hardening.',
+  'npm audit currently reports two moderate docs-app findings in Mermaid and transitive uuid; npm proposes a breaking Mermaid downgrade, so the advisory remains tracked.',
 ];
 
 export default function SecurityPage() {
   return (
     <>
       <section className="doc-section">
-        <p className="doc-kicker">Security and license</p>
+        <p className="doc-kicker">Client security</p>
         <h1 className="doc-title !mt-2 !text-4xl md:!text-5xl">
-          Security policy stays strict even though the license is now more permissive.
+          The UI stays thin where security belongs on the server.
         </h1>
         <p className="doc-section-copy !mt-4">
-          RelayForge now uses Apache-2.0 across both repositories. The goal is to reduce adoption
-          friction while keeping strong expectations around secret handling, release hygiene, and
-          security reporting.
+          RelayForge clients keep secrets out of source, avoid unsafe rendering, and consume typed
+          contracts. Authorization, disabled-user enforcement, realtime subscription validation,
+          media ACLs, and admin permissions remain server-owned.
         </p>
       </section>
 
       <section className="doc-section">
-        <h2 className="doc-section-title">Security reporting</h2>
+        <h2 className="doc-section-title">Client controls</h2>
         <p className="doc-section-copy">
-          Do not open public issues for vulnerabilities. Report privately with a clear description,
-          affected repository, reproduction steps, and impact assessment.
+          Do not open public issues for vulnerabilities. Report privately with affected repository,
+          reproduction steps, impact, and any useful traces or screenshots.
         </p>
 
         <ul className="doc-list">
@@ -40,17 +42,17 @@ export default function SecurityPage() {
       </section>
 
       <section className="doc-section">
-        <h2 className="doc-section-title">Why Apache-2.0 fits better now</h2>
+        <h2 className="doc-section-title">Known limitations</h2>
         <ul className="doc-list">
-          {licenseReasons.map((reason) => (
-            <li key={reason}>{reason}</li>
+          {knownLimits.map((limit) => (
+            <li key={limit}>{limit}</li>
           ))}
         </ul>
 
         <div className="doc-callout">
-          This is a project-structure decision, not legal advice. If the contributor model changes
-          materially later, revisit the license policy before accepting outside relicensing
-          constraints.
+          RelayForge uses Apache-2.0 across both repositories. License notes live in the root
+          repository files; security notes should stay focused on runtime behavior and operational
+          risk.
         </div>
       </section>
     </>

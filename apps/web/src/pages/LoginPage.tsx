@@ -41,24 +41,16 @@ export function LoginPage() {
 
   return (
     <div className="auth-shell flex min-h-screen items-center justify-center overflow-hidden px-4">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="animate-soft-float absolute left-[12%] top-[16%] h-40 w-40 rounded-full bg-[rgba(var(--rf-accent),0.12)] blur-3xl" />
-        <div className="animate-soft-float absolute bottom-[14%] right-[10%] h-52 w-52 rounded-full bg-[rgba(56,189,248,0.10)] blur-3xl [animation-delay:800ms]" />
-      </div>
-
       <div className="relative z-10 w-full max-w-md">
-        <div className="rf-floating-shell animate-fade-scale rounded-[36px] p-8">
-          <div className="mb-8 text-center">
+        <div className="rf-auth-card animate-fade-scale rounded-[30px] p-7">
+          <div className="mb-7 text-center">
             <img
               src={relayForgeIconSrc}
               alt="RelayForge"
-              className="mx-auto mb-5 h-20 w-20 rounded-[28px] border border-black/5 bg-white object-cover shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
+              className="mx-auto mb-4 h-16 w-16 rounded-[22px] border border-white/70 bg-white object-cover shadow-[0_16px_34px_rgba(15,23,42,0.14)]"
             />
-            <p className="text-text-secondary text-[11px] font-semibold uppercase tracking-[0.28em]">
-              RelayForge
-            </p>
-            <h1 className="text-text-primary mt-3 text-[34px] font-semibold tracking-[-0.05em]">
-              Welcome back
+            <h1 className="text-text-primary text-[30px] font-semibold tracking-[-0.04em]">
+              Sign in
             </h1>
           </div>
 
@@ -107,7 +99,7 @@ export function LoginPage() {
                 onClick={() => setShowTwoFactor(true)}
                 className="text-accent hover:text-accent-light text-sm font-medium transition-colors"
               >
-                Sign in with an authenticator or backup code
+                Use 2FA or backup code
               </button>
             )}
 
@@ -118,9 +110,7 @@ export function LoginPage() {
               className="h-12 shadow-[0_18px_34px_rgba(var(--rf-accent),0.26)]"
               aria-label="Sign in"
             >
-              <span role="img" aria-hidden="true">
-                ➡️
-              </span>
+              Sign in
             </Button>
           </form>
 

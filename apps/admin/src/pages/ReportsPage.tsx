@@ -65,7 +65,11 @@ export function ReportsPage() {
       header: 'Status',
       render: (row) => {
         const variant =
-          row.status === 'pending' ? 'warning' : row.status === 'resolved' ? 'success' : 'default';
+          row.status === 'open' || row.status === 'investigating'
+            ? 'warning'
+            : row.status === 'resolved'
+              ? 'success'
+              : 'default';
         return <Badge variant={variant}>{row.status}</Badge>;
       },
     },
@@ -79,7 +83,7 @@ export function ReportsPage() {
       header: 'Actions',
       className: 'w-44',
       render: (row) => {
-        if (row.status !== 'pending') {
+        if (row.status !== 'open' && row.status !== 'investigating') {
           return <span className="text-text-secondary text-xs">--</span>;
         }
         const isLoading = actionLoading === row.id;
