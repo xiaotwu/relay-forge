@@ -55,7 +55,11 @@ export function buildMessageContent(
   return parts.join('\n\n').trim();
 }
 
-export function resolveAttachmentUrl(url: string, mediaBaseUrl: string, accessToken?: string | null) {
+export function resolveAttachmentUrl(
+  url: string,
+  mediaBaseUrl: string,
+  accessToken?: string | null,
+) {
   try {
     const resolved = new URL(url, mediaBaseUrl);
     if (resolved.protocol !== 'http:' && resolved.protocol !== 'https:') {

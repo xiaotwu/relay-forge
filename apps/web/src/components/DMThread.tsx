@@ -195,7 +195,11 @@ export function DMThread({ channelId, onReply }: DMThreadProps) {
                               rel="noreferrer"
                             >
                               <img
-                                src={resolveAttachmentUrl(attachment.url, mediaBaseUrl, accessToken)}
+                                src={resolveAttachmentUrl(
+                                  attachment.url,
+                                  mediaBaseUrl,
+                                  accessToken,
+                                )}
                                 alt={attachment.filename}
                                 className="max-h-[320px] w-full object-cover"
                               />

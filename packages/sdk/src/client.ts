@@ -257,7 +257,9 @@ export class ApiClient {
   // --- Auth ---
 
   async register(data: RegisterRequest): Promise<ApiResponse<AuthTokens>> {
-    return this.request('POST', buildPath(API_PATHS.authRegister), data, undefined, { noAuth: true });
+    return this.request('POST', buildPath(API_PATHS.authRegister), data, undefined, {
+      noAuth: true,
+    });
   }
 
   async login(data: LoginRequest): Promise<ApiResponse<AuthTokens>> {
@@ -371,7 +373,10 @@ export class ApiClient {
   }
 
   async kickMember(guildId: string, userId: string): Promise<void> {
-    return this.request('DELETE', buildPath(API_PATHS.guildMember, { guildID: guildId, userID: userId }));
+    return this.request(
+      'DELETE',
+      buildPath(API_PATHS.guildMember, { guildID: guildId, userID: userId }),
+    );
   }
 
   async createInvite(guildId: string, data: CreateInviteRequest): Promise<ApiResponse<Invite>> {
@@ -424,15 +429,24 @@ export class ApiClient {
     channelId: string,
     params?: { before?: string; after?: string; limit?: number },
   ): Promise<CursorPaginatedResponse<Message>> {
-    return this.request('GET', buildPath(API_PATHS.channelMessages, { channelID: channelId }), undefined, {
-      before: params?.before,
-      after: params?.after,
-      limit: params?.limit,
-    });
+    return this.request(
+      'GET',
+      buildPath(API_PATHS.channelMessages, { channelID: channelId }),
+      undefined,
+      {
+        before: params?.before,
+        after: params?.after,
+        limit: params?.limit,
+      },
+    );
   }
 
   async sendMessage(channelId: string, data: SendMessageRequest): Promise<ApiResponse<Message>> {
-    return this.request('POST', buildPath(API_PATHS.channelMessages, { channelID: channelId }), data);
+    return this.request(
+      'POST',
+      buildPath(API_PATHS.channelMessages, { channelID: channelId }),
+      data,
+    );
   }
 
   async editMessage(
@@ -458,13 +472,18 @@ export class ApiClient {
     channelId: string,
     params: SearchMessagesRequest,
   ): Promise<PaginatedResponse<Message>> {
-    return this.request('GET', buildPath(API_PATHS.channelMessageSearch, { channelID: channelId }), undefined, {
-      q: params.query,
-      authorId: params.authorId,
-      before: params.before,
-      after: params.after,
-      limit: params.limit,
-    });
+    return this.request(
+      'GET',
+      buildPath(API_PATHS.channelMessageSearch, { channelID: channelId }),
+      undefined,
+      {
+        q: params.query,
+        authorId: params.authorId,
+        before: params.before,
+        after: params.after,
+        limit: params.limit,
+      },
+    );
   }
 
   async listPins(channelId: string): Promise<ApiResponse<Message[]>> {
@@ -527,7 +546,10 @@ export class ApiClient {
   }
 
   async deleteRole(guildId: string, roleId: string): Promise<void> {
-    return this.request('DELETE', buildPath(API_PATHS.guildRole, { guildID: guildId, roleID: roleId }));
+    return this.request(
+      'DELETE',
+      buildPath(API_PATHS.guildRole, { guildID: guildId, roleID: roleId }),
+    );
   }
 
   async assignRole(guildId: string, userId: string, roleId: string): Promise<void> {
@@ -741,7 +763,11 @@ export class ApiClient {
   }
 
   async sendDMMessage(dmChannelId: string, data: SendDMRequest): Promise<ApiResponse<DMMessage>> {
-    return this.request('POST', buildPath(API_PATHS.dmMessages, { dmChannelID: dmChannelId }), data);
+    return this.request(
+      'POST',
+      buildPath(API_PATHS.dmMessages, { dmChannelID: dmChannelId }),
+      data,
+    );
   }
 
   async deleteDMMessage(dmChannelId: string, messageId: string): Promise<void> {

@@ -83,7 +83,7 @@ function parseMarkdown(text: string): MarkdownNode[] {
     }
 
     // Plain text: consume until next special character
-    const nextSpecial = remaining.slice(1).search(/[`*\[@\n]/);
+    const nextSpecial = remaining.slice(1).search(/[`*[@\n]/);
     if (nextSpecial === -1) {
       nodes.push({ type: 'text', content: remaining });
       remaining = '';
@@ -127,7 +127,7 @@ export function renderMarkdown(text: string): React.ReactNode[] {
           },
           React.createElement('code', null, node.content),
         );
-      case 'link':
+      case 'link': {
         const href = getSafeMarkdownHref(node.href);
         if (!href) {
           return React.createElement(React.Fragment, { key: i }, node.content);
@@ -143,6 +143,7 @@ export function renderMarkdown(text: string): React.ReactNode[] {
           },
           node.content,
         );
+      }
       case 'mention':
         return React.createElement(
           'span',

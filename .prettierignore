@@ -8,5 +8,6 @@ coverage
 *.go
 go.sum
 go.work.sum
+packages/sdk/src/generated/relayforge.ts
 deploy/helm/**/templates/**
 infra/helm/**/templates/**

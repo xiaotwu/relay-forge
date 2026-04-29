@@ -66,11 +66,11 @@ make deploy-migrate
 Copy [`.env.example`](./.env.example) to `.env` when you want clients to target explicit backend
 endpoints. The shared runtime contract is:
 
-| Variable | Default | Used by |
-| --- | --- | --- |
-| `API_BASE_URL` | `http://localhost:8080/api/v1` | web, admin, desktop, SDK REST calls |
-| `WS_URL` | `ws://localhost:8081/ws` | web, desktop, realtime SDK |
-| `LIVEKIT_URL` | `ws://localhost:7880` | web and desktop voice/video UI |
+| Variable         | Default                        | Used by                                     |
+| ---------------- | ------------------------------ | ------------------------------------------- |
+| `API_BASE_URL`   | `http://localhost:8080/api/v1` | web, admin, desktop, SDK REST calls         |
+| `WS_URL`         | `ws://localhost:8081/ws`       | web, desktop, realtime SDK                  |
+| `LIVEKIT_URL`    | `ws://localhost:7880`          | web and desktop voice/video UI              |
 | `MEDIA_BASE_URL` | `http://localhost:8082/api/v1` | upload, media proxy, and voice helper calls |
 
 Legacy Vite aliases remain supported for compatibility: `VITE_API_URL`, `VITE_WS_URL`,

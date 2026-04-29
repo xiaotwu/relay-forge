@@ -154,7 +154,9 @@ describe('ApiClient', () => {
         client.addReaction('channel-1', 'message-2', ':+1:'),
       );
       expect(call.method).toBe('POST');
-      expect(call.url).toBe('http://api.test/api/v1/channels/channel-1/messages/message-2/reactions');
+      expect(call.url).toBe(
+        'http://api.test/api/v1/channels/channel-1/messages/message-2/reactions',
+      );
       expect(call.body).toBe(JSON.stringify({ emoji: ':+1:' }));
     });
 
